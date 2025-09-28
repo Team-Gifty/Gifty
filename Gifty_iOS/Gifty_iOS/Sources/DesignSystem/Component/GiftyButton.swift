@@ -1,1 +1,107 @@
+import UIKit
 
+import SnapKit
+
+import Then
+
+public class GiftyButton: UIButton {
+    
+    public var buttonTap: (() -> Void)?
+    
+    public override var isEnabled: Bool {
+        
+        didSet {
+            
+            attribute()
+            
+        }
+        
+    }
+    
+    private var bgColor: UIColor {
+        
+        isEnabled ? UIColor(named: "A98E5C") ?? .systemBrown : UIColor(named: "CDB9AD") ?? .lightGray
+        
+    }
+    
+    override public init(frame: CGRect) {
+        
+        super.init(frame: frame)
+        
+        setupButton()
+        
+    }
+    
+    convenience public init(
+        
+        type: UIButton.ButtonType? = .system,
+        
+        buttonText: String? = String(),
+        
+        isEnabled: Bool? = true,
+        
+        isHidden: Bool? = false,
+        
+        height: CGFloat? = 47
+        
+    ) {
+        
+        self.init(type: .system)
+        
+        self.setTitle(buttonText, for: .normal)
+        
+        self.isEnabled = isEnabled ?? true
+        
+        self.isHidden = isHidden ?? false
+        
+        attribute()
+        
+        self.snp.remakeConstraints {
+            
+            $0.height.equalTo(height ?? 0)
+            
+        }
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        
+        fatalError("init(coder:) has not been implemented")
+        
+    }
+    
+    public override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        attribute()
+        
+    }
+    
+    private func setupButton() {
+        
+        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        attribute()
+        
+    }
+    
+    @objc private func buttonTapped() {
+        
+        buttonTap?()
+        
+    }
+    
+    public func attribute() {
+        
+        self.backgroundColor = bgColor
+        
+        self.setTitleColor(UIColor(named: "FFF7EC") ?? .white, for: .normal)
+        
+        self.titleLabel?.font = .giftyFont(size: 16)
+        
+        self.layer.cornerRadius = 8
+        
+    }
+    
+}
