@@ -1,27 +1,26 @@
 import UIKit
 
-enum FontType {
-    case ongulipParkDahyeon
-    case ongulipConcon
-    case gumiRomance
-    case memomentKkukkkuk
-
-    var name: String {
-        switch self {
-        case .ongulipParkDahyeon:
-            return "giftyFont"
-        case .ongulipConcon:
-            return "cellFont"
-        case .gumiRomance:
-            return "nicknameFont"
-        case .memomentKkukkkuk:
-            return "onboardingFont"
-        }
-    }
+struct AppFontName {
+    static let giftyFont = "Ownglyph_PDH-Rg"
+    static let cellFont = "Ownglyph_corncorn-Rg"
+    static let nicknameFont = "GumiRomanceTTF"
+    static let onboardingFont = "MemomentKkukkukkR"
 }
 
 extension UIFont {
-    static func customFont(type: FontType, size: CGFloat) -> UIFont {
-        return UIFont(name: type.name, size: size) ?? UIFont.systemFont(ofSize: size)
+    static func giftyFont(size: CGFloat) -> UIFont {
+        return UIFont(name: AppFontName.giftyFont, size: size) ?? .systemFont(ofSize: size)
+    }
+    
+    static func cellFont(size: CGFloat) -> UIFont {
+        return UIFont(name: AppFontName.cellFont, size: size) ?? .systemFont(ofSize: size)
+    }
+    
+    static func nicknameFont(size: CGFloat) -> UIFont {
+        return UIFont(name: AppFontName.nicknameFont, size: size) ?? .systemFont(ofSize: size)
+    }
+    
+    static func onboardingFont(size: CGFloat) -> UIFont {
+        return UIFont(name: AppFontName.onboardingFont, size: size) ?? .systemFont(ofSize: size)
     }
 }
