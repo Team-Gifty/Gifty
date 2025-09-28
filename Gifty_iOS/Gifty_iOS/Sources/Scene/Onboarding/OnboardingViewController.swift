@@ -4,6 +4,8 @@ import Then
 
 class OnboardingViewController: UIViewController {
     
+    private let viewModel = OnboardingViewModel()
+    
     let onboardingButton = GiftyButton(
         buttonText: "Gifty 사용하러 가기",
         isEnabled: true,
@@ -25,9 +27,12 @@ class OnboardingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .FFF_7_EC
         
+        onboardingButton.addTarget(self, action: #selector(onboardingButtonDidTap), for: .touchUpInside)
+        
         view.addSubview(onboardingButton)
         view.addSubview(onboardingImage)
         view.addSubview(onboardingLabel)
+        
         
         
         onboardingButton.snp.makeConstraints {
@@ -48,6 +53,10 @@ class OnboardingViewController: UIViewController {
             $0.top.equalTo(onboardingImage.snp.bottom).offset(14)
         }
         
+    }
+    
+    @objc func onboardingButtonDidTap() {
+      //  viewModel.onboardingButtonDidTap
     }
     
     
