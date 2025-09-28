@@ -1,11 +1,9 @@
 import UIKit
-
 import SnapKit
-
 import Then
 
 public class GiftyButton: UIButton {
-    
+
     public var buttonTap: (() -> Void)?
     
     public override var isEnabled: Bool {
@@ -20,7 +18,7 @@ public class GiftyButton: UIButton {
     
     private var bgColor: UIColor {
         
-        isEnabled ? UIColor(named: "A98E5C") ?? .systemBrown : UIColor(named: "CDB9AD") ?? .lightGray
+        isEnabled ? UIColor(named: "FDE1AD") ?? .systemBrown : UIColor(named: "FCEDD0") ?? .lightGray
         
     }
     
@@ -96,9 +94,9 @@ public class GiftyButton: UIButton {
         
         self.backgroundColor = bgColor
         
-        self.setTitleColor(UIColor(named: "FFF7EC") ?? .white, for: .normal)
+        self.setTitleColor(UIColor(named: "A98E5C") ?? .white, for: .normal)
         
-        self.titleLabel?.font = .giftyFont(size: 16)
+        self.titleLabel?.font = .onboardingFont(size: 23)
         
         self.layer.cornerRadius = 8
         
