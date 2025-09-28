@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 import Then
 
-class OnboardingViewController: UIViewController {
+class OnboardingViewController: BaseViewController {
     
     private let viewModel = OnboardingViewModel()
     
@@ -25,16 +25,18 @@ class OnboardingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .FFF_7_EC
-        
         onboardingButton.addTarget(self, action: #selector(onboardingButtonDidTap), for: .touchUpInside)
-        
-        view.addSubview(onboardingButton)
-        view.addSubview(onboardingImage)
-        view.addSubview(onboardingLabel)
-        
-        
-        
+    }
+
+    override func addView() {
+        [
+            onboardingButton,
+            onboardingImage,
+            onboardingLabel
+        ].forEach { view.addSubview($0) }
+    }
+
+    override func setLayout() {
         onboardingButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(27)
@@ -52,9 +54,8 @@ class OnboardingViewController: UIViewController {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(onboardingImage.snp.bottom).offset(14)
         }
-        
     }
-    
+
     @objc func onboardingButtonDidTap() {
       //  viewModel.onboardingButtonDidTap
     }
