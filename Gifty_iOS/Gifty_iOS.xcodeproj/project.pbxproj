@@ -14,7 +14,7 @@
 		85BB435D2E83F68F002330D2 /* Exceptions for "Gifty_iOS" folder in "Gifty_iOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = 85BB434A2E83F68E002330D2 /* Gifty_iOS */;
 		};
