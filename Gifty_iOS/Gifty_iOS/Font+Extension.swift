@@ -9,13 +9,13 @@ enum FontType {
     var name: String {
         switch self {
         case .ongulipParkDahyeon:
-            return "온글잎 박다현체"
+            return "giftyFont"
         case .ongulipConcon:
-            return "온글잎 콘콘체"
+            return "cellFont"
         case .gumiRomance:
-            return "Gumi Romance"
+            return "nicknameFont"
         case .memomentKkukkkuk:
-            return "memomentKkukkkuk"
+            return "onboardingFont"
         }
     }
 }
