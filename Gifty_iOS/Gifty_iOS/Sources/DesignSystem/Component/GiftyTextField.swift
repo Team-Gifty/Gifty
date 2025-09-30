@@ -9,8 +9,7 @@ struct AppColors {
 }
 
 class GiftyTextField: UIView {
-    
-    // MARK: - UI Components
+
     private let textField = UITextField().then {
         $0.borderStyle = .none
         $0.font = UIFont.onboardingFont(size: 20)
@@ -24,8 +23,7 @@ class GiftyTextField: UIView {
     private let underlineView = UIView().then {
         $0.backgroundColor = AppColors.selectedTab
     }
-    
-    // MARK: - Properties
+
     var text: String? {
         get { return textField.text }
         set { textField.text = newValue }
