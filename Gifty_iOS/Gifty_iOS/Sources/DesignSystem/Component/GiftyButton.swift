@@ -94,7 +94,7 @@ public class GiftyButton: UIButton {
         
         self.backgroundColor = bgColor
         
-        self.setTitleColor(UIColor(named: "A98E5C") ?? .white, for: .normal)
+//        self.setTitleColor(UIColor(named: "DDC495") ?? .white, for: .normal)
         
         self.titleLabel?.font = .onboardingFont(size: 23)
         

@@ -111,4 +111,9 @@ class GiftyTextField: UIView {
             $0.height.equalTo(60)
         }
     }
+    
+    var delegate: UITextFieldDelegate? {
+            get { return textField.delegate }
+            set { textField.delegate = newValue }
+        }
 }
