@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F8A0C212E8C383600A8B1F3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6F8A0C202E8C383600A8B1F3 /* RealmSwift */; };
 		852807FC2E899A37009710CC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FB2E899A37009710CC /* Then */; };
 		852807FF2E899A45009710CC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FE2E899A45009710CC /* SnapKit */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F8A0C212E8C383600A8B1F3 /* RealmSwift in Frameworks */,
 				852807FC2E899A37009710CC /* Then in Frameworks */,
 				852807FF2E899A45009710CC /* SnapKit in Frameworks */,
 			);
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				852807FB2E899A37009710CC /* Then */,
 				852807FE2E899A45009710CC /* SnapKit */,
+				6F8A0C202E8C383600A8B1F3 /* RealmSwift */,
 			);
 			productName = Gifty_iOS;
 			productReference = 85BB434B2E83F68E002330D2 /* Gifty_iOS.app */;
@@ -119,6 +122,7 @@
 			packageReferences = (
 				852807FA2E899A37009710CC /* XCRemoteSwiftPackageReference "Then" */,
 				852807FD2E899A45009710CC /* XCRemoteSwiftPackageReference "SnapKit" */,
+				6F8A0C1F2E8C383600A8B1F3 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85BB434C2E83F68E002330D2 /* Products */;
@@ -358,6 +362,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6F8A0C1F2E8C383600A8B1F3 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		852807FA2E899A37009710CC /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then.git";
@@ -377,6 +389,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6F8A0C202E8C383600A8B1F3 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F8A0C1F2E8C383600A8B1F3 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		852807FB2E899A37009710CC /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 852807FA2E899A37009710CC /* XCRemoteSwiftPackageReference "Then" */;

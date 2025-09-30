@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 import Then
-
+import RealmSwift
 
 class NicknameViewController: BaseViewController {
     
@@ -25,21 +25,12 @@ class NicknameViewController: BaseViewController {
         isEnabled: false,
         height: 50
     )
-//
-//    
-//    override func addView() {
-//        [
-//            nicknameLabel,
-//            nicknameField,
-//            nicknameButton
-//        ].forEach { view.addSubview($0) }
-//        
-//        nicknameField.addTarget(self, action: #selector(textFieldDidChangeSelection(_:)), for: .editingChanged)
-//
-//
-//    }
-    
-    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadNickname()
+    }
+
     override func addView() {
         [
             nicknameLabel,
@@ -48,28 +39,9 @@ class NicknameViewController: BaseViewController {
         ].forEach { view.addSubview($0) }
         
         nicknameField.delegate = self
+        nicknameButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
     }
     
-
-//    
-//    // textField 상태에 따라 LoginButton 상태 활성화 유
-//    @objc func textFieldDidChangeSelection(_ nicknameField: UITextField) {
-//        if (nicknameField.text?.count ?? 0 < 1) {
-//            updateNicknameButtonState(isEnabled: false, backgroundColor: .FCEDD_0, borderColor: .DDC_495)
-//        } else {
-//            updateNicknameButtonState(isEnabled: true, backgroundColor: .FDE_1_AD, borderColor: .A_98_E_5_C)
-//        }
-//    }
-//
-//    func updateNicknameButtonState(isEnabled: Bool, backgroundColor: UIColor, borderColor: UIColor) {
-//        nicknameButton.isEnabled = isEnabled
-//        nicknameButton.backgroundColor = backgroundColor
-//        nicknameButton.layer.borderColor = borderColor.cgColor
-//    }
-//
-//}
-
-
     override func setLayout() {
         nicknameLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -86,12 +58,42 @@ class NicknameViewController: BaseViewController {
         }
     }
 
+    @objc private func saveButtonTapped() {
+        guard let nickname = nicknameField.text, !nickname.isEmpty else {
+            return
+        }
+
+        RealmManager.shared.saveNickname(nickname)
+
+        showSaveAlert(nickname: nickname)
+    }
+
+    private func loadNickname() {
+        if let savedNickname = RealmManager.shared.getNickname() {
+            nicknameField.text = savedNickname
+            updateNicknameButtonState(isEnabled: true, backgroundColor: .FDE_1_AD, textColor: .A_98_E_5_C)
+            print("✅ 저장된 닉네임 불러오기: \(savedNickname)")
+        }
+    }
+
+    private func showSaveAlert(nickname: String) {
+        let alert = UIAlertController(
+            title: "저장 완료",
+            message: "닉네임 '\(nickname)'이(가) 저장되었습니다!",
+            preferredStyle: .alert
+        )
+        
+        let confirmAction = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(confirmAction)
+        
+        present(alert, animated: true)
+    }
+
     func updateNicknameButtonState(isEnabled: Bool, backgroundColor: UIColor, textColor: UIColor) {
         nicknameButton.isEnabled = isEnabled
         nicknameButton.backgroundColor = backgroundColor
         nicknameButton.setTitleColor(textColor, for: .normal)
     }
-
 }
 
 // MARK: - UITextFieldDelegate
