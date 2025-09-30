@@ -26,6 +26,9 @@ class OnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        onboardingButton.addTarget(self, action: #selector(onboardingButtonDidTap), for: .touchUpInside)
+        onboardingButton.addTarget(self, action: #selector(goNickname), for: .touchUpInside)
+        
+        self.navigationController?.navigationBar.isHidden = true
     }
 
     override func addView() {
@@ -60,6 +63,12 @@ class OnboardingViewController: BaseViewController {
         onboardingButton.isEnabled = true
         onboardingButton.backgroundColor = UIColor(named: "FDE1AD") ?? .systemBrown
         onboardingButton.setTitleColor(.A_98_E_5_C, for: .normal)
+    }
+    
+    
+    @objc func goNickname() {
+        let NicknameVC = NicknameViewController()
+        self.navigationController?.pushViewController(NicknameVC, animated: true)
     }
 
 

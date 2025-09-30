@@ -36,6 +36,7 @@ class TestViewController: BaseViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         loadNickname()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
     }
     
     override func addView() {
