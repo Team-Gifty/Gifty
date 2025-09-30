@@ -25,7 +25,7 @@ class OnboardingViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        onboardingButton.addTarget(self, action: #selector(onboardingButtonDidTap), for: .touchUpInside)
+//        onboardingButton.addTarget(self, action: #selector(onboardingButtonDidTap), for: .touchUpInside)
     }
 
     override func addView() {
@@ -55,10 +55,17 @@ class OnboardingViewController: BaseViewController {
             $0.top.equalTo(onboardingImage.snp.bottom).offset(14)
         }
     }
-
-    @objc func onboardingButtonDidTap() {
-      //  viewModel.onboardingButtonDidTap
+    
+    func setupGiftyButtonStyle() {
+        onboardingButton.isEnabled = true
+        onboardingButton.backgroundColor = UIColor(named: "FDE1AD") ?? .systemBrown
+        onboardingButton.setTitleColor(.A_98_E_5_C, for: .normal)
     }
+
+
+//    @objc func onboardingButtonDidTap() {
+//      //  viewModel.onboardingButtonDidTap
+//    }
     
     
 }
