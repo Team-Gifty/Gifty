@@ -44,6 +44,8 @@ class UploadViewController: BaseViewController {
         super.viewDidLoad()
     }
     
+//    imageuploadButton.addTarget(self, action: #selector(imageuploadButtonTapped), for: .touchUpInside)
+    
     
     override func addView() {
         [
@@ -83,6 +85,16 @@ class UploadViewController: BaseViewController {
         }
     }
     
+    
+//    @objc func imageuploadButtonTapped() {
+//        //이미지 피커 설정
+//        let picker = UIImagePickerController()
+//        picker.delegate = self
+//        picker.allowsEditing = true
+//        
+//        present(picker, animated: true, completion: nil)
+//    }
+//    
     
     
 }
