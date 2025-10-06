@@ -1,77 +1,73 @@
-//import UIKit
-//import SnapKit
-//import Then
-//
-//class MainViewController: BaseViewController {
-//
-//    let iconImageView = UIImageView().then {
-//        $0.image = UIImage(named: "GiftyBox")
-//    }
-//
-//    let nameLabel = UILabel().then {
-//        $0.text = "Hello, World!"
-//        $0.font = .nicknameFont(size: 15)
-//    }
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//    }
-//
-//    override func addView() {
-//        [
-//            iconImageView,
-//            nameLabel
-//        ].forEach { view.addSubview($0) }
-//    }
-//
-//    override func setLayout() {
-//        iconImageView.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(20)
-//            $0.leading.equalToSuperview().inset(34)
-//        }
-//    }
-//
-//
-//}
-
-
 import UIKit
 import SnapKit
 import Then
 
 class MainViewController: BaseViewController {
     
-    private let iconImageView = UIImageView().then {
+    
+    let iconImageView = UIImageView().then {
         $0.image = UIImage(named: "GiftyBox")
-        $0.contentMode = .scaleAspectFit
     }
     
-    private let nameLabel = UILabel().then {
-        $0.text = "Hello, World!"
+    let titleLabel = UILabel().then {
+        $0.text = "이거주희님의 교환권"
+        $0.textColor = ._6_A_4_C_4_C
         $0.font = .nicknameFont(size: 15)
-        $0.textColor = .black
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupNavigationBar()
+    
+    let noneLabel = UILabel().then {
+        $0.text = "아직 등록된 교환권이 없어요"
+        $0.textColor = ._7_F_7_D_7_D
+        $0.textAlignment = .center
+        $0.numberOfLines = 0
+        $0.font = .giftyFont(size: 28)
     }
     
-    // 네비게이션바 세팅
-    private func setupNavigationBar() {
-        let stackView = UIStackView(arrangedSubviews: [iconImageView, nameLabel])
-        stackView.axis = .horizontal // 라벨이 아이콘 옆에 배치
-        stackView.alignment = .center //
-        stackView.spacing = 8 // 사이 간격
+    let boxImageView = UIImageView().then {
+        $0.image = UIImage(named: "EmptyBox")
+    }
+    
+   
+       override func viewDidLoad() {
+           super.viewDidLoad()
+       }
+       
+    
+    override func addView() {
+        [
+            iconImageView,
+            titleLabel,
+            noneLabel,
+            boxImageView
+        ].forEach { view.addSubview($0) }
+        
+    }
+    
+    override func setLayout() {
         
         iconImageView.snp.makeConstraints {
-            $0.width.equalTo(30)
-            $0.height.equalTo(36)
-            
+            $0.top.equalToSuperview().inset(64)
+            $0.leading.equalToSuperview().inset(34)
         }
         
-        let leftItem = UIBarButtonItem(customView: stackView)
-        navigationItem.leftBarButtonItem = leftItem
+        titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(74)
+            $0.leading.equalTo(iconImageView.snp.trailing).offset(8)
+        }
+        
+        noneLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(titleLabel.snp.bottom).offset(281)
+        }
+        
+        boxImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(noneLabel.snp.top).offset(-49)
+            $0.width.equalTo(124.11)
+            $0.height.equalTo(113)
+        }
     }
-}
 
+    
+}
