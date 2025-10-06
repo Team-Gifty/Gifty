@@ -69,6 +69,6 @@ public class GiftyButton: UIButton {
         self.backgroundColor = bgColor
         //   self.setTitleColor(UIColor(named: "A98E5C") ?? .white, for: .normal)
         self.titleLabel?.font = .onboardingFont(size: 23)
-        self.layer.cornerRadius = 8
+        self.layer.cornerRadius = 12
     }
 }

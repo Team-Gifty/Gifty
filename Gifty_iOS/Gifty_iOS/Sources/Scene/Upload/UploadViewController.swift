@@ -33,6 +33,13 @@ class UploadViewController: BaseViewController {
     )
     
     
+    let uploadButton = GiftyButton(
+        buttonText: "등록",
+        isEnabled: false,
+        height: 50
+    )
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -42,7 +49,8 @@ class UploadViewController: BaseViewController {
         [
             photoDescriptionLabel,
             imageuploadButton,
-            informationButton
+            informationButton,
+            uploadButton
         ].forEach { view.addSubview($0) }
         
     }
@@ -67,6 +75,12 @@ class UploadViewController: BaseViewController {
             $0.top.equalTo(imageuploadButton.snp.bottom).offset(25)
         }
         
+        uploadButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(300)
+            $0.height.equalTo(50)
+            $0.top.equalTo(informationButton.snp.bottom).offset(14)
+        }
     }
     
     
