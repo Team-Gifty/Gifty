@@ -50,4 +50,23 @@ class RealmManager {
             print("❌ 닉네임 삭제 실패: \(error.localizedDescription)")
         }
     }
+    
+    // MARK: - Gifticon CRUD
+    
+    // Create
+    func saveGifticon(model: GifticonModel) {
+        do {
+            try realm.write {
+                realm.add(model)
+            }
+            print("✅ 기프티콘 저장 성공: \(model.gifticonName)")
+        } catch {
+            print("❌ 기프티콘 저장 실패: \(error.localizedDescription)")
+        }
+    }
+    
+    // Read
+    func getAllGifticons() -> Results<GifticonModel> {
+        return realm.objects(GifticonModel.self).sorted(byKeyPath: "createdAt", ascending: false)
+    }
 }

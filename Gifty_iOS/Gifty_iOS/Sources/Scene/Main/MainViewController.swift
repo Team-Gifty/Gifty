@@ -2,15 +2,10 @@ import UIKit
 import SnapKit
 import Then
 import RealmSwift
-
-struct Gifticon {
-    let image: String
-    let title: String
-    let usage: String
-    let date: String
-}
+import Realm
 
 class MainViewController: BaseViewController {
+    
     private let iconImageView = UIImageView().then {
         $0.image = UIImage(named: "GiftyBox")
     }
@@ -40,18 +35,27 @@ class MainViewController: BaseViewController {
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
 
-    private var gifticonData: [Gifticon] = []
+    private var gifticons: Results<GifticonModel>?
+    private var notificationToken: NotificationToken?
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gifticonTableView.dataSource = self
         gifticonTableView.delegate = self
-        view.backgroundColor = .FFF_7_EC
+        
         setupTitleLabel()
-        setupSampleData()
-        updateUI()
+        loadGifticons()
+        setupRealmNotification()
+    }
+    
+    @MainActor
+    deinit {
+        notificationToken?.invalidate()
     }
 
+    // MARK: - UI Setup
+    
     override func addView() {
         [
             iconImageView,
@@ -92,51 +96,67 @@ class MainViewController: BaseViewController {
             $0.height.equalTo(113)
         }
     }
-
+    
+    // MARK: - Private Methods
+    
     private func setupTitleLabel() {
         if let nickname = RealmManager.shared.getNickname() {
             titleLabel.text = "\(nickname)님의 교환권"
         } else {
-            titleLabel.text = "Gifty님의 교환권"
+            titleLabel.text = "Gifty님의 교환권" // Fallback text
         }
     }
     
-    private func setupSampleData() {
-        gifticonData.append(Gifticon(image: "GiftyBox", title: "스타벅스 아메리카노", usage: "스타벅스", date: "2025.12.25"))
-        gifticonData.append(Gifticon(image: "GiftyBox", title: "투썸플레이스 케이크", usage: "투썸플레이스", date: "2025.11.10"))
-        gifticonData.append(Gifticon(image: "GiftyBox", title: "BHC 치킨", usage: "BHC", date: "2025.10.31"))
+    private func loadGifticons() {
+        gifticons = RealmManager.shared.getAllGifticons()
+        updateUI()
+        gifticonTableView.reloadData()
     }
-
-    private func updateUI() {
-        if gifticonData.isEmpty {
-            gifticonTableView.isHidden = true
-            noneLabel.isHidden = false
-            boxImageView.isHidden = false
-        } else {
-            gifticonTableView.isHidden = false
-            noneLabel.isHidden = true
-            boxImageView.isHidden = true
-            gifticonTableView.reloadData()
+    
+    private func setupRealmNotification() {
+        notificationToken = gifticons?.observe { [weak self] (changes: RealmCollectionChange) in
+            guard let self = self else { return }
+            switch changes {
+            case .initial, .update:
+                self.updateUI()
+                self.gifticonTableView.reloadData()
+            case .error(let error):
+                fatalError("\(error)")
+            }
         }
+    }
+    
+    private func updateUI() {
+        let hasGifticons = !(gifticons?.isEmpty ?? true)
+        gifticonTableView.isHidden = !hasGifticons
+        noneLabel.isHidden = hasGifticons
+        boxImageView.isHidden = hasGifticons
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return gifticonData.count
+        return gifticons?.count ?? 0
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell,
+              let gifticon = gifticons?[indexPath.row] else {
             return UITableViewCell()
         }
-
-        let data = gifticonData[indexPath.row]
-        cell.configure(image: UIImage(named: data.image), title: data.title, usage: data.usage, date: data.date)
-
+        
+        let image = gifticon.imageData != nil ? UIImage(data: gifticon.imageData!) : nil
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let dateString = dateFormatter.string(from: gifticon.expirationDate)
+        
+        cell.configure(image: image, title: gifticon.gifticonName, usage: gifticon.usage, date: dateString)
+        
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 102
     }
