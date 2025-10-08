@@ -1,14 +1,32 @@
 import UIKit
+import RealmSwift
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
+    func printRealmPath() {
+        if let fileURL = Realm.Configuration.defaultConfiguration.fileURL {
+            print("📂 Realm file path: \(fileURL.path)")
+        } else {
+            print("⚠️ Realm file URL not found.")
+        }
+    }
+
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let rootVC = GiftyTabBarController() // 여기부터
+        
+        let rootVC: UIViewController
+
+        if RealmManager.shared.getNickname() != nil {
+            rootVC = GiftyTabBarController()
+        } else {
+            rootVC = NicknameViewController()
+        }
+        printRealmPath()
+
         let navController = UINavigationController(rootViewController: rootVC)
-        window?.rootViewController = navController // 여기까지
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
     }
 

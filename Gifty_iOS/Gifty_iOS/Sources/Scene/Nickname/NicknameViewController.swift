@@ -83,15 +83,46 @@ class NicknameViewController: BaseViewController {
             preferredStyle: .alert
         )
         
-        let confirmAction = UIAlertAction(title: "확인", style: .default)
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.goToMainScreen()
+        }
         alert.addAction(confirmAction)
         
         present(alert, animated: true)
+    }
+
+    private func goToMainScreen() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            return
+        }
+
+        let tabBarController = GiftyTabBarController()
+        let navController = UINavigationController(rootViewController: tabBarController)
+
+        UIView.transition(with: sceneDelegate.window!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            sceneDelegate.window?.rootViewController = navController
+        })
     }
 
     func updateNicknameButtonState(isEnabled: Bool, backgroundColor: UIColor, textColor: UIColor) {
         nicknameButton.isEnabled = isEnabled
         nicknameButton.backgroundColor = backgroundColor
         nicknameButton.setTitleColor(textColor, for: .normal)
+    }
+}
+
+extension NicknameViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+        if newText.count < 1 {
+            updateNicknameButtonState(isEnabled: false, backgroundColor: .FCEDD_0, textColor: .DDC_495)
+        } else {
+            updateNicknameButtonState(isEnabled: true, backgroundColor: .FDE_1_AD, textColor: .A_98_E_5_C)
+        }
+        
+        return true
     }
 }
