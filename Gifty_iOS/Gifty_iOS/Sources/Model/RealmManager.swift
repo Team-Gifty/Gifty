@@ -6,7 +6,14 @@ class RealmManager {
     
     private var realm: Realm {
         do {
-            return try Realm()
+            let config = Realm.Configuration(
+                schemaVersion: 2,
+                migrationBlock: {
+                    migration, oldSchemaVersion in
+                    if oldSchemaVersion < 2 {}
+                }
+            )
+            return try Realm(configuration: config)
         } catch {
             fatalError("Realm 초기화 실패: \(error.localizedDescription)")
         }
