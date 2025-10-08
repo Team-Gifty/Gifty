@@ -1,6 +1,7 @@
 import UIKit
 import SnapKit
 import Then
+import RealmSwift
 
 struct Gifticon {
     let image: String
@@ -15,7 +16,7 @@ class MainViewController: BaseViewController {
     }
 
     private let titleLabel = UILabel().then {
-        $0.text = "이거주희님의 교환권"
+        $0.text = ""
         $0.textColor = ._6_A_4_C_4_C
         $0.font = .nicknameFont(size: 15)
     }
@@ -46,6 +47,7 @@ class MainViewController: BaseViewController {
         gifticonTableView.dataSource = self
         gifticonTableView.delegate = self
         view.backgroundColor = .FFF_7_EC
+        setupTitleLabel()
         setupSampleData()
         updateUI()
     }
@@ -91,6 +93,14 @@ class MainViewController: BaseViewController {
         }
     }
 
+    private func setupTitleLabel() {
+        if let nickname = RealmManager.shared.getNickname() {
+            titleLabel.text = "\(nickname)님의 교환권"
+        } else {
+            titleLabel.text = "Gifty님의 교환권"
+        }
+    }
+    
     private func setupSampleData() {
         gifticonData.append(Gifticon(image: "GiftyBox", title: "스타벅스 아메리카노", usage: "스타벅스", date: "2025.12.25"))
         gifticonData.append(Gifticon(image: "GiftyBox", title: "투썸플레이스 케이크", usage: "투썸플레이스", date: "2025.11.10"))
@@ -128,7 +138,6 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // Height for cell(89) + spacing(13) = 102
         return 102
     }
 }
