@@ -5,6 +5,8 @@ import Then
 class UploadViewController: BaseViewController, UINavigationControllerDelegate {
     
     
+    var state: Bool = false
+    
     let photoDescriptionLabel = UILabel().then {
         $0.text = "등록할 교환권 이미지를 넣어주세요 :)"
         $0.textAlignment = .center

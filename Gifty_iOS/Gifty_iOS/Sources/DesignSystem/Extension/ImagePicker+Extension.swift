@@ -4,6 +4,7 @@ extension UploadViewController: UIImagePickerControllerDelegate {
     // 이미지피커 선택이 완료되면 전달되는 델리게이트
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
+        
         // 이미지를 받아와서 plusPhotoButton의 Image로
         guard let selectedImage = info[.editedImage] as? UIImage else { return }
         
@@ -32,8 +33,10 @@ extension UploadViewController: UIImagePickerControllerDelegate {
         
         imageuploadButton.addSubview(imageView)
         
-        
+        state = true
+        informationButton.isEnabled = state
         
         self.dismiss(animated: true, completion: nil)
+        
     }
 }
