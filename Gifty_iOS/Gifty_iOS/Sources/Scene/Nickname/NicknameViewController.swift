@@ -83,10 +83,26 @@ class NicknameViewController: BaseViewController {
             preferredStyle: .alert
         )
         
-        let confirmAction = UIAlertAction(title: "확인", style: .default)
+        let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            self?.goToMainScreen()
+        }
         alert.addAction(confirmAction)
         
         present(alert, animated: true)
+    }
+
+    private func goToMainScreen() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            return
+        }
+
+        let tabBarController = GiftyTabBarController()
+        let navController = UINavigationController(rootViewController: tabBarController)
+
+        UIView.transition(with: sceneDelegate.window!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            sceneDelegate.window?.rootViewController = navController
+        })
     }
 
     func updateNicknameButtonState(isEnabled: Bool, backgroundColor: UIColor, textColor: UIColor) {
@@ -96,7 +112,6 @@ class NicknameViewController: BaseViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
 extension NicknameViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
