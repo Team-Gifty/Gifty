@@ -37,6 +37,19 @@ class MainViewController: BaseViewController {
 
     private var gifts: Results<Gift>?
     private var notificationToken: NotificationToken?
+    
+    var ShowCheckModal = false
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if ShowCheckModal {
+            ShowCheckModal = false
+            let checkModalVC = CheckModalViewController()
+            checkModalVC.modalPresentationStyle = .overFullScreen
+            present(checkModalVC, animated: false)
+        }
+    }
 
     
     override func viewDidLoad() {

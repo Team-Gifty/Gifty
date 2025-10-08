@@ -126,6 +126,10 @@ class UploadViewController: BaseViewController {
         
         clearInputs()
         
+        if let mainVC = self.tabBarController?.viewControllers?[0] as? MainViewController {
+            mainVC.ShowCheckModal = true
+        }
+        
         self.tabBarController?.selectedIndex = 0
     }
     
