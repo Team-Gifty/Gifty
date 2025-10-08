@@ -2,7 +2,7 @@ import UIKit
 import SnapKit
 import Then
 
-class UploadViewController: BaseViewController {
+class UploadViewController: BaseViewController, UINavigationControllerDelegate {
     
     
     let photoDescriptionLabel = UILabel().then {
@@ -42,9 +42,10 @@ class UploadViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        imageuploadButton.addTarget(self, action: #selector(imageuploadButtonTapped), for: .touchUpInside)
     }
     
-//    imageuploadButton.addTarget(self, action: #selector(imageuploadButtonTapped), for: .touchUpInside)
     
     
     override func addView() {
@@ -86,15 +87,14 @@ class UploadViewController: BaseViewController {
     }
     
     
-//    @objc func imageuploadButtonTapped() {
-//        //이미지 피커 설정
-//        let picker = UIImagePickerController()
-//        picker.delegate = self
-//        picker.allowsEditing = true
-//        
-//        present(picker, animated: true, completion: nil)
-//    }
-//    
+    @objc func imageuploadButtonTapped(){
+        //이미지 피커 설정
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        
+        present(picker, animated: true, completion: nil)
+    }
     
     
 }
