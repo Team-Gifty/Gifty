@@ -72,7 +72,7 @@ class MainViewController: BaseViewController {
         }
 
         gifticonTableView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(88)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(31)
             $0.trailing.equalToSuperview().offset(-28)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-81)
