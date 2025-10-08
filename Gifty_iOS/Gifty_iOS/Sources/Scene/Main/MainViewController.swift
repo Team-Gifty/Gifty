@@ -81,7 +81,7 @@ class MainViewController: BaseViewController {
             $0.top.equalTo(titleLabel.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(31)
             $0.trailing.equalToSuperview().offset(-28)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-81)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
 
         noneLabel.snp.makeConstraints {
