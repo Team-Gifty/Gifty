@@ -35,7 +35,7 @@ class MainViewController: BaseViewController {
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
 
-    private var gifticons: Results<GifticonModel>?
+    private var gifts: Results<Gift>?
     private var notificationToken: NotificationToken?
 
     
@@ -45,8 +45,13 @@ class MainViewController: BaseViewController {
         gifticonTableView.delegate = self
         
         setupTitleLabel()
-        loadGifticons()
+        loadGifts()
         setupRealmNotification()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        gifticonTableView.reloadData()
     }
     
     @MainActor
@@ -100,21 +105,21 @@ class MainViewController: BaseViewController {
     // MARK: - Private Methods
     
     private func setupTitleLabel() {
-        if let nickname = RealmManager.shared.getNickname() {
+        if let nickname = RealmManager.shared.getUser()?.nickname {
             titleLabel.text = "\(nickname)님의 교환권"
         } else {
             titleLabel.text = "Gifty님의 교환권" // Fallback text
         }
     }
     
-    private func loadGifticons() {
-        gifticons = RealmManager.shared.getAllGifticons()
+    private func loadGifts() {
+        gifts = RealmManager.shared.getGifts()
         updateUI()
         gifticonTableView.reloadData()
     }
     
     private func setupRealmNotification() {
-        notificationToken = gifticons?.observe { [weak self] (changes: RealmCollectionChange) in
+        notificationToken = gifts?.observe { [weak self] (changes: RealmCollectionChange) in
             guard let self = self else { return }
             switch changes {
             case .initial, .update:
@@ -127,32 +132,34 @@ class MainViewController: BaseViewController {
     }
     
     private func updateUI() {
-        let hasGifticons = !(gifticons?.isEmpty ?? true)
-        gifticonTableView.isHidden = !hasGifticons
-        noneLabel.isHidden = hasGifticons
-        boxImageView.isHidden = hasGifticons
+        let hasGifts = !(gifts?.isEmpty ?? true)
+        gifticonTableView.isHidden = !hasGifts
+        noneLabel.isHidden = hasGifts
+        boxImageView.isHidden = hasGifts
     }
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return gifticons?.count ?? 0
+        return gifts?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell,
-              let gifticon = gifticons?[indexPath.row] else {
+              let gift = gifts?[indexPath.row] else {
             return UITableViewCell()
         }
         
-        let image = gifticon.imageData != nil ? UIImage(data: gifticon.imageData!) : nil
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
+        let image = UIImage(contentsOfFile: fileURL.path)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
-        let dateString = dateFormatter.string(from: gifticon.expirationDate)
+        let dateString = dateFormatter.string(from: gift.expiryDate)
         
-        cell.configure(image: image, title: gifticon.gifticonName, usage: gifticon.usage, date: dateString)
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString)
         
         return cell
     }

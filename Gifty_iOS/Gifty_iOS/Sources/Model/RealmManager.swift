@@ -6,13 +6,7 @@ class RealmManager {
     
     private var realm: Realm {
         do {
-            let config = Realm.Configuration(
-                schemaVersion: 2,
-                migrationBlock: {
-                    migration, oldSchemaVersion in
-                    if oldSchemaVersion < 2 {}
-                }
-            )
+            let config = Realm.Configuration(schemaVersion: 2)
             return try Realm(configuration: config)
         } catch {
             fatalError("Realm 초기화 실패: \(error.localizedDescription)")
@@ -21,59 +15,60 @@ class RealmManager {
     
     private init() {}
     
-    // MARK: - Nickname 저장
+    // MARK: - User
     func saveNickname(_ nickname: String) {
-        do {
-            try realm.write {
-                // 기존 유저 데이터 삭제 (최신 닉네임만 유지)
-                let allUsers = realm.objects(UserModel.self)
-                realm.delete(allUsers)
-                
-                // 새로운 닉네임 저장
-                let user = UserModel(nickname: nickname)
-                realm.add(user)
+        let now = Date()
+        if let existingUser = realm.objects(User.self).first {
+            try! realm.write {
+                existingUser.nickname = nickname
+                existingUser.updatedAt = now
             }
-            print("✅ 닉네임 저장 성공: \(nickname)")
-        } catch {
-            print("❌ 닉네임 저장 실패: \(error.localizedDescription)")
+        } else {
+            let newUser = User()
+            newUser.id = ObjectId.generate()
+            newUser.nickname = nickname
+            newUser.createdAt = now
+            newUser.updatedAt = now
+            try! realm.write {
+                realm.add(newUser)
+            }
         }
     }
     
-    // MARK: - Nickname 읽기
-    func getNickname() -> String? {
-        let users = realm.objects(UserModel.self).sorted(byKeyPath: "createdAt", ascending: false)
-        return users.first?.nickname
+    func getUser() -> User? {
+        return realm.objects(User.self).first
     }
     
-    // MARK: - Nickname 삭제
-    func deleteNickname() {
-        do {
-            try realm.write {
-                let allUsers = realm.objects(UserModel.self)
-                realm.delete(allUsers)
-            }
-            print("✅ 닉네임 삭제 성공")
-        } catch {
-            print("❌ 닉네임 삭제 실패: \(error.localizedDescription)")
+    func deleteUser() {
+        try! realm.write {
+            realm.delete(realm.objects(User.self))
         }
     }
     
-    // MARK: - Gifticon CRUD
-    
-    // Create
-    func saveGifticon(model: GifticonModel) {
-        do {
-            try realm.write {
-                realm.add(model)
-            }
-            print("✅ 기프티콘 저장 성공: \(model.gifticonName)")
-        } catch {
-            print("❌ 기프티콘 저장 실패: \(error.localizedDescription)")
+    // MARK: - Gift
+    func saveGift(name: String, usage: String, expiryDate: Date, memo: String?, imagePath: String) {
+        guard let user = getUser() else { return }
+        
+        let newGift = Gift()
+        newGift.id = ObjectId.generate()
+        newGift.name = name
+        newGift.usage = usage
+        newGift.expiryDate = expiryDate
+        newGift.memo = memo
+        newGift.imagePath = imagePath
+        
+        try! realm.write {
+            user.gifts.append(newGift)
         }
     }
     
-    // Read
-    func getAllGifticons() -> Results<GifticonModel> {
-        return realm.objects(GifticonModel.self).sorted(byKeyPath: "createdAt", ascending: false)
+    func getGifts() -> Results<Gift> {
+        return realm.objects(Gift.self)
+    }
+    
+    func deleteGift(_ gift: Gift) {
+        try! realm.write {
+            realm.delete(gift)
+        }
     }
 }

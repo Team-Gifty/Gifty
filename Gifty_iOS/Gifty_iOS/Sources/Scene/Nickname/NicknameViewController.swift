@@ -69,10 +69,10 @@ class NicknameViewController: BaseViewController {
     }
 
     private func loadNickname() {
-        if let savedNickname = RealmManager.shared.getNickname() {
+        if let savedNickname = RealmManager.shared.getUser()?.nickname {
             nicknameField.text = savedNickname
             updateNicknameButtonState(isEnabled: true, backgroundColor: .FDE_1_AD, textColor: .A_98_E_5_C)
-            print("✅ 저장된 닉네임 불러오기: \(savedNickname)")
+            print("✅ 저장된 닉네임 불러오기: \(savedNickname ?? "")")
         }
     }
 

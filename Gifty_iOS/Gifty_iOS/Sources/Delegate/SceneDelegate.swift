@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let rootVC: UIViewController
 
-        if RealmManager.shared.getNickname() != nil {
+        if RealmManager.shared.getUser() != nil {
             rootVC = GiftyTabBarController()
         } else {
             rootVC = NicknameViewController()
