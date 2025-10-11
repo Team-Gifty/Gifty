@@ -4,6 +4,7 @@ import Then
 
 class DeleteModalViewController: BaseViewController {
     
+    
     let ModalView = UIView().then {
         $0.layer.cornerRadius = 15
         $0.layer.borderWidth = 1
@@ -109,5 +110,6 @@ class DeleteModalViewController: BaseViewController {
         }
         
     }
+    
     
 }
