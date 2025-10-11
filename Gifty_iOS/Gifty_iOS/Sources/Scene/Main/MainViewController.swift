@@ -15,6 +15,20 @@ class MainViewController: BaseViewController {
         $0.textColor = ._6_A_4_C_4_C
         $0.font = .nicknameFont(size: 15)
     }
+    
+    private let sortButton = UIButton(type: .system).then {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(named: "arrowDown")
+        config.imagePlacement = .trailing
+        config.imagePadding = 4
+        config.baseForegroundColor = ._6_A_4_C_4_C
+        $0.configuration = config
+        $0.addTarget(self, action: #selector(toggleSortDropdown), for: .touchUpInside)
+    }
+    
+    private let sortDropDownView = SortDropDownView().then {
+        $0.isHidden = true
+    }
 
     private let noneLabel = UILabel().then {
         $0.text = "아직 등록된 교환권이 없어요"
@@ -37,27 +51,18 @@ class MainViewController: BaseViewController {
 
     private var gifts: Results<Gift>?
     private var notificationToken: NotificationToken?
+    private var currentSortOrder: SortOrder = .byRegistrationDate
     
     var ShowCheckModal = false
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if ShowCheckModal {
-            ShowCheckModal = false
-            let checkModalVC = CheckModalViewController()
-            checkModalVC.modalPresentationStyle = .overFullScreen
-            present(checkModalVC, animated: false)
-        }
-    }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
         gifticonTableView.dataSource = self
         gifticonTableView.delegate = self
+        sortDropDownView.delegate = self
         
         setupTitleLabel()
+        updateSortButtonTitle()
         loadGifts()
         setupRealmNotification()
     }
@@ -65,6 +70,13 @@ class MainViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         gifticonTableView.reloadData()
+        
+        if ShowCheckModal {
+            ShowCheckModal = false
+            let checkModalVC = CheckModalViewController()
+            checkModalVC.modalPresentationStyle = .overFullScreen
+            present(checkModalVC, animated: false)
+        }
     }
     
     @MainActor
@@ -78,6 +90,8 @@ class MainViewController: BaseViewController {
         [
             iconImageView,
             titleLabel,
+            sortButton,
+            sortDropDownView,
             noneLabel,
             boxImageView,
             gifticonTableView
@@ -94,9 +108,19 @@ class MainViewController: BaseViewController {
             $0.centerY.equalTo(iconImageView)
             $0.leading.equalTo(iconImageView.snp.trailing).offset(8)
         }
+        
+        sortButton.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.trailing.equalToSuperview().inset(33)
+        }
+        
+        sortDropDownView.snp.makeConstraints {
+            $0.top.equalTo(sortButton.snp.bottom).offset(8)
+            $0.trailing.equalTo(sortButton.snp.trailing)
+        }
 
         gifticonTableView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(32)
+            $0.top.equalTo(sortButton.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(31)
             $0.trailing.equalToSuperview().offset(-28)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
@@ -126,7 +150,7 @@ class MainViewController: BaseViewController {
     }
     
     private func loadGifts() {
-        gifts = RealmManager.shared.getGifts()
+        gifts = RealmManager.shared.getGifts(sortedBy: currentSortOrder)
         updateUI()
         gifticonTableView.reloadData()
     }
@@ -149,6 +173,21 @@ class MainViewController: BaseViewController {
         gifticonTableView.isHidden = !hasGifts
         noneLabel.isHidden = hasGifts
         boxImageView.isHidden = hasGifts
+        sortButton.isHidden = !hasGifts
+    }
+    
+    private func updateSortButtonTitle() {
+        let title = currentSortOrder == .byExpiryDate ? "짧은 유효기간 순" : "최신 등록 순"
+        var attText = AttributedString(title)
+        attText.font = .giftyFont(size: 16)
+        sortButton.configuration?.attributedTitle = attText
+    }
+    
+    @objc private func toggleSortDropdown() {
+        sortDropDownView.isHidden.toggle()
+        if !sortDropDownView.isHidden {
+            view.bringSubviewToFront(sortDropDownView)
+        }
     }
 }
 
@@ -179,5 +218,15 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 102
+    }
+}
+
+extension MainViewController: SortDropDownViewDelegate {
+    func sortButtonTapped(sortOrder: SortOrder) {
+        currentSortOrder = sortOrder
+        sortDropDownView.set(sortOrder: sortOrder)
+        sortDropDownView.isHidden = true
+        updateSortButtonTitle()
+        loadGifts()
     }
 }

@@ -58,17 +58,14 @@ class CheckModalViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         
         ModalView.alpha = 0
         
-        // 페이드인
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.3) {
             self.ModalView.alpha = 1
-        }) { _ in
-            UIView.animate(withDuration: 0.3, delay: 2.0, options: [], animations: {
-                
-            }) { _ in
+        } completion: { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.dismiss(animated: false, completion: nil)
             }
         }

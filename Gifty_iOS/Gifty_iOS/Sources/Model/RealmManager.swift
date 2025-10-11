@@ -62,8 +62,29 @@ class RealmManager {
         }
     }
     
-    func getGifts() -> Results<Gift> {
-        return realm.objects(Gift.self)
+    func getGifts(sortedBy sortOrder: SortOrder = .byRegistrationDate) -> Results<Gift> {
+        switch sortOrder {
+        case .byRegistrationDate:
+            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
+        case .byExpiryDate:
+            return realm.objects(Gift.self).sorted(byKeyPath: "expiryDate", ascending: true)
+        }
+    }
+    
+    func searchGifts(name: String) -> Results<Gift> {
+        let predicate = NSPredicate(format: "name CONTAINS[c] %@", name)
+        return realm.objects(Gift.self).filter(predicate)
+    }
+    
+    func searchGifts(query: String, filter: SearchFilter) -> Results<Gift> {
+        let predicate: NSPredicate
+        switch filter {
+        case .productName:
+            predicate = NSPredicate(format: "name CONTAINS[c] %@", query)
+        case .usage:
+            predicate = NSPredicate(format: "usage CONTAINS[c] %@", query)
+        }
+        return realm.objects(Gift.self).filter(predicate)
     }
     
     func deleteGift(_ gift: Gift) {
