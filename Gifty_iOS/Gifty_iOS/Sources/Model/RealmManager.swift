@@ -66,6 +66,11 @@ class RealmManager {
         return realm.objects(Gift.self)
     }
     
+    func searchGifts(name: String) -> Results<Gift> {
+        let predicate = NSPredicate(format: "name CONTAINS[c] %@", name)
+        return realm.objects(Gift.self).filter(predicate)
+    }
+    
     func deleteGift(_ gift: Gift) {
         try! realm.write {
             realm.delete(gift)

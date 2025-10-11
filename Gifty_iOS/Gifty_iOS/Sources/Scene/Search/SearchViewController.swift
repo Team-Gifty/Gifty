@@ -1,8 +1,11 @@
 import UIKit
 import SnapKit
 import Then
+import RealmSwift
 
 class SearchViewController: BaseViewController {
+    
+    private var searchResults: Results<Gift>?
     
     let searchTextField = UITextField().then {
         $0.placeholder = "검색"
@@ -36,7 +39,6 @@ class SearchViewController: BaseViewController {
         rightButton.frame = CGRect(x: 0, y: 4, width: 21.27, height: 13)
         rightContainer.addSubview(rightButton)
 
-        // 텍스트필드 오른쪽에 버튼 추가
         $0.rightView = rightContainer
         $0.rightViewMode = .always
         
@@ -47,12 +49,28 @@ class SearchViewController: BaseViewController {
         $0.textColor = ._7_F_7_D_7_D
         $0.font = .giftyFont(size: 28)
     }
+    
+    private let gifticonTableView = UITableView().then {
+        $0.backgroundColor = .clear
+        $0.separatorStyle = .none
+        $0.showsVerticalScrollIndicator = false
+        $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        searchTextField.delegate = self
+        gifticonTableView.dataSource = self
+        gifticonTableView.delegate = self
+        updateUI()
+    }
 
     
     override func addView() {
         [
             searchTextField,
-            searchDescriptionLabel
+            searchDescriptionLabel,
+            gifticonTableView
         ].forEach { view.addSubview($0) }
     }
     
@@ -67,5 +85,59 @@ class SearchViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(searchTextField.snp.bottom).offset(246)
         }
+        
+        gifticonTableView.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(31)
+            $0.trailing.equalToSuperview().offset(-28)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
+        }
+    }
+    
+    private func updateUI() {
+        let hasResults = !(searchResults?.isEmpty ?? true)
+        gifticonTableView.isHidden = !hasResults
+        searchDescriptionLabel.isHidden = hasResults
+    }
+}
+
+extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell,
+              let gift = searchResults?[indexPath.row] else {
+            return UITableViewCell()
+        }
+        
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
+        let image = UIImage(contentsOfFile: fileURL.path)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let dateString = dateFormatter.string(from: gift.expiryDate)
+        
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 102
+    }
+}
+
+extension SearchViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if let searchText = textField.text, !searchText.isEmpty {
+            searchResults = RealmManager.shared.searchGifts(name: searchText)
+        } else {
+            searchResults = nil
+        }
+        updateUI()
+        gifticonTableView.reloadData()
     }
 }
