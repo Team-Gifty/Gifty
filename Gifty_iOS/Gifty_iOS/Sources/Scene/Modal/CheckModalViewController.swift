@@ -11,11 +11,11 @@ class CheckModalViewController: BaseViewController {
         $0.backgroundColor = UIColor.F_7_EAD_8
     }
     
-    let CheckImageView = UIImageView().then {
+    let checkImageView = UIImageView().then {
         $0.image = UIImage.check
     }
     
-    let CheckLabel = UILabel().then {
+    let checkLabel = UILabel().then {
         $0.text = "정상적으로 등록되었습니다"
         $0.textColor = ._6_A_4_C_4_C
         $0.font = .giftyFont(size: 23)
@@ -30,8 +30,8 @@ class CheckModalViewController: BaseViewController {
     
     override func addView() {
         [
-            CheckImageView,
-            CheckLabel
+            checkImageView,
+            checkLabel
         ].forEach { ModalView.addSubview($0) }
         
         [
@@ -46,14 +46,14 @@ class CheckModalViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview().inset(325)
         }
-        CheckImageView.snp.makeConstraints {
+        checkImageView.snp.makeConstraints {
             $0.width.height.equalTo(38)
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview().inset(16)
         }
-        CheckLabel.snp.makeConstraints {
+        checkLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(CheckImageView.snp.bottom).offset(11)
+            $0.top.equalTo(checkImageView.snp.bottom).offset(11)
         }
     }
     
