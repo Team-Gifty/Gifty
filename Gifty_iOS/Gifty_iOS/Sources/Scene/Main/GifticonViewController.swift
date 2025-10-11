@@ -4,14 +4,14 @@ import Then
 
 class GifticonViewController: BaseViewController {
     
-    let imageView = UIImageView().then {
+    private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 15
     }
     
-    let shadowView = UIView().then {
+    private let shadowView = UIView().then {
         $0.backgroundColor = .clear
         $0.layer.cornerRadius = 15
         $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
@@ -20,74 +20,74 @@ class GifticonViewController: BaseViewController {
     }
     
     
-    let productLabel = UILabel().then {
+    private let productLabel = UILabel().then {
         $0.text = "상품명"
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
     
-    let productcontentLabel = UILabel().then {
+    private let productcontentLabel = UILabel().then {
         $0.text = "상품명 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
     
-    let storeLabel = UILabel().then {
+    private  let storeLabel = UILabel().then {
         $0.text = "사용처"
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
     
-    let storecontentLabel = UILabel().then {
+    private let storecontentLabel = UILabel().then {
         $0.text = "사용처 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
     
-    let expiryLabel = UILabel().then {
+    private  let expiryLabel = UILabel().then {
         $0.text = "유효기간"
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
     
-    let expirycontentLabel = UILabel().then {
+    private   let expirycontentLabel = UILabel().then {
         $0.text = "유효기간 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
     
-    let memoLabel = UILabel().then {
+    private let memoLabel = UILabel().then {
         $0.text = "메모"
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
     
-    let memocontentLabel = UILabel().then {
+    private let memocontentLabel = UILabel().then {
         $0.text = "등록된 메모가 없어요"
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
     
-    let pView = UIView()
-    let sView = UIView()
-    let eView = UIView()
-    let mView = UIView()
-    let contentView = UIView()
+    private let pView = UIView()
+    private   let sView = UIView()
+    private    let eView = UIView()
+    private  let mView = UIView()
+    private  let contentView = UIView()
     
-    let modifyButton = UIButton().then {
+    private   let modifyButton = UIButton().then {
         $0.setImage(UIImage(named: "Modify"), for: .normal)
     }
     
-    let shareButton = UIButton().then {
+    private  let shareButton = UIButton().then {
         $0.setImage(UIImage(named: "Share"), for: .normal)
     }
     
-    let deleteButton = UIButton().then {
+    private  let deleteButton = UIButton().then {
         $0.setImage(UIImage(named: "Delete"), for: .normal)
         $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
-    let exitButton = UIButton().then {
+    private let exitButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
     }
     
