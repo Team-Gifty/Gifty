@@ -62,8 +62,13 @@ class RealmManager {
         }
     }
     
-    func getGifts() -> Results<Gift> {
-        return realm.objects(Gift.self)
+    func getGifts(sortedBy sortOrder: SortOrder = .byRegistrationDate) -> Results<Gift> {
+        switch sortOrder {
+        case .byRegistrationDate:
+            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
+        case .byExpiryDate:
+            return realm.objects(Gift.self).sorted(byKeyPath: "expiryDate", ascending: true)
+        }
     }
     
     func searchGifts(name: String) -> Results<Gift> {
