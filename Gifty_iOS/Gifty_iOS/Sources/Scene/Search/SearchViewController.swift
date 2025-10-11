@@ -6,8 +6,11 @@ import RealmSwift
 class SearchViewController: BaseViewController {
     
     private var searchResults: Results<Gift>?
+    private var currentFilter: SearchFilter = .productName
+    private let filterDropDownView = FilterDropDownView()
+
     
-    let searchTextField = UITextField().then {
+    lazy var searchTextField = UITextField().then {
         $0.placeholder = "검색"
         $0.textColor = ._6_A_4_C_4_C
         $0.backgroundColor = UIColor.EFE_4_D_3
@@ -38,6 +41,8 @@ class SearchViewController: BaseViewController {
         let rightContainer = UIView(frame: CGRect(x: 0, y: 0, width: 36, height: 24))
         rightButton.frame = CGRect(x: 0, y: 4, width: 21.27, height: 13)
         rightContainer.addSubview(rightButton)
+        rightButton.addTarget(self, action: #selector(toggleFilterDropdown), for: .touchUpInside)
+
 
         $0.rightView = rightContainer
         $0.rightViewMode = .always
@@ -62,6 +67,8 @@ class SearchViewController: BaseViewController {
         searchTextField.delegate = self
         gifticonTableView.dataSource = self
         gifticonTableView.delegate = self
+        filterDropDownView.delegate = self
+        filterDropDownView.isHidden = true
         updateUI()
     }
 
@@ -70,7 +77,8 @@ class SearchViewController: BaseViewController {
         [
             searchTextField,
             searchDescriptionLabel,
-            gifticonTableView
+            gifticonTableView,
+            filterDropDownView
         ].forEach { view.addSubview($0) }
     }
     
@@ -92,12 +100,33 @@ class SearchViewController: BaseViewController {
             $0.trailing.equalToSuperview().offset(-28)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
+        
+        filterDropDownView.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(3)
+            $0.trailing.equalTo(searchTextField.snp.trailing)
+            $0.width.equalTo(94)
+            $0.height.equalTo(54)
+        }
     }
     
     private func updateUI() {
         let hasResults = !(searchResults?.isEmpty ?? true)
         gifticonTableView.isHidden = !hasResults
         searchDescriptionLabel.isHidden = hasResults
+    }
+    
+    @objc private func toggleFilterDropdown() {
+        filterDropDownView.isHidden.toggle()
+    }
+    
+    private func performSearch() {
+        if let searchText = searchTextField.text, !searchText.isEmpty {
+            searchResults = RealmManager.shared.searchGifts(query: searchText, filter: currentFilter)
+        } else {
+            searchResults = nil
+        }
+        updateUI()
+        gifticonTableView.reloadData()
     }
 }
 
@@ -132,12 +161,14 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension SearchViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if let searchText = textField.text, !searchText.isEmpty {
-            searchResults = RealmManager.shared.searchGifts(name: searchText)
-        } else {
-            searchResults = nil
-        }
-        updateUI()
-        gifticonTableView.reloadData()
+        performSearch()
+    }
+}
+
+extension SearchViewController: FilterDropDownViewDelegate {
+    func filterButtonTapped(filter: SearchFilter) {
+        self.currentFilter = filter
+        filterDropDownView.isHidden = true
+        performSearch()
     }
 }

@@ -71,6 +71,17 @@ class RealmManager {
         return realm.objects(Gift.self).filter(predicate)
     }
     
+    func searchGifts(query: String, filter: SearchFilter) -> Results<Gift> {
+        let predicate: NSPredicate
+        switch filter {
+        case .productName:
+            predicate = NSPredicate(format: "name CONTAINS[c] %@", query)
+        case .usage:
+            predicate = NSPredicate(format: "usage CONTAINS[c] %@", query)
+        }
+        return realm.objects(Gift.self).filter(predicate)
+    }
+    
     func deleteGift(_ gift: Gift) {
         try! realm.write {
             realm.delete(gift)
