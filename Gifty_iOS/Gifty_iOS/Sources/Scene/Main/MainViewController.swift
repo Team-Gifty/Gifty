@@ -40,18 +40,6 @@ class MainViewController: BaseViewController {
     
     var ShowCheckModal = false
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        if ShowCheckModal {
-            ShowCheckModal = false
-            let checkModalVC = CheckModalViewController()
-            checkModalVC.modalPresentationStyle = .overFullScreen
-            present(checkModalVC, animated: false)
-        }
-    }
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         gifticonTableView.dataSource = self
@@ -65,6 +53,13 @@ class MainViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         gifticonTableView.reloadData()
+        
+        if ShowCheckModal {
+            ShowCheckModal = false
+            let checkModalVC = CheckModalViewController()
+            checkModalVC.modalPresentationStyle = .overFullScreen
+            present(checkModalVC, animated: false)
+        }
     }
     
     @MainActor
