@@ -8,14 +8,17 @@ class GifticonTableViewCell: UITableViewCell {
     
     private let containerView = UIView().then {
         $0.backgroundColor = .FFFEF_7
-        $0.layer.cornerRadius = 10
+        $0.layer.cornerRadius = 3
         $0.clipsToBounds = true
+        $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
+        $0.layer.shadowOpacity = 100
+        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
     }
     
     private let gifticonImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 8
+        $0.layer.cornerRadius = 3
         $0.backgroundColor = .lightGray
     }
     
