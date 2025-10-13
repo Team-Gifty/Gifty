@@ -3,7 +3,7 @@ import SnapKit
 import Then
 
 class CheckModalViewController: BaseViewController {
-    let ModalView = UIView().then {
+    let modalView = UIView().then {
         $0.layer.cornerRadius = 10
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.D_0_C_6_C_6.cgColor
@@ -31,15 +31,15 @@ class CheckModalViewController: BaseViewController {
         [
             checkImageView,
             checkLabel
-        ].forEach { ModalView.addSubview($0) }
+        ].forEach { modalView.addSubview($0) }
         
         [
-            ModalView
+            modalView
         ].forEach { view.addSubview($0) }
     }
 
     override func setLayout() {
-        ModalView.snp.makeConstraints {
+        modalView.snp.makeConstraints {
             $0.width.equalTo(230)
             $0.height.equalTo(110)
             $0.centerX.equalToSuperview()
@@ -59,10 +59,10 @@ class CheckModalViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        ModalView.alpha = 0
+        modalView.alpha = 0
         
         UIView.animate(withDuration: 0.3) {
-            self.ModalView.alpha = 1
+            self.modalView.alpha = 1
         } completion: { _ in
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.dismiss(animated: false, completion: nil)

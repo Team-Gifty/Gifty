@@ -3,7 +3,7 @@ import SnapKit
 import Then
 
 class DeleteModalViewController: BaseViewController {
-    let ModalView = UIView().then {
+    let modalView = UIView().then {
         $0.layer.cornerRadius = 15
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor._6_A_4_C_4_C.cgColor
@@ -58,7 +58,7 @@ class DeleteModalViewController: BaseViewController {
             deleteLabel,
             warningLabel,
             buttoncontainerView
-        ].forEach { ModalView.addSubview($0) }
+        ].forEach { modalView.addSubview($0) }
         
         [
             deleteButton,
@@ -66,12 +66,12 @@ class DeleteModalViewController: BaseViewController {
         ].forEach { buttoncontainerView.addSubview($0) }
         
         [
-            ModalView
+            modalView
         ].forEach { view.addSubview($0) }
     }
 
     override func setLayout() {
-        ModalView.snp.makeConstraints {
+        modalView.snp.makeConstraints {
             $0.width.equalTo(330)
             $0.height.equalTo(212)
             $0.centerX.equalTo(view)

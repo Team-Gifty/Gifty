@@ -75,6 +75,7 @@
 			buildConfigurationList = 85BB435E2E83F68F002330D2 /* Build configuration list for PBXNativeTarget "Gifty_iOS" */;
 			buildPhases = (
 				85BB43472E83F68E002330D2 /* Sources */,
+				6FD4A0772E9D38F800041C7B /* ShellScript */,
 				85BB43482E83F68E002330D2 /* Frameworks */,
 				85BB43492E83F68E002330D2 /* Resources */,
 			);
@@ -143,6 +144,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6FD4A0772E9D38F800041C7B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = " if which swiftlint >/dev/null; then\n    swiftlint\n    else\n      echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n   5 fi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		85BB43472E83F68E002330D2 /* Sources */ = {
