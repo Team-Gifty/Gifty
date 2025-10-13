@@ -4,9 +4,8 @@ import Then
 import RealmSwift
 
 class NicknameViewController: BaseViewController {
-    
     var nicknameState: Bool = false
-    
+
     let nicknameLabel = UILabel().then {
         $0.text = "사용하실 닉네임을 입력해주세요!"
         $0.textAlignment = .center
@@ -14,12 +13,12 @@ class NicknameViewController: BaseViewController {
         $0.font = .onboardingFont(size: 25)
         $0.textColor = ._6_A_4_C_4_C
     }
-    
+
     let nicknameField = GiftyTextField(
         hintText: "닉네임 입력",
         textAlign: .center
     )
-    
+
     let nicknameButton = GiftyButton(
         buttonText: "저장",
         isEnabled: false,
@@ -41,7 +40,7 @@ class NicknameViewController: BaseViewController {
         nicknameField.delegate = self
         nicknameButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
     }
-    
+
     override func setLayout() {
         nicknameLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -82,12 +81,10 @@ class NicknameViewController: BaseViewController {
             message: "닉네임 '\(nickname)'이(가) 저장되었습니다!",
             preferredStyle: .alert
         )
-        
         let confirmAction = UIAlertAction(title: "확인", style: .default) { [weak self] _ in
             self?.goToMainScreen()
         }
         alert.addAction(confirmAction)
-        
         present(alert, animated: true)
     }
 

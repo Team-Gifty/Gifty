@@ -3,18 +3,17 @@ import SnapKit
 import Then
 
 class CheckModalViewController: BaseViewController {
-    
     let ModalView = UIView().then {
         $0.layer.cornerRadius = 10
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.D_0_C_6_C_6.cgColor
         $0.backgroundColor = UIColor.F_7_EAD_8
     }
-    
+
     let checkImageView = UIImageView().then {
         $0.image = UIImage.check
     }
-    
+
     let checkLabel = UILabel().then {
         $0.text = "정상적으로 등록되었습니다"
         $0.textColor = ._6_A_4_C_4_C
@@ -22,12 +21,12 @@ class CheckModalViewController: BaseViewController {
         $0.textAlignment = .center
         $0.numberOfLines = 0
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
     }
-    
+
     override func addView() {
         [
             checkImageView,
@@ -38,7 +37,7 @@ class CheckModalViewController: BaseViewController {
             ModalView
         ].forEach { view.addSubview($0) }
     }
-    
+
     override func setLayout() {
         ModalView.snp.makeConstraints {
             $0.width.equalTo(230)
@@ -56,7 +55,7 @@ class CheckModalViewController: BaseViewController {
             $0.top.equalTo(checkImageView.snp.bottom).offset(11)
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         

@@ -40,8 +40,7 @@ class GiftyTextField: UIView {
             textField.textAlignment = textAlign
         }
     }
-    
-    // MARK: - Initializers
+
     convenience init(hintText: String, textAlign: NSTextAlignment = .left) {
         self.init(frame: .zero)
         self.hintText = hintText
@@ -58,19 +57,15 @@ class GiftyTextField: UIView {
         super.init(coder: coder)
         setupView()
     }
-    
-    // MARK: - Setup
+
     private func setupView() {
         [backgroundView, textField, underlineView].forEach {
             addSubview($0)
         }
-        
-        // TextField 설정
+
         textField.placeholder = hintText
         textField.textAlignment = textAlign
-        textField.tintColor = AppColors.selectedTab // 커서 색상
-        
-        // Placeholder 스타일 설정
+        textField.tintColor = AppColors.selectedTab
         if let placeholder = textField.placeholder {
             textField.attributedPlaceholder = NSAttributedString(
                 string: placeholder,
@@ -83,33 +78,29 @@ class GiftyTextField: UIView {
         
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
-        // 배경 뷰
         backgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        
-        // 텍스트 필드 (bottom에 8pt 패딩)
+
         textField.snp.makeConstraints {
             $0.leading.trailing.top.equalToSuperview().inset(12)
             $0.bottom.equalToSuperview().offset(-8)
             $0.centerX.equalToSuperview()
         }
-        
-        // 언더라인 (2pt 높이)
+
         underlineView.snp.makeConstraints {
             $0.leading.trailing.bottom.equalToSuperview()
             $0.height.equalTo(2)
             $0.width.equalTo(180)
         }
-        
-        // 전체 높이
+
         self.snp.makeConstraints {
             $0.height.equalTo(60)
         }
     }
-    
+
     var delegate: UITextFieldDelegate? {
             get { return textField.delegate }
             set { textField.delegate = newValue }
