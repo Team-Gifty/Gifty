@@ -219,6 +219,14 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 102
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let gift = gifts?[indexPath.row] else { return }
+        
+        let gifticonVC = GifticonViewController()
+        gifticonVC.gift = gift
+        navigationController?.pushViewController(gifticonVC, animated: true)
+    }
 }
 
 extension MainViewController: SortDropDownViewDelegate {

@@ -4,6 +4,8 @@ import Then
 
 class GifticonViewController: BaseViewController {
     
+    var gift: Gift?
+    
     private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
         $0.contentMode = .scaleAspectFill
@@ -89,13 +91,15 @@ class GifticonViewController: BaseViewController {
     
     private let exitButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
+        $0.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if let gift = gift {
+            configure(with: gift)
+        }
     }
-    
     
     override func addView() {
         
@@ -126,23 +130,39 @@ class GifticonViewController: BaseViewController {
         ].forEach { contentView.addSubview($0) }
     }
     
-    
-    override func setLayout() {
+    private func configure(with gift: Gift) {
+        productcontentLabel.text = gift.name
+        storecontentLabel.text = gift.usage
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        expirycontentLabel.text = dateFormatter.string(from: gift.expiryDate)
+        
+        memocontentLabel.text = gift.memo ?? "등록된 메모가 없어요"
+        memocontentLabel.textColor = gift.memo == nil ? .CDB_9_AD : ._6_A_4_C_4_C
+        
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
+        imageView.image = UIImage(contentsOfFile: fileURL.path)
+    }
+    
+    @objc private func exitButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    override func setLayout() {
         shadowView.snp.makeConstraints {
             $0.width.equalTo(287)
             $0.height.equalTo(323)
             $0.centerX.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(118)
         }
-        
         imageView.snp.makeConstraints {
             $0.width.equalTo(287)
             $0.height.equalTo(323)
             $0.centerX.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(118)
         }
-        
         productLabel.snp.makeConstraints {
             $0.leading.top.bottom.equalToSuperview()
         }
