@@ -33,6 +33,7 @@ class UploadViewController: BaseViewController {
         $0.titleLabel?.font = .giftyFont(size: 23)
         $0.backgroundColor = .F_7_EAD_8
         $0.layer.cornerRadius = 15
+        $0.clipsToBounds = true
     }
     
     
