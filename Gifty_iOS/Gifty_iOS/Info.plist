@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>온글잎 박다현체.ttf</string>
+		<string>온글잎 콘콘체.ttf</string>
+		<string>Gumi Romance.ttf</string>
+		<string>memomentKkukkkuk.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -19,12 +26,9 @@
 			</array>
 		</dict>
 	</dict>
-	<key>UIAppFonts</key>
+	<key>UIBackgroundModes</key>
 	<array>
-		<string>온글잎 박다현체.ttf</string>
-		<string>온글잎 콘콘체.ttf</string>
-		<string>Gumi Romance.ttf</string>
-		<string>memomentKkukkkuk.ttf</string>
+		<string>remote-notification</string>
 	</array>
 </dict>
 </plist>

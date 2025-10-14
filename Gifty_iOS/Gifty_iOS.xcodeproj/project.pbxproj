@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F6ABF522E9DE7F40023A872 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF512E9DE7F40023A872 /* FirebaseAI */; };
+		6F6ABF542E9DE7F40023A872 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF532E9DE7F40023A872 /* FirebaseAnalytics */; };
+		6F6ABF562E9DE7F40023A872 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF552E9DE7F40023A872 /* FirebaseAnalyticsCore */; };
+		6F6ABF582E9DE7F40023A872 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF572E9DE7F40023A872 /* FirebaseAnalyticsIdentitySupport */; };
+		6F6ABF5A2E9DE7F40023A872 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF592E9DE7F40023A872 /* FirebaseAppCheck */; };
 		85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; };
 		852807FC2E899A37009710CC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FB2E899A37009710CC /* Then */; };
 		852807FF2E899A45009710CC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FE2E899A45009710CC /* SnapKit */; };
@@ -42,8 +47,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F6ABF5A2E9DE7F40023A872 /* FirebaseAppCheck in Frameworks */,
 				85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */,
+				6F6ABF562E9DE7F40023A872 /* FirebaseAnalyticsCore in Frameworks */,
+				6F6ABF522E9DE7F40023A872 /* FirebaseAI in Frameworks */,
+				6F6ABF582E9DE7F40023A872 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				852807FC2E899A37009710CC /* Then in Frameworks */,
+				6F6ABF542E9DE7F40023A872 /* FirebaseAnalytics in Frameworks */,
 				852807FF2E899A45009710CC /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,6 +101,11 @@
 				852807FB2E899A37009710CC /* Then */,
 				852807FE2E899A45009710CC /* SnapKit */,
 				85190AEC2E8C3D1B00498C29 /* RealmSwift */,
+				6F6ABF512E9DE7F40023A872 /* FirebaseAI */,
+				6F6ABF532E9DE7F40023A872 /* FirebaseAnalytics */,
+				6F6ABF552E9DE7F40023A872 /* FirebaseAnalyticsCore */,
+				6F6ABF572E9DE7F40023A872 /* FirebaseAnalyticsIdentitySupport */,
+				6F6ABF592E9DE7F40023A872 /* FirebaseAppCheck */,
 			);
 			productName = Gifty_iOS;
 			productReference = 85BB434B2E83F68E002330D2 /* Gifty_iOS.app */;
@@ -124,6 +139,7 @@
 				852807FA2E899A37009710CC /* XCRemoteSwiftPackageReference "Then" */,
 				852807FD2E899A45009710CC /* XCRemoteSwiftPackageReference "SnapKit" */,
 				85190AEB2E8C3D1B00498C29 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85BB434C2E83F68E002330D2 /* Products */;
@@ -181,9 +197,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Gifty_iOS/Gifty_iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GP2ML5Q5AN;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifty_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -212,9 +229,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Gifty_iOS/Gifty_iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = GP2ML5Q5AN;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifty_iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -383,6 +401,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.4.0;
+			};
+		};
 		85190AEB2E8C3D1B00498C29 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -410,6 +436,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6F6ABF512E9DE7F40023A872 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		6F6ABF532E9DE7F40023A872 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		6F6ABF552E9DE7F40023A872 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		6F6ABF572E9DE7F40023A872 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		6F6ABF592E9DE7F40023A872 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F6ABF502E9DE7F40023A872 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
 		85190AEC2E8C3D1B00498C29 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 85190AEB2E8C3D1B00498C29 /* XCRemoteSwiftPackageReference "realm-swift" */;
