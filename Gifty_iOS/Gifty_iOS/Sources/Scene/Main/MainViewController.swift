@@ -92,8 +92,9 @@ class MainViewController: BaseViewController {
             titleLabel,
             sortButton,
             sortDropDownView,
-            noneLabel,
             boxImageView,
+            noneLabel,
+
             gifticonTableView
         ].forEach { view.addSubview($0) }
     }
