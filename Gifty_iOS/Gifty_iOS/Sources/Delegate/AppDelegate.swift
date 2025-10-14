@@ -3,6 +3,7 @@ import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
 
+@main
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -27,16 +28,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         return true
     }
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
     
-    // 백그라운드에서 푸시 알림을 탭했을 때 실행
     func application(_ application: UIApplication,
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("APNS token: \(deviceToken)")
         Messaging.messaging().apnsToken = deviceToken
     }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for remote notifications: \(error.localizedDescription)")
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
     
     // Foreground(앱 켜진 상태)에서도 알림 오는 설정
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
