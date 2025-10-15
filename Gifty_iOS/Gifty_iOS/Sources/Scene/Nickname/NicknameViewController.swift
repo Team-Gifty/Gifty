@@ -28,6 +28,13 @@ class NicknameViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadNickname()
+        hideKeyboardWhenTappedAround()
+    }
+
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
 
     override func addView() {
