@@ -51,7 +51,7 @@ class NicknameViewController: BaseViewController {
     override func setLayout() {
         nicknameLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(276)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(120)
         }
         nicknameField.snp.makeConstraints {
             $0.centerX.equalToSuperview()
