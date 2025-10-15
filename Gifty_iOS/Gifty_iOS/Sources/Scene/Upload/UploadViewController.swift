@@ -21,6 +21,11 @@ class UploadViewController: BaseViewController {
         $0.textColor = ._6_A_4_C_4_C
     }
     
+    let shadowView = UIView().then {
+        $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
+        $0.layer.shadowOpacity = 100
+        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
+    }
     
     let imageuploadButton = UIButton().then {
         $0.setTitle("탭하여 교환권 넣기", for: .normal)
@@ -28,9 +33,7 @@ class UploadViewController: BaseViewController {
         $0.titleLabel?.font = .giftyFont(size: 23)
         $0.backgroundColor = .F_7_EAD_8
         $0.layer.cornerRadius = 15
-        $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
-        $0.layer.shadowOpacity = 100
-        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
+        $0.clipsToBounds = true
     }
     
     
@@ -59,9 +62,12 @@ class UploadViewController: BaseViewController {
     
     
     override func addView() {
+        
+        shadowView.addSubview(imageuploadButton)
+        
         [
             photoDescriptionLabel,
-            imageuploadButton,
+            shadowView,
             informationButton,
             uploadButton
         ].forEach { view.addSubview($0) }
@@ -72,6 +78,13 @@ class UploadViewController: BaseViewController {
         photoDescriptionLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(75)
+        }
+        
+        shadowView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(photoDescriptionLabel.snp.bottom).offset(16)
+            $0.width.equalTo(287)
+            $0.height.equalTo(323)
         }
         
         imageuploadButton.snp.makeConstraints {
