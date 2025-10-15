@@ -14,10 +14,25 @@
 		6F6ABF662E9DEB2E0023A872 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF652E9DEB2E0023A872 /* FirebaseAppCheck */; };
 		6F6ABF692E9DEC8B0023A872 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF682E9DEC8B0023A872 /* FirebaseCore */; };
 		6F6ABF6B2E9DECB00023A872 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 6F6ABF6A2E9DECB00023A872 /* FirebaseMessaging */; };
+		6F8507E92E9FA966006DA65B /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; };
 		852807FC2E899A37009710CC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FB2E899A37009710CC /* Then */; };
 		852807FF2E899A45009710CC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FE2E899A45009710CC /* SnapKit */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6F8507E82E9FA963006DA65B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6F8507E92E9FA966006DA65B /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		85BB434B2E83F68E002330D2 /* Gifty_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +115,7 @@
 				6FD4A0772E9D38F800041C7B /* ShellScript */,
 				85BB43482E83F68E002330D2 /* Frameworks */,
 				85BB43492E83F68E002330D2 /* Resources */,
+				6F8507E82E9FA963006DA65B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -223,6 +239,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"\" @loader_path/Frameworks\"",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
@@ -255,6 +272,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"\" @loader_path/Frameworks\"",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
