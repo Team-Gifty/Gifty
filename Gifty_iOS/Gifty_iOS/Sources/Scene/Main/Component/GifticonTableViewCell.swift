@@ -10,9 +10,6 @@ class GifticonTableViewCell: UITableViewCell {
         $0.backgroundColor = .FFFEF_7
         $0.layer.cornerRadius = 3
         $0.clipsToBounds = true
-        $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
-        $0.layer.shadowOpacity = 100
-        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
     }
     
     private let gifticonImageView = UIImageView().then {
@@ -45,12 +42,23 @@ class GifticonTableViewCell: UITableViewCell {
         self.selectionStyle = .none
         self.backgroundColor = .FFF_7_EC
         
+        contentView.layer.shadowColor = UIColor.CBBDB_1.cgColor
+        contentView.layer.shadowOpacity = 0.5
+        contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        contentView.layer.shadowRadius = 3
+        contentView.layer.masksToBounds = false
+
         addView()
         setLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: containerView.frame, cornerRadius: containerView.layer.cornerRadius).cgPath
     }
 
     private func addView() {

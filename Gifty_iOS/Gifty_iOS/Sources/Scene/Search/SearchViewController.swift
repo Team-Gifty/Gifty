@@ -70,6 +70,13 @@ class SearchViewController: BaseViewController {
         filterDropDownView.delegate = self
         filterDropDownView.isHidden = true
         updateUI()
+        hideKeyboardWhenTappedAround()
+    }
+
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
 
     
