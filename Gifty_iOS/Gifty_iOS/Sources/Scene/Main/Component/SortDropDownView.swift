@@ -12,7 +12,7 @@ enum SortOrder {
 }
 
 class SortDropDownView: UIView {
-    
+
     weak var delegate: SortDropDownViewDelegate?
     private var currentSortOrder: SortOrder = .byRegistrationDate
 
@@ -30,9 +30,9 @@ class SortDropDownView: UIView {
     }
 
     private func setupView() {
-        backgroundColor = UIColor(red: 0.992, green: 0.984, blue: 0.965, alpha: 1.0) // #FDFBF6
+        backgroundColor = UIColor(red: 0.992, green: 0.984, blue: 0.965, alpha: 1.0)
         layer.cornerRadius = 8
-        layer.borderColor = UIColor(red: 0.937, green: 0.894, blue: 0.827, alpha: 1.0).cgColor // #EFE4D3
+        layer.borderColor = UIColor(red: 0.937, green: 0.894, blue: 0.827, alpha: 1.0).cgColor
         layer.borderWidth = 1.0
         
         let stackView = UIStackView(arrangedSubviews: [expiryDateButton, registrationDateButton]).then {
