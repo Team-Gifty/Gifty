@@ -34,14 +34,22 @@ class NotificationManager {
             return
         }
         
+        let soonestExpiryDate = soonestGift.expiryDate
+        let soonestGifts = gifts.filter { $0.expiryDate == soonestExpiryDate }
+        let soonestGiftsCount = soonestGifts.count
+        
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림"
         
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
+        let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
         let daysRemaining = components.day ?? 0
         
-        content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+        if soonestGiftsCount > 1 {
+            content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+        } else {
+            content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+        }
         content.sound = .default
         
         var dateComponents = DateComponents()
@@ -69,14 +77,22 @@ class NotificationManager {
             return
         }
         
+        let soonestExpiryDate = soonestGift.expiryDate
+        let soonestGifts = gifts.filter { $0.expiryDate == soonestExpiryDate }
+        let soonestGiftsCount = soonestGifts.count
+        
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림 (테스트)"
         
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
+        let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
         let daysRemaining = components.day ?? 0
         
-        content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+        if soonestGiftsCount > 1 {
+            content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+        } else {
+            content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+        }
         content.sound = .default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
