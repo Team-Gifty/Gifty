@@ -246,26 +246,15 @@ class GifticonViewController: BaseViewController {
     
     @objc
     private func deleteButtonTapped() {
-        
-        let dimView = UIView()
-        dimView.backgroundColor = UIColor._5_C_5_C_5_C.withAlphaComponent(0.45)
-        dimView.frame = view.bounds
-        dimView.alpha = 0
-        view.addSubview(dimView)
-        
-        UIView.animate(withDuration: 0.25) {
-            dimView.alpha = 1
-        } completion: { _ in
-            
-            // 검은 뷰를 그냥 하나 만들고 그 뷰가 먼저 뜨게 끔
-            
-            
-            let deleteModalVC = DeleteModalViewController()
-            deleteModalVC.modalPresentationStyle = .overFullScreen
-            //  deleteModalVC.view.backgroundColor = UIColor._5_C_5_C_5_C.withAlphaComponent(0.45)
-            self.present(deleteModalVC, animated: true, completion: nil)
+        let deleteModalVC = DeleteModalViewController()
+        deleteModalVC.modalPresentationStyle = .overFullScreen
+        deleteModalVC.onDelete = {
+            if let gift = self.gift {
+                RealmManager.shared.deleteGift(gift)
+                self.navigationController?.popViewController(animated: true)
+            }
         }
-        
+        self.present(deleteModalVC, animated: true, completion: nil)
     }
     
 }

@@ -27,6 +27,7 @@ class DeleteModalViewController: BaseViewController {
     }
 
     let buttoncontainerView = UIView()
+    var onDelete: (() -> Void)?
 
     let deleteButton = UIButton().then {
         $0.backgroundColor = ._6_A_4_C_4_C
@@ -36,6 +37,7 @@ class DeleteModalViewController: BaseViewController {
         $0.layer.borderWidth = 2.3
         $0.layer.borderColor = UIColor._6_A_4_C_4_C.cgColor
         $0.layer.cornerRadius = 7.5
+        $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
 
     let cancelButton = UIButton().then {
@@ -46,11 +48,22 @@ class DeleteModalViewController: BaseViewController {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor._6_A_4_C_4_C.cgColor
         $0.layer.cornerRadius = 7.5
+        $0.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+    }
+    
+    @objc private func deleteButtonTapped() {
+        dismiss(animated: true) { [weak self] in
+            self?.onDelete?()
+        }
+    }
+    
+    @objc private func cancelButtonTapped() {
+        dismiss(animated: true, completion: nil)
     }
 
     override func addView() {
