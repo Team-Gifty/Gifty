@@ -35,7 +35,7 @@ class NotificationManager {
         }
         
         let soonestExpiryDate = soonestGift.expiryDate
-        let soonestGifts = gifts.filter { $0.expiryDate == soonestExpiryDate }
+        let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
         let soonestGiftsCount = soonestGifts.count
         
         let content = UNMutableNotificationContent()
@@ -78,7 +78,7 @@ class NotificationManager {
         }
         
         let soonestExpiryDate = soonestGift.expiryDate
-        let soonestGifts = gifts.filter { $0.expiryDate == soonestExpiryDate }
+        let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
         let soonestGiftsCount = soonestGifts.count
         
         let content = UNMutableNotificationContent()
