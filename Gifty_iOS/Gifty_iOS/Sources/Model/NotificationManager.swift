@@ -29,26 +29,26 @@ class NotificationManager {
     func scheduleDailySummaryNotification() {
         let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
         
-        guard let soonestGift = gifts.first else {
-            // No gifts, no notification
-            return
-        }
-        
-        let soonestExpiryDate = soonestGift.expiryDate
-        let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
-        let soonestGiftsCount = soonestGifts.count
-        
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림"
         
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
-        let daysRemaining = components.day ?? 0
-        
-        if soonestGiftsCount > 1 {
-            content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+        if let soonestGift = gifts.first {
+            let soonestExpiryDate = soonestGift.expiryDate
+            let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
+            let soonestGiftsCount = soonestGifts.count
+            
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
+            let daysRemaining = components.day ?? 0
+            
+            if soonestGiftsCount > 1 {
+                content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+            } else {
+                content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+            }
         } else {
-            content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+            content.title = "Gifty"
+            content.body = "아직 등록된 교환권이 없어요. 지금 바로 등록하고 똑똑하게 관리해보세요!"
         }
         content.sound = .default
         
@@ -72,26 +72,26 @@ class NotificationManager {
     func scheduleDailySummaryNotificationForTest() {
         let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
         
-        guard let soonestGift = gifts.first else {
-            // No gifts, no notification
-            return
-        }
-        
-        let soonestExpiryDate = soonestGift.expiryDate
-        let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
-        let soonestGiftsCount = soonestGifts.count
-        
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림 (테스트)"
         
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
-        let daysRemaining = components.day ?? 0
-        
-        if soonestGiftsCount > 1 {
-            content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+        if let soonestGift = gifts.first {
+            let soonestExpiryDate = soonestGift.expiryDate
+            let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
+            let soonestGiftsCount = soonestGifts.count
+            
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
+            let daysRemaining = components.day ?? 0
+            
+            if soonestGiftsCount > 1 {
+                content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+            } else {
+                content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+            }
         } else {
-            content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+            content.title = "Gifty (테스트)"
+            content.body = "아직 등록된 교환권이 없어요. 지금 바로 등록하고 똑똑하게 관리해보세요!"
         }
         content.sound = .default
         
