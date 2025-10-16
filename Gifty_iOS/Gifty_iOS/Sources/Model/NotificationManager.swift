@@ -41,7 +41,7 @@ class NotificationManager {
         let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
         let daysRemaining = components.day ?? 0
         
-        content.body = "가장 빨리 만료되는 기프티콘의 만료일이 \(daysRemaining)일 남았습니다."
+        content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
         content.sound = .default
         
         var dateComponents = DateComponents()
@@ -76,7 +76,7 @@ class NotificationManager {
         let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
         let daysRemaining = components.day ?? 0
         
-        content.body = "가장 빨리 만료되는 기프티콘의 만료일이 \(daysRemaining)일 남았습니다."
+        content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
         content.sound = .default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
