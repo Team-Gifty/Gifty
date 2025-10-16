@@ -138,7 +138,8 @@ class UploadViewController: BaseViewController {
               let imageName = self.selectedImageName else { return }
         
         if let newGift = viewModel.saveGift(name: name, usage: usage, expiryDate: expiryDate, memo: self.memo, imagePath: imageName) {
-            scheduleNotification(for: newGift)
+            NotificationManager.shared.scheduleImmediateNotification(for: newGift)
+            NotificationManager.shared.scheduleNotifications()
         }
         
         clearInputs()
@@ -148,25 +149,6 @@ class UploadViewController: BaseViewController {
         }
         
         self.tabBarController?.selectedIndex = 0
-    }
-    
-    private func scheduleNotification(for gift: Gift) {
-        let content = UNMutableNotificationContent()
-        content.title = "Gifty"
-        content.body = "'\(gift.name)' 교환권의 만료일이 1주일 남았습니다!"
-        content.sound = .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: gift.id.stringValue,
-                                            content: content,
-                                            trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error scheduling notification: \(error.localizedDescription)")
-            }
-        }
     }
     
     private func clearInputs() {

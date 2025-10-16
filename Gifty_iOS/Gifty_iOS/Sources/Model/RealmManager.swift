@@ -93,4 +93,13 @@ class RealmManager {
             realm.delete(gift)
         }
     }
+    
+    func updateGift(_ gift: Gift, name: String, usage: String, expiryDate: Date, memo: String?) {
+        try! realm.write {
+            gift.name = name
+            gift.usage = usage
+            gift.expiryDate = expiryDate
+            gift.memo = memo
+        }
+    }
 }

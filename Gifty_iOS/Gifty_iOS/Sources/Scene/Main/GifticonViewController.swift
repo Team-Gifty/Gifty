@@ -78,6 +78,7 @@ class GifticonViewController: BaseViewController {
     
     private   let modifyButton = UIButton().then {
         $0.setImage(UIImage(named: "Modify"), for: .normal)
+        $0.addTarget(self, action: #selector(modifyButtonTapped), for: .touchUpInside)
     }
     
     private  let shareButton = UIButton().then {
@@ -257,4 +258,20 @@ class GifticonViewController: BaseViewController {
         self.present(deleteModalVC, animated: true, completion: nil)
     }
     
+    @objc private func modifyButtonTapped() {
+        let modifyVC = ModifyGiftViewController()
+        modifyVC.gift = self.gift
+        modifyVC.delegate = self
+        self.present(modifyVC, animated: true, completion: nil)
+    }
+}
+
+extension GifticonViewController: ModifyGiftViewControllerDelegate {
+    func didModifyGiftInfo(name: String, usage: String, expiryDate: Date, memo: String?) {
+        if let gift = self.gift {
+            RealmManager.shared.updateGift(gift, name: name, usage: usage, expiryDate: expiryDate, memo: memo)
+            configure(with: gift)
+            NotificationManager.shared.scheduleNotifications()
+        }
+    }
 }

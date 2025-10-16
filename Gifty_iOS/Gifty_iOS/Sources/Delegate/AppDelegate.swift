@@ -15,27 +15,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         Messaging.messaging().delegate = self
         
         // 앱 실행 시 사용자에게 알림 허용 권한을 받음
+        NotificationManager.shared.requestAuthorization()
         UNUserNotificationCenter.current().delegate = self
         
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: { granted, error in
-                print("===== 알림 권한 =====")
-                if granted {
-                    print("✅ 알림 권한 허용됨")
-                    DispatchQueue.main.async {
-                        application.registerForRemoteNotifications()
-                    }
-                } else {
-                    print("❌ 알림 권한 거부됨")
-                }
-                if let error = error {
-                    print("⚠️ 알림 권한 요청 에러: \(error.localizedDescription)")
-                }
-                print("===================")
-            }
-        )
+        // 예약된 알림 확인
+        NotificationManager.shared.scheduleNotifications()
         
         return true
     }
