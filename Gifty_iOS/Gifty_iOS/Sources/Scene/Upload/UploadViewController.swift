@@ -139,7 +139,7 @@ class UploadViewController: BaseViewController {
         
         if let newGift = viewModel.saveGift(name: name, usage: usage, expiryDate: expiryDate, memo: self.memo, imagePath: imageName) {
             NotificationManager.shared.scheduleImmediateNotification(for: newGift)
-            NotificationManager.shared.scheduleNotifications()
+            NotificationManager.shared.scheduleDailySummaryNotification()
         }
         
         clearInputs()

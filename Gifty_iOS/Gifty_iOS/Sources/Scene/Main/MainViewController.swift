@@ -48,6 +48,11 @@ class MainViewController: BaseViewController {
         $0.showsVerticalScrollIndicator = false
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
+    
+    private let testNotificationButton = UIButton(type: .system).then {
+        $0.setTitle("Test Notification", for: .normal)
+        $0.addTarget(self, action: #selector(testNotificationButtonTapped), for: .touchUpInside)
+    }
 
     private var gifts: Results<Gift>?
     private var notificationToken: NotificationToken?
@@ -94,9 +99,12 @@ class MainViewController: BaseViewController {
             sortDropDownView,
             boxImageView,
             noneLabel,
+            testNotificationButton,
 
             gifticonTableView
         ].forEach { view.addSubview($0) }
+        
+        view.bringSubviewToFront(testNotificationButton)
     }
 
     override func setLayout() {
@@ -112,6 +120,11 @@ class MainViewController: BaseViewController {
         
         sortButton.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.trailing.equalToSuperview().inset(33)
+        }
+        
+        testNotificationButton.snp.makeConstraints {
+            $0.bottom.equalTo(sortButton.snp.top).offset(-10)
             $0.trailing.equalToSuperview().inset(33)
         }
         
@@ -189,6 +202,10 @@ class MainViewController: BaseViewController {
         if !sortDropDownView.isHidden {
             view.bringSubviewToFront(sortDropDownView)
         }
+    }
+    
+    @objc private func testNotificationButtonTapped() {
+        NotificationManager.shared.scheduleDailySummaryNotificationForTest()
     }
 }
 

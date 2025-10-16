@@ -252,6 +252,7 @@ class GifticonViewController: BaseViewController {
         deleteModalVC.onDelete = {
             if let gift = self.gift {
                 RealmManager.shared.deleteGift(gift)
+                NotificationManager.shared.scheduleDailySummaryNotification()
                 self.navigationController?.popViewController(animated: true)
             }
         }
@@ -271,7 +272,7 @@ extension GifticonViewController: ModifyGiftViewControllerDelegate {
         if let gift = self.gift {
             RealmManager.shared.updateGift(gift, name: name, usage: usage, expiryDate: expiryDate, memo: memo)
             configure(with: gift)
-            NotificationManager.shared.scheduleNotifications()
+            NotificationManager.shared.scheduleDailySummaryNotification()
         }
     }
 }

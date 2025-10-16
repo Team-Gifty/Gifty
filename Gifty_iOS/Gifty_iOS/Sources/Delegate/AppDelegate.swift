@@ -19,7 +19,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
         
         // 예약된 알림 확인
-        NotificationManager.shared.scheduleNotifications()
+        NotificationManager.shared.scheduleDailySummaryNotification()
         
         return true
     }

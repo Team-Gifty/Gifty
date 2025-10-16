@@ -26,45 +26,68 @@ class NotificationManager {
         )
     }
     
-    func scheduleNotifications() {
-        let gifts = RealmManager.shared.getGifts()
+    func scheduleDailySummaryNotification() {
+        let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
         
-        for gift in gifts {
-            let giftRef = ThreadSafeReference(to: gift)
-            DispatchQueue.global().async {
-                let realm = try! Realm()
-                guard let gift = realm.resolve(giftRef) else {
-                    return
-                }
-                
-                let expiryDate = gift.expiryDate
-                let calendar = Calendar.current
-                let intervals = [3, 7, 14, 30]
-                
-                for interval in intervals {
-                    let notificationDate = calendar.date(byAdding: .day, value: -interval, to: expiryDate)
-                    
-                    if let notificationDate = notificationDate, calendar.isDateInToday(notificationDate) {
-                        let content = UNMutableNotificationContent()
-                        content.title = "기프티콘 만료 알림"
-                        content.body = "'\(gift.name)' 기프티콘이 \(interval)일 후에 만료됩니다."
-                        content.sound = .default
-                        
-                        var dateComponents = calendar.dateComponents([.year, .month, .day], from: notificationDate)
-                        dateComponents.hour = 12
-                        dateComponents.minute = 00
-                        
-                        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                        
-                        let request = UNNotificationRequest(identifier: "\(gift.id.stringValue)_\(interval)days", content: content, trigger: trigger)
-                        
-                        UNUserNotificationCenter.current().add(request) { error in
-                            if let error = error {
-                                print("Error scheduling notification: \(error)")
-                            }
-                        }
-                    }
-                }
+        guard let soonestGift = gifts.first else {
+            // No gifts, no notification
+            return
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "기프티콘 만료 알림"
+        
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
+        let daysRemaining = components.day ?? 0
+        
+        content.body = "가장 빨리 만료되는 기프티콘의 만료일이 \(daysRemaining)일 남았습니다."
+        content.sound = .default
+        
+        var dateComponents = DateComponents()
+        dateComponents.hour = 0
+        dateComponents.minute = 1
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        let request = UNNotificationRequest(identifier: "daily_summary_notification", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling daily summary notification: \(error)")
+            } else {
+                print("Daily summary notification scheduled")
+            }
+        }
+    }
+    
+    func scheduleDailySummaryNotificationForTest() {
+        let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
+        
+        guard let soonestGift = gifts.first else {
+            // No gifts, no notification
+            return
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "기프티콘 만료 알림 (테스트)"
+        
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.day], from: Date(), to: soonestGift.expiryDate)
+        let daysRemaining = components.day ?? 0
+        
+        content.body = "가장 빨리 만료되는 기프티콘의 만료일이 \(daysRemaining)일 남았습니다."
+        content.sound = .default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: "daily_summary_notification_test", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling daily summary notification for test: \(error)")
+            } else {
+                print("Daily summary notification for test scheduled")
             }
         }
     }
