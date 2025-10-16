@@ -46,8 +46,8 @@ class RealmManager {
     }
     
     // MARK: - Gift
-    func saveGift(name: String, usage: String, expiryDate: Date, memo: String?, imagePath: String) {
-        guard let user = getUser() else { return }
+    func saveGift(name: String, usage: String, expiryDate: Date, memo: String?, imagePath: String) -> Gift? {
+        guard let user = getUser() else { return nil }
         
         let newGift = Gift()
         newGift.id = ObjectId.generate()
@@ -60,6 +60,7 @@ class RealmManager {
         try! realm.write {
             user.gifts.append(newGift)
         }
+        return newGift
     }
     
     func getGifts(sortedBy sortOrder: SortOrder = .byRegistrationDate) -> Results<Gift> {
