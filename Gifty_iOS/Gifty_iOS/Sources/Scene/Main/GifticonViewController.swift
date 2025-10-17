@@ -67,7 +67,7 @@ class GifticonViewController: BaseViewController {
         $0.font = .giftyFont(size: 22)
         $0.textColor = .CDB_9_AD
     }
-
+    
     private let pView = UIView()
     private let sView = UIView()
     private let eView = UIView()
@@ -95,6 +95,7 @@ class GifticonViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
         if let gift = gift {
             configure(with: gift)
         }

@@ -123,10 +123,10 @@ class MainViewController: BaseViewController {
             $0.trailing.equalToSuperview().inset(33)
         }
         
-        testNotificationButton.snp.makeConstraints {
-            $0.bottom.equalTo(sortButton.snp.top).offset(-10)
-            $0.trailing.equalToSuperview().inset(33)
-        }
+//        testNotificationButton.snp.makeConstraints {
+//            $0.bottom.equalTo(sortButton.snp.top).offset(-10)
+//            $0.trailing.equalToSuperview().inset(33)
+//        }
         
         sortDropDownView.snp.makeConstraints {
             $0.top.equalTo(sortButton.snp.bottom).offset(8)
