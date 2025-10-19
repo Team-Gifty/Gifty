@@ -16,18 +16,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let rootVC: UIViewController
-
-        if RealmManager.shared.getUser() != nil {
-            rootVC = GiftyTabBarController()
-        } else {
-            rootVC = NicknameViewController()
-        }
-        printRealmPath()
-
-        let navController = UINavigationController(rootViewController: rootVC)
-        window?.rootViewController = navController
+        window?.rootViewController = OnboardingViewController()
         window?.makeKeyAndVisible()
+        printRealmPath()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            let rootVC: UIViewController
+            if RealmManager.shared.getUser() != nil {
+                rootVC = GiftyTabBarController()
+            } else {
+                rootVC = NicknameViewController()
+            }
+            
+            let navController = UINavigationController(rootViewController: rootVC)
+            
+            guard let window = self.window else { return }
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = navController
+            }, completion: nil)
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {}
