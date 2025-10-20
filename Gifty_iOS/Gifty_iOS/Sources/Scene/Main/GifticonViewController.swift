@@ -82,6 +82,14 @@ class GifticonViewController: BaseViewController {
 
     private  let shareButton = UIButton().then {
         $0.setImage(UIImage(named: "Share"), for: .normal)
+        $0.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+    }
+
+    @objc private func shareButtonTapped() {
+        guard let image = imageView.image else { return }
+
+        let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
 
     private  let deleteButton = UIButton().then {
