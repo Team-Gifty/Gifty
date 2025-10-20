@@ -36,6 +36,7 @@ class UploadViewController: BaseViewController {
         $0.backgroundColor = .F_7_EAD_8
         $0.layer.cornerRadius = 15
         $0.clipsToBounds = true
+        $0.imageView?.contentMode = .scaleAspectFit
     }
     
     
@@ -116,7 +117,7 @@ class UploadViewController: BaseViewController {
         //이미지 피커 설정
         let picker = UIImagePickerController()
         picker.delegate = self
-        picker.allowsEditing = true
+        picker.allowsEditing = false
         
         present(picker, animated: true, completion: nil)
     }
@@ -174,7 +175,7 @@ class UploadViewController: BaseViewController {
 
 extension UploadViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[.editedImage] as? UIImage {
+        if let image = info[.originalImage] as? UIImage {
             self.selectedImage = image
             
             let imageName = UUID().uuidString

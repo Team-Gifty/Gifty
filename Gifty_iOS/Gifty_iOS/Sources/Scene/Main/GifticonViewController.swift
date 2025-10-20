@@ -7,9 +7,10 @@ class GifticonViewController: BaseViewController {
 
     private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
-        $0.contentMode = .scaleAspectFill
+        $0.contentMode = .scaleAspectFit
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 15
+        $0.isUserInteractionEnabled = true
     }
 
     private let shadowView = UIView().then {
@@ -99,6 +100,9 @@ class GifticonViewController: BaseViewController {
         if let gift = gift {
             configure(with: gift)
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        imageView.addGestureRecognizer(tapGesture)
     }
 
     override func addView() {
@@ -223,6 +227,13 @@ class GifticonViewController: BaseViewController {
             $0.leading.equalToSuperview().inset(34)
         }
         
+    }
+
+    @objc private func imageViewTapped() {
+        let zoomVC = ImageZoomViewController()
+        zoomVC.image = imageView.image
+        zoomVC.modalPresentationStyle = .fullScreen
+        present(zoomVC, animated: true, completion: nil)
     }
 
     @objc
