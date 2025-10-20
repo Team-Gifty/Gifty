@@ -8,10 +8,10 @@ protocol ModifyGiftViewControllerDelegate: AnyObject {
 }
 
 class ModifyGiftViewController: UIViewController {
-    
+
     var gift: Gift?
     weak var delegate: ModifyGiftViewControllerDelegate?
-    
+
     private let giftNameTextField = GiftyTextField(hintText: "교환권 이름")
     private let usageTextField = GiftyTextField(hintText: "사용처")
     private let expiryDatePicker = UIDatePicker().then {
@@ -74,7 +74,7 @@ class ModifyGiftViewController: UIViewController {
             $0.bottom.equalToSuperview().inset(40)
         }
     }
-    
+
     private func configure() {
         if let gift = gift {
             giftNameTextField.text = gift.name
@@ -83,17 +83,16 @@ class ModifyGiftViewController: UIViewController {
             memoTextField.text = gift.memo
         }
     }
-    
+
     func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
+
     @objc private func saveButtonTapped() {
         guard let name = giftNameTextField.text, !name.isEmpty,
               let usage = usageTextField.text, !usage.isEmpty else {
-            // TODO: 사용자에게 모든 필드를 채워달라는 알림 표시
             return
         }
         
@@ -126,7 +125,7 @@ class ModifyGiftViewController: UIViewController {
         saveButton.snp.updateConstraints {
             $0.bottom.equalToSuperview().inset(keyboardHeight + 20)
         }
-        
+
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -136,7 +135,7 @@ class ModifyGiftViewController: UIViewController {
         saveButton.snp.updateConstraints {
             $0.bottom.equalToSuperview().inset(40)
         }
-        
+
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
