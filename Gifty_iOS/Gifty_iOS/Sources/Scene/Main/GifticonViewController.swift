@@ -7,7 +7,7 @@ class GifticonViewController: BaseViewController {
 
     private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
-        $0.contentMode = .scaleAspectFill
+        $0.contentMode = .scaleAspectFit
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 15
     }
