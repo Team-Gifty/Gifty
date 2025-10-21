@@ -149,7 +149,13 @@ class UploadViewController: BaseViewController {
             mainVC.ShowCheckModal = true
         }
         
-        self.tabBarController?.selectedIndex = 0
+        if let tabBarController = self.tabBarController, let window = self.view.window {
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                tabBarController.selectedIndex = 0
+            }, completion: nil)
+        } else {
+            self.tabBarController?.selectedIndex = 0
+        }
     }
     
     private func clearInputs() {

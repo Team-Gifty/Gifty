@@ -1,10 +1,19 @@
 import UIKit
 
-class GiftyTabBarController: UITabBarController {
+class GiftyTabBarController: UITabBarController, UITabBarControllerDelegate {
+
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.delegate = self
         setupTabs()
         setupStyle()
+        feedbackGenerator.prepare()
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        feedbackGenerator.impactOccurred()
     }
 
     private func setupStyle() {
