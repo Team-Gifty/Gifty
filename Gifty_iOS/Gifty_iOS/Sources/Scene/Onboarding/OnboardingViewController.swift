@@ -12,7 +12,7 @@ class OnboardingViewController: BaseViewController {
         height: 50
     )
     
-    let onboardingImage = UIImageView(image: UIImage(named: "Phone"))
+    let onboardingImage = UIImageView(image: UIImage(named: "MockTest"))
     
     let onboardingLabel = UILabel().then {
         $0.text = "소중한 선물, 놓치지 않도록\nGifty가 도와드려요"
