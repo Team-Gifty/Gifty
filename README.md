@@ -1,1 +1,1 @@
-# Gifty_iOS
+# Gifty
