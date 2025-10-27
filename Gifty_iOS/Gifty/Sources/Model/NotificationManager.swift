@@ -1,4 +1,3 @@
-
 import Foundation
 import UserNotifications
 import RealmSwift
@@ -27,24 +26,39 @@ class NotificationManager {
     }
 
     func scheduleDailySummaryNotification() {
-        let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
+        let allGifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let activeGifts = allGifts.filter { gift in
+            let expiryDay = calendar.startOfDay(for: gift.expiryDate)
+            return expiryDay >= today
+        }
 
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림"
 
-        if let soonestGift = gifts.first {
+        if let soonestGift = activeGifts.first {
             let soonestExpiryDate = soonestGift.expiryDate
-            let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
+            let soonestGifts = activeGifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
             let soonestGiftsCount = soonestGifts.count
             
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
+            let expiryDay = calendar.startOfDay(for: soonestExpiryDate)
+            let components = calendar.dateComponents([.day], from: today, to: expiryDay)
             let daysRemaining = components.day ?? 0
             
-            if soonestGiftsCount > 1 {
-                content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+            if daysRemaining == 0 {
+                if soonestGiftsCount > 1 {
+                    content.body = "'⚠️ \(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 오늘 만료됩니다!"
+                } else {
+                    content.body = "'⚠️ \(soonestGift.name)'이(가) 오늘 만료됩니다!"
+                }
             } else {
-                content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+                if soonestGiftsCount > 1 {
+                    content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+                } else {
+                    content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+                }
             }
         } else {
             content.title = "Gifty"
@@ -70,24 +84,39 @@ class NotificationManager {
     }
 
     func scheduleDailySummaryNotificationForTest() {
-        let gifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
+        let allGifts = RealmManager.shared.getGifts(sortedBy: .byExpiryDate)
+
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let activeGifts = allGifts.filter { gift in
+            let expiryDay = calendar.startOfDay(for: gift.expiryDate)
+            return expiryDay >= today
+        }
 
         let content = UNMutableNotificationContent()
         content.title = "기프티콘 만료 알림 (테스트)"
 
-        if let soonestGift = gifts.first {
+        if let soonestGift = activeGifts.first {
             let soonestExpiryDate = soonestGift.expiryDate
-            let soonestGifts = gifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
+            let soonestGifts = activeGifts.filter { Calendar.current.isDate($0.expiryDate, inSameDayAs: soonestExpiryDate) }
             let soonestGiftsCount = soonestGifts.count
             
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.day], from: Date(), to: soonestExpiryDate)
+            let expiryDay = calendar.startOfDay(for: soonestExpiryDate)
+            let components = calendar.dateComponents([.day], from: today, to: expiryDay)
             let daysRemaining = components.day ?? 0
             
-            if soonestGiftsCount > 1 {
-                content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+            if daysRemaining == 0 {
+                if soonestGiftsCount > 1 {
+                    content.body = "'⚠️ \(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 오늘 만료됩니다!"
+                } else {
+                    content.body = "'⚠️ \(soonestGift.name)'이(가) 오늘 만료됩니다!"
+                }
             } else {
-                content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+                if soonestGiftsCount > 1 {
+                    content.body = "'\(soonestGift.name)' 외 \(soonestGiftsCount - 1)개의 교환권이 \(daysRemaining)일 후에 만료됩니다."
+                } else {
+                    content.body = "'\(soonestGift.name)'의 만료일이 \(daysRemaining)일 남았습니다."
+                }
             }
         } else {
             content.title = "Gifty (테스트)"
@@ -120,10 +149,16 @@ class NotificationManager {
             content.title = "기프티콘 등록 완료"
 
             let calendar = Calendar.current
-            let components = calendar.dateComponents([.day], from: Date(), to: gift.expiryDate)
+            let today = calendar.startOfDay(for: Date())
+            let expiryDay = calendar.startOfDay(for: gift.expiryDate)
+            let components = calendar.dateComponents([.day], from: today, to: expiryDay)
             let daysRemaining = components.day ?? 0
 
-            content.body = "'\(gift.name)' 기프티콘이 등록되었습니다. 만료일까지 \(daysRemaining)일 남았습니다."
+            if daysRemaining == 0 {
+                content.body = "'\(gift.name)' 기프티콘이 등록되었습니다. 오늘 만료됩니다!⚠️"
+            } else {
+                content.body = "'\(gift.name)' 기프티콘이 등록되었습니다. 만료일까지 \(daysRemaining)일 남았습니다."
+            }
             content.sound = .default
 
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
