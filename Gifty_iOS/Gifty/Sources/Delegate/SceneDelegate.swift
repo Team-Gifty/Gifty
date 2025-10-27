@@ -38,9 +38,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {}
-    func sceneDidBecomeActive(_ scene: UIScene) {}
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        checkAndUpdateExpiredGifts()
+    }
     func sceneWillResignActive(_ scene: UIScene) {}
-    func sceneWillEnterForeground(_ scene: UIScene) {}
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        checkAndUpdateExpiredGifts()
+    }
     func sceneDidEnterBackground(_ scene: UIScene) {}
+    private func checkAndUpdateExpiredGifts() {
+        let gifts = RealmManager.shared.getGifts()
+        
+        try? RealmManager.shared.realm.write {
+            for gift in gifts {
+                if gift.checkIsExpired && !gift.isExpired {
+                    gift.isExpired = true
+                    print("🗓️ 만료 처리: \(gift.name)")
+                }
+            }
+        }
+    }
 }
 

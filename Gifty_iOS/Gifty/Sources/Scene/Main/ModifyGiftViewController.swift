@@ -16,6 +16,7 @@ class ModifyGiftViewController: UIViewController {
     private let usageTextField = GiftyTextField(hintText: "사용처")
     private let expiryDatePicker = UIDatePicker().then {
         $0.datePickerMode = .date
+        $0.minimumDate = Calendar.current.startOfDay(for: Date())
     }
     private let memoTextField = GiftyTextField(hintText: "메모 (선택)")
     

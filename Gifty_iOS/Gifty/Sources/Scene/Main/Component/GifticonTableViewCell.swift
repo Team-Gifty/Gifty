@@ -36,6 +36,17 @@ class GifticonTableViewCell: UITableViewCell {
         $0.textColor = UIColor(named: "6A4C4C")
         $0.text = "YYYY.MM.DD"
     }
+    
+    private let expiredLabel = UILabel().then {
+        $0.text = "만료됨"
+        $0.font = .cellFont(size: 10)
+        $0.textColor = UIColor(named: "9B1C1C")
+        $0.backgroundColor = UIColor(named: "9B1C1C")?.withAlphaComponent(0.1)
+        $0.layer.cornerRadius = 3
+        $0.clipsToBounds = true
+        $0.textAlignment = .center
+        $0.isHidden = true
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -66,6 +77,7 @@ class GifticonTableViewCell: UITableViewCell {
         containerView.addSubview(gifticonImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(usageLabel)
+        containerView.addSubview(expiredLabel)
         containerView.addSubview(dateLabel)
     }
 
@@ -90,16 +102,34 @@ class GifticonTableViewCell: UITableViewCell {
             $0.leading.equalTo(titleLabel.snp.leading)
         }
         
+        expiredLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-12)
+            $0.bottom.equalTo(dateLabel.snp.top).offset(-4)
+            $0.height.equalTo(18)
+            $0.width.equalTo(50)
+        }
+        
         dateLabel.snp.makeConstraints {
             $0.trailing.equalToSuperview().offset(-12)
             $0.bottom.equalToSuperview().offset(-9)
         }
     }
 
-    func configure(image: UIImage?, title: String, usage: String, date: String) {
+    func configure(image: UIImage?, title: String, usage: String, date: String, isExpired: Bool = false) {
         gifticonImageView.image = image
         titleLabel.text = title
         usageLabel.text = usage
         dateLabel.text = date
+        
+        // 만료 상태 처리
+        if isExpired {
+            expiredLabel.isHidden = false
+            dateLabel.textColor = UIColor(named: "7F7D7D")
+            containerView.alpha = 0.7
+        } else {
+            expiredLabel.isHidden = true
+            dateLabel.textColor = UIColor(named: "6A4C4C")
+            containerView.alpha = 1.0
+        }
     }
 }

@@ -15,6 +15,7 @@ class GiftInfoBottomSheetViewController: UIViewController {
     private let usageTextField = GiftyTextField(hintText: "사용처")
     private let expiryDatePicker = UIDatePicker().then {
         $0.datePickerMode = .date
+        $0.minimumDate = Calendar.current.startOfDay(for: Date())
     }
     private let memoTextField = GiftyTextField(hintText: "메모 (선택)")
     
@@ -119,7 +120,6 @@ class GiftInfoBottomSheetViewController: UIViewController {
     @objc private func saveButtonTapped() {
         guard let name = giftNameTextField.text, !name.isEmpty,
               let usage = usageTextField.text, !usage.isEmpty else {
-            // TODO: 사용자에게 모든 필드를 채워달라는 알림 표시
             return
         }
         

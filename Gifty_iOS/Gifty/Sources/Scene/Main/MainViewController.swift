@@ -228,8 +228,10 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let dateString = dateFormatter.string(from: gift.expiryDate)
+
+        let isExpired = gift.checkIsExpired
         
-        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString)
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired)
         
         return cell
     }

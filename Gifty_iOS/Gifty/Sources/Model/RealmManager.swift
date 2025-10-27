@@ -4,9 +4,18 @@ import RealmSwift
 class RealmManager {
     static let shared = RealmManager()
 
-    private var realm: Realm {
+    var realm: Realm {
         do {
-            let config = Realm.Configuration(schemaVersion: 2)
+            let config = Realm.Configuration(
+                schemaVersion: 3,
+                migrationBlock: { migration, oldSchemaVersion in
+                    if oldSchemaVersion < 3 {
+                        migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
+                            newObject?["isExpired"] = false
+                        }
+                    }
+                }
+            )
             return try Realm(configuration: config)
         } catch {
             fatalError("Realm 초기화 실패: \(error.localizedDescription)")
