@@ -114,7 +114,11 @@ class GifticonViewController: BaseViewController {
     }
 
     override func addView() {
+        [contentView, shadowView].forEach { view.addSubview($0) }
         shadowView.addSubview(imageView)
+
+        [exitButton, deleteButton, shareButton, modifyButton].forEach { view.addSubview($0) }
+        
         pView.addSubview(productLabel)
         pView.addSubview(productcontentLabel)
         sView.addSubview(storeLabel)
@@ -123,20 +127,8 @@ class GifticonViewController: BaseViewController {
         eView.addSubview(expirycontentLabel)
         mView.addSubview(memoLabel)
         mView.addSubview(memocontentLabel)
-        [
-            contentView,
-            shadowView,
-            modifyButton,
-            shareButton,
-            deleteButton,
-            exitButton
-        ].forEach { view.addSubview($0) }
-        [
-            pView,
-            sView,
-            eView,
-            mView
-        ].forEach { contentView.addSubview($0) }
+        
+        [pView, sView, eView, mView].forEach { contentView.addSubview($0) }
     }
 
     private func configure(with gift: Gift) {
