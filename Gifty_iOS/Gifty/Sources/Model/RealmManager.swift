@@ -109,4 +109,15 @@ class RealmManager {
             gift.memo = memo
         }
     }
+
+    func isDuplicateGiftName(_ name: String, excludingGift: Gift? = nil) -> Bool {
+        let predicate = NSPredicate(format: "name ==[c] %@", name)
+        let results = realm.objects(Gift.self).filter(predicate)
+        
+        if let excludingGift = excludingGift {
+            return results.filter("id != %@", excludingGift.id).count > 0
+        } else {
+            return results.count > 0
+        }
+    }
 }

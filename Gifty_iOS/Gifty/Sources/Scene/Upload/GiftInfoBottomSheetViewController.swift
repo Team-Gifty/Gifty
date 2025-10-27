@@ -120,6 +120,12 @@ class GiftInfoBottomSheetViewController: UIViewController {
     @objc private func saveButtonTapped() {
         guard let name = giftNameTextField.text, !name.isEmpty,
               let usage = usageTextField.text, !usage.isEmpty else {
+            showAlert(title: "알림", message: "교환권 이름과 사용처를 모두 입력해주세요.")
+            return
+        }
+
+        if RealmManager.shared.isDuplicateGiftName(name) {
+            showAlert(title: "중복", message: "이미 등록된 교환권 이름입니다.\n다른 이름을 사용해주세요.")
             return
         }
         
@@ -129,5 +135,11 @@ class GiftInfoBottomSheetViewController: UIViewController {
         delegate?.didSaveGiftInfo(name: name, usage: usage, expiryDate: expiryDate, memo: memo)
         
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
     }
 }
