@@ -89,7 +89,46 @@ class GifticonViewController: BaseViewController {
     }
 
     @objc private func shareButtonTapped() {
-        shareToKakaoTalk()
+        // 공유 옵션 선택 액션시트
+        let actionSheet = UIAlertController(
+            title: "공유 방법 선택",
+            message: "어떻게 공유하시겠어요?",
+            preferredStyle: .actionSheet
+        )
+        
+        // 카카오톡 공유
+        if ShareApi.isKakaoTalkSharingAvailable() {
+            actionSheet.addAction(UIAlertAction(
+                title: "💬 카카오톡으로 공유",
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.shareToKakaoTalk()
+                }
+            ))
+        }
+        
+        // 이미지 공유
+        actionSheet.addAction(UIAlertAction(
+            title: "📷 이미지로 공유",
+            style: .default,
+            handler: { [weak self] _ in
+                self?.shareImage()
+            }
+        ))
+        
+        // 취소
+        actionSheet.addAction(UIAlertAction(
+            title: "취소",
+            style: .cancel
+        ))
+        
+        // iPad 지원
+        if let popoverController = actionSheet.popoverPresentationController {
+            popoverController.sourceView = shareButton
+            popoverController.sourceRect = shareButton.bounds
+        }
+        
+        present(actionSheet, animated: true)
     }
     
     private func shareToKakaoTalk() {
@@ -140,31 +179,54 @@ class GifticonViewController: BaseViewController {
                 }
             }
         } else {
-            print("⚠️ 카카오톡이 설치되지 않음 - 기본 공유 사용")
-            shareFallback()
+            print("⚠️ 카카오톡이 설치되지 않음")
+            showAlert(title: "카카오톡 없음", message: "카카오톡이 설치되지 않았습니다.")
         }
     }
-    
-    private func shareFallback() {
-        guard let image = imageView.image else { return }
+
+    private func shareImage() {
+        guard let image = imageView.image else {
+            showAlert(title: "오류", message: "공유할 이미지가 없습니다.")
+            return
+        }
+        
+        print("===== 이미지 공유 시작 =====")
         
         let activityViewController = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil
         )
+        
+        // iPad 지원
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = shareButton
+            popoverController.sourceRect = shareButton.bounds
+        }
+        
         present(activityViewController, animated: true)
     }
 
     private func showKakaoShareError() {
         let alert = UIAlertController(
             title: "공유 실패",
-            message: "카카오톡 공유 중 오류가 발생했습니다.\n기본 공유를 사용하시겠습니까?",
+            message: "카카오톡 공유 중 오류가 발생했습니다.\n이미지로 공유하시겠습니까?",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-        alert.addAction(UIAlertAction(title: "기본 공유", style: .default) { [weak self] _ in
-            self?.shareFallback()
+        alert.addAction(UIAlertAction(title: "이미지 공유", style: .default) { [weak self] _ in
+            self?.shareImage()
         })
+        present(alert, animated: true)
+    }
+    
+    // 일반 알림
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
         present(alert, animated: true)
     }
 
