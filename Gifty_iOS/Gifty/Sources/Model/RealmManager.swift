@@ -120,4 +120,14 @@ class RealmManager {
             return results.count > 0
         }
     }
+
+    func getGift(by idString: String) -> Gift? {
+        do {
+            let objectId = try ObjectId(string: idString)
+            return realm.object(ofType: Gift.self, forPrimaryKey: objectId)
+        } catch {
+            print("❌ 유효하지 않은 ObjectId: \(idString)")
+            return nil
+        }
+    }
 }

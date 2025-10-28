@@ -1,5 +1,6 @@
 import UIKit
 import RealmSwift
+import KakaoSDKAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -46,6 +47,50 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         checkAndUpdateExpiredGifts()
     }
     func sceneDidEnterBackground(_ scene: UIScene) {}
+    
+    // URL 스킴 처리 (iOS 13+)
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            print("===== SceneDelegate URL 수신 =====")
+            print("URL: \(url.absoluteString)")
+            print("Scheme: \(url.scheme ?? "nil")")
+            print("Host: \(url.host ?? "nil")")
+            print("=================================")
+            
+            // 카카오톡 인증 처리
+            if AuthApi.isKakaoTalkLoginUrl(url) {
+                _ = AuthController.handleOpenUrl(url: url)
+            }
+            
+            // 딥링크 처리
+            handleDeepLink(url: url)
+        }
+    }
+    
+    // 딥링크 처리 함수
+    private func handleDeepLink(url: URL) {
+        guard url.scheme == "gifty" else { return }
+        
+        print("===== 딥링크 처리 =====")
+        print("URL: \(url.absoluteString)")
+        
+        if url.host == "gifticon",
+           let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let giftId = components.queryItems?.first(where: { $0.name == "id" })?.value {
+            
+            print("✅ 기프티콘 ID: \(giftId)")
+            print("=======================")
+            
+            NotificationCenter.default.post(
+                name: NSNotification.Name("OpenGifticon"),
+                object: nil,
+                userInfo: ["giftId": giftId]
+            )
+        } else {
+            print("❌ 올바르지 않은 딥링크 형식")
+            print("=======================")
+        }
+    }
     private func checkAndUpdateExpiredGifts() {
         let gifts = RealmManager.shared.getGifts()
         

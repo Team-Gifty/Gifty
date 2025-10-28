@@ -1,6 +1,9 @@
 import UIKit
 import SnapKit
 import Then
+import KakaoSDKShare
+import KakaoSDKTemplate
+import Realm
 
 class GifticonViewController: BaseViewController {
     var gift: Gift?
@@ -86,10 +89,138 @@ class GifticonViewController: BaseViewController {
     }
 
     @objc private func shareButtonTapped() {
-        guard let image = imageView.image else { return }
+        let actionSheet = UIAlertController(
+            title: "공유 방법 선택",
+            message: "어떻게 공유하시겠어요?",
+            preferredStyle: .actionSheet
+        )
 
-        let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        present(activityViewController, animated: true, completion: nil)
+        if ShareApi.isKakaoTalkSharingAvailable() {
+            actionSheet.addAction(UIAlertAction(
+                title: "💬 카카오톡으로 공유",
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.shareToKakaoTalk()
+                }
+            ))
+        }
+
+        actionSheet.addAction(UIAlertAction(
+            title: "📷 이미지로 공유",
+            style: .default,
+            handler: { [weak self] _ in
+                self?.shareImage()
+            }
+        ))
+
+        actionSheet.addAction(UIAlertAction(
+            title: "취소",
+            style: .cancel
+        ))
+
+        if let popoverController = actionSheet.popoverPresentationController {
+            popoverController.sourceView = shareButton
+            popoverController.sourceRect = shareButton.bounds
+        }
+        
+        present(actionSheet, animated: true)
+    }
+    
+    private func shareToKakaoTalk() {
+        guard let gift = gift else { return }
+        
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        let expiryString = dateFormatter.string(from: gift.expiryDate)
+        
+        
+        let feedTemplate = FeedTemplate(
+            content: Content(
+                title: "🎁 \(gift.name)",
+                imageUrl: URL(string: "https://via.placeholder.com/400x300")!,
+                description: "사용처: \(gift.usage)\n유효기간: \(expiryString)",
+                link: Link(
+                    webUrl: URL(string: "https://gifty.app"),
+                    mobileWebUrl: URL(string: "https://gifty.app")
+                )
+            ),
+            buttons: [
+                Button(
+                    title: "앱에서 보기",
+                    link: Link(
+                        webUrl: URL(string: "https://gifty.app"),
+                        mobileWebUrl: URL(string: "gifty://gifticon?id=\(gift.id.stringValue)"),
+                        iosExecutionParams: ["id": gift.id.stringValue]
+                    )
+                )
+            ]
+        )
+
+        if ShareApi.isKakaoTalkSharingAvailable() {
+            print("===== 카카오톡 공유 시작 =====")
+            ShareApi.shared.shareDefault(templatable: feedTemplate) { [weak self] (sharingResult, error) in
+                if let error = error {
+                    print("❌ 카카오톡 공유 실패: \(error.localizedDescription)")
+                    print("에러 상세: \(error)")
+                    print("============================")
+                    self?.showKakaoShareError()
+                } else {
+                    print("✅ 카카오톡 공유 성공")
+                    print("============================")
+                    if let sharingResult = sharingResult {
+                        UIApplication.shared.open(sharingResult.url, options: [:])
+                    }
+                }
+            }
+        } else {
+            print("⚠️ 카카오톡이 설치되지 않음")
+            showAlert(title: "카카오톡 없음", message: "카카오톡이 설치되지 않았습니다.")
+        }
+    }
+
+    private func shareImage() {
+        guard let image = imageView.image else {
+            showAlert(title: "오류", message: "공유할 이미지가 없습니다.")
+            return
+        }
+        
+        print("===== 이미지 공유 시작 =====")
+        
+        let activityViewController = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+        
+        if let popoverController = activityViewController.popoverPresentationController {
+            popoverController.sourceView = shareButton
+            popoverController.sourceRect = shareButton.bounds
+        }
+        
+        present(activityViewController, animated: true)
+    }
+
+    private func showKakaoShareError() {
+        let alert = UIAlertController(
+            title: "공유 실패",
+            message: "카카오톡 공유 중 오류가 발생했습니다.\n이미지로 공유하시겠습니까?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        alert.addAction(UIAlertAction(title: "이미지 공유", style: .default) { [weak self] _ in
+            self?.shareImage()
+        })
+        present(alert, animated: true)
+    }
+
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "확인", style: .default))
+        present(alert, animated: true)
     }
 
     private  let deleteButton = UIButton().then {

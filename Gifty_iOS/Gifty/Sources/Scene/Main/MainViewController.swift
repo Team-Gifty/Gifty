@@ -70,6 +70,13 @@ class MainViewController: BaseViewController {
         updateSortButtonTitle()
         loadGifts()
         setupRealmNotification()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDeepLink(_:)),
+            name: NSNotification.Name("OpenGifticon"),
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,10 +94,9 @@ class MainViewController: BaseViewController {
     @MainActor
     deinit {
         notificationToken?.invalidate()
+        NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: - UI Setup
-    
     override func addView() {
         [
             iconImageView,
@@ -153,13 +159,11 @@ class MainViewController: BaseViewController {
         }
     }
     
-    // MARK: - Private Methods
-    
     private func setupTitleLabel() {
         if let nickname = RealmManager.shared.getUser()?.nickname {
             titleLabel.text = "\(nickname)님의 교환권"
         } else {
-            titleLabel.text = "Gifty님의 교환권" // Fallback text
+            titleLabel.text = "Gifty님의 교환권"
         }
     }
     
@@ -207,9 +211,40 @@ class MainViewController: BaseViewController {
     @objc private func testNotificationButtonTapped() {
         NotificationManager.shared.scheduleDailySummaryNotificationForTest()
     }
+
+    @objc private func handleDeepLink(_ notification: Notification) {
+        guard let giftId = notification.userInfo?["giftId"] as? String else { return }
+        
+        print("===== MainViewController 딥링크 처리 =====")
+        print("기프티콘 ID: \(giftId)")
+        
+        if let gift = RealmManager.shared.getGift(by: giftId) {
+            print("✅ 기프티콘 발견: \(gift.name)")
+            print("=====================================")
+
+            let gifticonVC = GifticonViewController()
+            gifticonVC.gift = gift
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.navigationController?.pushViewController(gifticonVC, animated: true)
+            }
+        } else {
+            print("❌ 기프티콘을 찾을 수 없음")
+            print("=====================================")
+
+            let alert = UIAlertController(
+                title: "기프티콘 없음",
+                message: "해당 기프티콘을 찾을 수 없습니다.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            DispatchQueue.main.async { [weak self] in
+                self?.present(alert, animated: true)
+            }
+        }
+    }
 }
 
-// MARK: - UITableViewDataSource, UITableViewDelegate
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return gifts?.count ?? 0

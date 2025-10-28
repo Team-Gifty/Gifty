@@ -2,11 +2,21 @@ import UIKit
 import FirebaseCore
 import FirebaseMessaging
 import UserNotifications
+import KakaoSDKCommon
+import KakaoSDKAuth
 
 @main
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        // 카카오 SDK 초기화
+        if let appKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String {
+            KakaoSDK.initSDK(appKey: appKey)
+            print("===== 카카오 SDK 초기화 =====")
+            print("✅ 카카오 앱 키: \(appKey)")
+            print("============================")
+        }
         
         // 파이어베이스 설정
         FirebaseApp.configure()
@@ -55,6 +65,55 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("❌ APNS 토큰 등록 실패: \(error.localizedDescription)")
         print("에러 상세: \(error)")
         print("========================")
+    }
+    
+    // URL 스킴 처리 (iOS 13 미만 지원)
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        print("===== URL 스킴 수신 =====")
+        print("URL: \(url.absoluteString)")
+        print("Scheme: \(url.scheme ?? "nil")")
+        print("Host: \(url.host ?? "nil")")
+        print("========================")
+        
+        // 카카오톡 인증 처리
+        if AuthApi.isKakaoTalkLoginUrl(url) {
+            return AuthController.handleOpenUrl(url: url)
+        }
+        
+        // 딥링크 처리
+        return handleDeepLink(url: url)
+    }
+    
+    // 딥링크 처리 함수
+    private func handleDeepLink(url: URL) -> Bool {
+        guard url.scheme == "gifty" else { return false }
+        
+        print("===== 딥링크 처리 =====")
+        print("URL: \(url.absoluteString)")
+        
+        // gifty://gifticon?id=123 형태로 받기
+        if url.host == "gifticon",
+           let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let giftId = components.queryItems?.first(where: { $0.name == "id" })?.value {
+            
+            print("✅ 기프티콘 ID: \(giftId)")
+            print("=======================")
+            
+            // MainViewController로 이동 후 해당 기프티콘 표시
+            NotificationCenter.default.post(
+                name: NSNotification.Name("OpenGifticon"),
+                object: nil,
+                userInfo: ["giftId": giftId]
+            )
+            return true
+        }
+        
+        print("❌ 올바르지 않은 딥링크 형식")
+        print("=======================")
+        return false
     }
 }
 
