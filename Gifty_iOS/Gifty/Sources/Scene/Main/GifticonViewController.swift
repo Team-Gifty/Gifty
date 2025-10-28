@@ -89,14 +89,12 @@ class GifticonViewController: BaseViewController {
     }
 
     @objc private func shareButtonTapped() {
-        // 공유 옵션 선택 액션시트
         let actionSheet = UIAlertController(
             title: "공유 방법 선택",
             message: "어떻게 공유하시겠어요?",
             preferredStyle: .actionSheet
         )
-        
-        // 카카오톡 공유
+
         if ShareApi.isKakaoTalkSharingAvailable() {
             actionSheet.addAction(UIAlertAction(
                 title: "💬 카카오톡으로 공유",
@@ -106,8 +104,7 @@ class GifticonViewController: BaseViewController {
                 }
             ))
         }
-        
-        // 이미지 공유
+
         actionSheet.addAction(UIAlertAction(
             title: "📷 이미지로 공유",
             style: .default,
@@ -115,14 +112,12 @@ class GifticonViewController: BaseViewController {
                 self?.shareImage()
             }
         ))
-        
-        // 취소
+
         actionSheet.addAction(UIAlertAction(
             title: "취소",
             style: .cancel
         ))
-        
-        // iPad 지원
+
         if let popoverController = actionSheet.popoverPresentationController {
             popoverController.sourceView = shareButton
             popoverController.sourceRect = shareButton.bounds
@@ -143,7 +138,7 @@ class GifticonViewController: BaseViewController {
         let feedTemplate = FeedTemplate(
             content: Content(
                 title: "🎁 \(gift.name)",
-                imageUrl: URL(string: "https://via.placeholder.com/400x300")!, // 임시 이미지
+                imageUrl: URL(string: "https://via.placeholder.com/400x300")!,
                 description: "사용처: \(gift.usage)\n유효기간: \(expiryString)",
                 link: Link(
                     webUrl: URL(string: "https://gifty.app"),
@@ -197,7 +192,6 @@ class GifticonViewController: BaseViewController {
             applicationActivities: nil
         )
         
-        // iPad 지원
         if let popoverController = activityViewController.popoverPresentationController {
             popoverController.sourceView = shareButton
             popoverController.sourceRect = shareButton.bounds
@@ -218,8 +212,7 @@ class GifticonViewController: BaseViewController {
         })
         present(alert, animated: true)
     }
-    
-    // 일반 알림
+
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
