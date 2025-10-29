@@ -31,7 +31,6 @@ class GifticonViewController: BaseViewController {
     }
 
     private let productcontentLabel = UILabel().then {
-        $0.text = "상품명 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
@@ -43,7 +42,6 @@ class GifticonViewController: BaseViewController {
     }
 
     private let storecontentLabel = UILabel().then {
-        $0.text = "사용처 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
@@ -55,7 +53,6 @@ class GifticonViewController: BaseViewController {
     }
 
     private let expirycontentLabel = UILabel().then {
-        $0.text = "유효기간 내용"
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
     }
