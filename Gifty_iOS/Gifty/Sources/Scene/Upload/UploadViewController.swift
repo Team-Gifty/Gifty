@@ -36,7 +36,7 @@ class UploadViewController: BaseViewController {
         $0.backgroundColor = .F_7_EAD_8
         $0.layer.cornerRadius = 15
         $0.clipsToBounds = true
-        $0.imageView?.contentMode = .scaleAspectFit
+        $0.imageView?.contentMode = .scaleAspectFill
     }
     
     
