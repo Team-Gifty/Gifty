@@ -10,7 +10,7 @@ class GifticonViewController: BaseViewController {
 
     private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
-        $0.contentMode = .scaleAspectFit
+        $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 15
         $0.isUserInteractionEnabled = true
@@ -361,8 +361,14 @@ class GifticonViewController: BaseViewController {
     }
 
     @objc private func imageViewTapped() {
+        guard let gift = gift else { return }
+
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
+        let originalImage = UIImage(contentsOfFile: fileURL.path)
+
         let zoomVC = ImageZoomViewController()
-        zoomVC.image = imageView.image
+        zoomVC.image = originalImage
         zoomVC.modalPresentationStyle = .fullScreen
         present(zoomVC, animated: true, completion: nil)
     }
