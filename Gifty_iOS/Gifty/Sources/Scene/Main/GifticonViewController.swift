@@ -270,8 +270,9 @@ class GifticonViewController: BaseViewController {
         dateFormatter.dateFormat = "yyyy.MM.dd"
         expirycontentLabel.text = dateFormatter.string(from: gift.expiryDate)
 
-        memocontentLabel.text = gift.memo ?? "등록된 메모가 없어요"
-        memocontentLabel.textColor = gift.memo == nil ? .CDB_9_AD : ._6_A_4_C_4_C
+        let isMemoEmpty = gift.memo?.isEmpty ?? true
+        memocontentLabel.text = isMemoEmpty ? "등록된 메모가 없어요" : gift.memo
+        memocontentLabel.textColor = isMemoEmpty ? .CDB_9_AD : ._6_A_4_C_4_C
 
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
