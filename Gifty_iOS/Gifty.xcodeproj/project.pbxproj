@@ -20,10 +20,23 @@
 		6F2EF7DB2EABC0E000E43376 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 6F2EF7DA2EABC0E000E43376 /* FirebaseAppCheck */; };
 		6F2EF7DD2EABC1B600E43376 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 6F2EF7DC2EABC1B600E43376 /* FirebaseMessaging */; };
 		6F8507E92E9FA966006DA65B /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6FCDCF5E2EB2EEF800D6D919 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCDCF5D2EB2EEF800D6D919 /* WidgetKit.framework */; };
+		6FCDCF602EB2EEF800D6D919 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCDCF5F2EB2EEF800D6D919 /* SwiftUI.framework */; };
+		6FCDCF712EB2EEF900D6D919 /* GiftyWigetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6FCDCF5C2EB2EEF800D6D919 /* GiftyWigetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; };
 		852807FC2E899A37009710CC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FB2E899A37009710CC /* Then */; };
 		852807FF2E899A45009710CC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FE2E899A45009710CC /* SnapKit */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6FCDCF6F2EB2EEF900D6D919 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85BB43432E83F68E002330D2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FCDCF5B2EB2EEF800D6D919;
+			remoteInfo = GiftyWigetExtension;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		6F8507E82E9FA963006DA65B /* Embed Frameworks */ = {
@@ -37,13 +50,34 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6FCDCF722EB2EEF900D6D919 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6FCDCF712EB2EEF900D6D919 /* GiftyWigetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6FCDCF5C2EB2EEF800D6D919 /* GiftyWigetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GiftyWigetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FCDCF5D2EB2EEF800D6D919 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		6FCDCF5F2EB2EEF800D6D919 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6FCDCF762EB2EEF900D6D919 /* Exceptions for "GiftyWiget" folder in "GiftyWigetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6FCDCF5B2EB2EEF800D6D919 /* GiftyWigetExtension */;
+		};
 		85BB435D2E83F68F002330D2 /* Exceptions for "Gifty" folder in "Gifty" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -54,6 +88,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		6FCDCF612EB2EEF900D6D919 /* GiftyWiget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6FCDCF762EB2EEF900D6D919 /* Exceptions for "GiftyWiget" folder in "GiftyWigetExtension" target */,
+			);
+			path = GiftyWiget;
+			sourceTree = "<group>";
+		};
 		85BB434D2E83F68E002330D2 /* Gifty */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -65,6 +107,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6FCDCF592EB2EEF800D6D919 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FCDCF602EB2EEF800D6D919 /* SwiftUI.framework in Frameworks */,
+				6FCDCF5E2EB2EEF800D6D919 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85BB43482E83F68E002330D2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -93,6 +144,8 @@
 		6F6ABF672E9DEC8B0023A872 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FCDCF5D2EB2EEF800D6D919 /* WidgetKit.framework */,
+				6FCDCF5F2EB2EEF800D6D919 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -101,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				85BB434D2E83F68E002330D2 /* Gifty */,
+				6FCDCF612EB2EEF900D6D919 /* GiftyWiget */,
 				6F6ABF672E9DEC8B0023A872 /* Frameworks */,
 				85BB434C2E83F68E002330D2 /* Products */,
 			);
@@ -110,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				85BB434B2E83F68E002330D2 /* Gifty.app */,
+				6FCDCF5C2EB2EEF800D6D919 /* GiftyWigetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +172,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6FCDCF5B2EB2EEF800D6D919 /* GiftyWigetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FCDCF752EB2EEF900D6D919 /* Build configuration list for PBXNativeTarget "GiftyWigetExtension" */;
+			buildPhases = (
+				6FCDCF582EB2EEF800D6D919 /* Sources */,
+				6FCDCF592EB2EEF800D6D919 /* Frameworks */,
+				6FCDCF5A2EB2EEF800D6D919 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				6FCDCF612EB2EEF900D6D919 /* GiftyWiget */,
+			);
+			name = GiftyWigetExtension;
+			packageProductDependencies = (
+			);
+			productName = GiftyWigetExtension;
+			productReference = 6FCDCF5C2EB2EEF800D6D919 /* GiftyWigetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		85BB434A2E83F68E002330D2 /* Gifty */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85BB435E2E83F68F002330D2 /* Build configuration list for PBXNativeTarget "Gifty" */;
@@ -126,10 +203,12 @@
 				85BB43482E83F68E002330D2 /* Frameworks */,
 				85BB43492E83F68E002330D2 /* Resources */,
 				6F8507E82E9FA963006DA65B /* Embed Frameworks */,
+				6FCDCF722EB2EEF900D6D919 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6FCDCF702EB2EEF900D6D919 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				85BB434D2E83F68E002330D2 /* Gifty */,
@@ -166,6 +245,9 @@
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					6FCDCF5B2EB2EEF800D6D919 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 					85BB434A2E83F68E002330D2 = {
 						CreatedOnToolsVersion = 26.0;
 					};
@@ -193,11 +275,19 @@
 			projectRoot = "";
 			targets = (
 				85BB434A2E83F68E002330D2 /* Gifty */,
+				6FCDCF5B2EB2EEF800D6D919 /* GiftyWigetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6FCDCF5A2EB2EEF800D6D919 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85BB43492E83F68E002330D2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,6 +318,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6FCDCF582EB2EEF800D6D919 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		85BB43472E83F68E002330D2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -237,7 +334,75 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		6FCDCF702EB2EEF900D6D919 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6FCDCF5B2EB2EEF800D6D919 /* GiftyWigetExtension */;
+			targetProxy = 6FCDCF6F2EB2EEF900D6D919 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		6FCDCF732EB2EEF900D6D919 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4WFV8NBUPB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GiftyWiget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GiftyWiget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ahyeonlee.gifty.app.GiftyWiget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6FCDCF742EB2EEF900D6D919 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4WFV8NBUPB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GiftyWiget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GiftyWiget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ahyeonlee.gifty.app.GiftyWiget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		85BB435F2E83F68F002330D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -436,6 +601,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6FCDCF752EB2EEF900D6D919 /* Build configuration list for PBXNativeTarget "GiftyWigetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FCDCF732EB2EEF900D6D919 /* Debug */,
+				6FCDCF742EB2EEF900D6D919 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		85BB43462E83F68E002330D2 /* Build configuration list for PBXProject "Gifty" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
