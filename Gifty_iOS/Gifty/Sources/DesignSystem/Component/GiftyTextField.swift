@@ -105,4 +105,8 @@ class GiftyTextField: UIView {
             get { return textField.delegate }
             set { textField.delegate = newValue }
         }
+
+    func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {
+        textField.addTarget(target, action: action, for: controlEvents)
+    }
 }
