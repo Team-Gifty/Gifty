@@ -26,11 +26,19 @@ class GiftyTabBarController: UITabBarController, UITabBarControllerDelegate {
         let addVC = UploadViewController()
         let searchVC = SearchViewController()
 
-        homeVC.tabBarItem = GiftyTabBarItem(.home)
-        addVC.tabBarItem = GiftyTabBarItem(.add)
-        searchVC.tabBarItem = GiftyTabBarItem(.search)
+        let homeNav = UINavigationController(rootViewController: homeVC)
+        let addNav = UINavigationController(rootViewController: addVC)
+        let searchNav = UINavigationController(rootViewController: searchVC)
+        
+        homeNav.setNavigationBarHidden(true, animated: false)
+        addNav.setNavigationBarHidden(true, animated: false)
+        searchNav.setNavigationBarHidden(true, animated: false)
 
-        self.viewControllers = [homeVC, addVC, searchVC]
+        homeNav.tabBarItem = GiftyTabBarItem(.home)
+        addNav.tabBarItem = GiftyTabBarItem(.add)
+        searchNav.tabBarItem = GiftyTabBarItem(.search)
+
+        self.viewControllers = [homeNav, addNav, searchNav]
     }
 }
 

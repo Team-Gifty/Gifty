@@ -77,6 +77,13 @@ class MainViewController: BaseViewController {
             name: NSNotification.Name("OpenGifticon"),
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(refreshGiftList),
+            name: NSNotification.Name("RefreshGiftList"),
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -212,6 +219,11 @@ class MainViewController: BaseViewController {
         NotificationManager.shared.scheduleDailySummaryNotificationForTest()
     }
 
+    @objc private func refreshGiftList() {
+        print("♻️ 기프티콘 목록 새로고침")
+        loadGifts()
+    }
+    
     @objc private func handleDeepLink(_ notification: Notification) {
         guard let giftId = notification.userInfo?["giftId"] as? String else { return }
         

@@ -73,11 +73,7 @@ class SearchViewController: BaseViewController {
         hideKeyboardWhenTappedAround()
     }
 
-    func hideKeyboardWhenTappedAround() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
+
 
     
     override func addView() {
@@ -91,7 +87,7 @@ class SearchViewController: BaseViewController {
     
     override func setLayout() {
         searchTextField.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-32)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             $0.leading.trailing.equalToSuperview().inset(25)
             $0.height.equalTo(50)
         }
