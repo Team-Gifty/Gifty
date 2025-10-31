@@ -233,6 +233,10 @@ class GifticonViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
+
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
         if let gift = gift {
             configure(with: gift)
         }
@@ -400,5 +404,11 @@ extension GifticonViewController: ModifyGiftViewControllerDelegate {
             configure(with: gift)
             NotificationManager.shared.scheduleDailySummaryNotification()
         }
+    }
+}
+
+extension GifticonViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return navigationController?.viewControllers.count ?? 0 > 1
     }
 }
