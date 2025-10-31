@@ -49,18 +49,15 @@ class UploadViewController: BaseViewController {
         informationButton.addTarget(self, action: #selector(informationButtonTapped), for: .touchUpInside)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleGiftRegistered), name: .giftRegistered, object: nil)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: .giftRegistered, object: nil)
-    }
-
-    @objc private func handleGiftRegistered() {
+    func registrationDidComplete() {
         clearInputs()
+        
+        if let mainVC = self.tabBarController?.viewControllers?[0] as? MainViewController {
+            mainVC.ShowCheckModal = true
+        }
+        
+        self.navigationController?.popToRootViewController(animated: false)
+        self.tabBarController?.selectedIndex = 0
     }
     
     override func addView() {
@@ -119,7 +116,7 @@ class UploadViewController: BaseViewController {
         self.navigationController?.pushViewController(productNameVC, animated: true)
     }
     
-    private func clearInputs() {
+    func clearInputs() {
         self.selectedImage = nil
         self.selectedImageName = nil
         

@@ -53,7 +53,9 @@ class MemoViewController: BaseViewController {
         guard let name = productName,
               let usage = usageLocation,
               let expiryDate = expirationDate,
-              let imageName = selectedImageName else { return }
+              let imageName = selectedImageName else {
+            return 
+        }
         
         let memo = memoTextField.text
         
@@ -62,18 +64,44 @@ class MemoViewController: BaseViewController {
             return
         }
         
+        print("===== 등록 시작 =====")
+        
         if let newGift = viewModel.saveGift(name: name, usage: usage, expiryDate: expiryDate, memo: memo, imagePath: imageName) {
+            print("✅ 기프티콘 저장 성공: \(newGift.name)")
             NotificationManager.shared.scheduleImmediateNotification(for: newGift)
             NotificationManager.shared.scheduleDailySummaryNotification()
-            NotificationCenter.default.post(name: .giftRegistered, object: nil)
         }
         
-        if let mainVC = self.navigationController?.tabBarController?.viewControllers?[0] as? MainViewController {
-            mainVC.ShowCheckModal = true
-        }
+        print("네비게이션 컨트롤러: \(String(describing: self.navigationController))")
+        print("탭바 컨트롤러: \(String(describing: self.tabBarController))")
         
-        self.navigationController?.popToRootViewController(animated: false)
-        self.tabBarController?.selectedIndex = 0
+        if let tabBarController = self.tabBarController {
+            if let homeNav = tabBarController.viewControllers?[0] as? UINavigationController,
+               let mainVC = homeNav.viewControllers.first as? MainViewController {
+                print("✅ MainViewController 발견")
+                mainVC.ShowCheckModal = true
+            } else {
+                print("❌ MainViewController 찾기 실패")
+            }
+            
+            if let uploadVC = self.navigationController?.viewControllers.first as? UploadViewController {
+                uploadVC.clearInputs()
+            } else {}
+            
+            if let navController = self.navigationController {
+                print("✅ 네비게이션 스택 초기화")
+                navController.popToRootViewController(animated: false)
+            } else {
+                print("❌ 네비게이션 컨트롤러 없음")
+            }
+
+            print("홈 탭으로 전환")
+            tabBarController.selectedIndex = 0
+            
+            print("===== 등록 완료 =====")
+        } else {
+            print("❌ 탭바 컨트롤러 찾기 실패")
+        }
     }
 
     private func showAlert(title: String, message: String) {

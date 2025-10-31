@@ -21,11 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if RealmManager.shared.getUser() != nil {
             rootVC = GiftyTabBarController()
         } else {
-            rootVC = NicknameViewController()
+            let nicknameVC = NicknameViewController()
+            rootVC = UINavigationController(rootViewController: nicknameVC)
         }
         
-        let navController = UINavigationController(rootViewController: rootVC)
-        window?.rootViewController = navController
+        window?.rootViewController = rootVC
         window?.makeKeyAndVisible()
         printRealmPath()
     }

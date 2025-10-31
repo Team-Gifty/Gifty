@@ -374,7 +374,7 @@ class GifticonViewController: BaseViewController {
     @objc
     private func deleteButtonTapped() {
         let deleteModalVC = DeleteModalViewController()
-        deleteModalVC.modalPresentationStyle = .overFullScreen
+        deleteModalVC.modalTransitionStyle = .crossDissolve
         deleteModalVC.onDelete = {
             if let gift = self.gift {
                 RealmManager.shared.deleteGift(gift)
