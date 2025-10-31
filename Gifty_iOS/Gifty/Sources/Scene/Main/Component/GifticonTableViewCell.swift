@@ -53,10 +53,10 @@ class GifticonTableViewCell: UITableViewCell {
         self.selectionStyle = .none
         self.backgroundColor = .FFF_7_EC
 
-        contentView.layer.shadowColor = UIColor.CBBDB_1.cgColor
-        contentView.layer.shadowOpacity = 0.5
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        contentView.layer.shadowRadius = 3
+        contentView.layer.shadowColor = UIColor(named: "595959")?.cgColor
+        contentView.layer.shadowOpacity = 0.25
+        contentView.layer.shadowOffset = CGSize(width: 1, height: 2.5)
+        contentView.layer.shadowRadius = 2
         contentView.layer.masksToBounds = false
 
         addView()
