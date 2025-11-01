@@ -126,17 +126,44 @@ class GifticonViewController: BaseViewController {
     private func shareToKakaoTalk() {
         guard let gift = gift else { return }
         
+        let loadingAlert = UIAlertController(title: nil, message: "공유 준비 중...", preferredStyle: .alert)
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = .medium
+        loadingIndicator.startAnimating()
+        loadingAlert.view.addSubview(loadingIndicator)
+        present(loadingAlert, animated: true)
         
+        FirebaseManager.shared.shareGift(gift) { [weak self] result in
+            DispatchQueue.main.async {
+                loadingAlert.dismiss(animated: true) {
+                    switch result {
+                    case .success(let sharedGiftId):
+                        self?.sendKakaoTalkMessage(gift: gift, sharedGiftId: sharedGiftId)
+                        
+                    case .failure(let error):
+                        print("❌ Firebase 업로드 실패: \(error.localizedDescription)")
+                        self?.showAlert(title: "공유 실패", message: "기프티콘 공유 중 오류가 발생했습니다.\n\(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+    }
+    
+    private func sendKakaoTalkMessage(gift: Gift, sharedGiftId: String) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let expiryString = dateFormatter.string(from: gift.expiryDate)
         
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
+        guard let image = UIImage(contentsOfFile: fileURL.path) else { return }
         
         let feedTemplate = FeedTemplate(
             content: Content(
                 title: "🎁 \(gift.name)",
                 imageUrl: URL(string: "https://via.placeholder.com/400x300")!,
-                description: "사용처: \(gift.usage)\n유효기간: \(expiryString)",
+                description: "\(gift.usage)에서 사용 가능\n유효기간: \(expiryString)까지\n\n아래 버튼을 눌러 받아가세요!",
                 link: Link(
                     webUrl: URL(string: "https://gifty.app"),
                     mobileWebUrl: URL(string: "https://gifty.app")
@@ -144,11 +171,9 @@ class GifticonViewController: BaseViewController {
             ),
             buttons: [
                 Button(
-                    title: "앱에서 보기",
+                    title: "기프티콘 받기",
                     link: Link(
-                        webUrl: URL(string: "https://gifty.app"),
-                        mobileWebUrl: URL(string: "gifty://gifticon?id=\(gift.id.stringValue)"),
-                        iosExecutionParams: ["id": gift.id.stringValue]
+                        iosExecutionParams: ["path": "gift", "id": sharedGiftId]
                     )
                 )
             ]
@@ -156,6 +181,7 @@ class GifticonViewController: BaseViewController {
 
         if ShareApi.isKakaoTalkSharingAvailable() {
             print("===== 카카오톡 공유 시작 =====")
+            print("공유 ID: \(sharedGiftId)")
             ShareApi.shared.shareDefault(templatable: feedTemplate) { [weak self] (sharingResult, error) in
                 if let error = error {
                     print("❌ 카카오톡 공유 실패: \(error.localizedDescription)")
@@ -233,6 +259,10 @@ class GifticonViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
+
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
         if let gift = gift {
             configure(with: gift)
         }
@@ -375,6 +405,7 @@ class GifticonViewController: BaseViewController {
     private func deleteButtonTapped() {
         let deleteModalVC = DeleteModalViewController()
         deleteModalVC.modalPresentationStyle = .overFullScreen
+        deleteModalVC.modalTransitionStyle = .crossDissolve
         deleteModalVC.onDelete = {
             if let gift = self.gift {
                 RealmManager.shared.deleteGift(gift)
@@ -400,5 +431,11 @@ extension GifticonViewController: ModifyGiftViewControllerDelegate {
             configure(with: gift)
             NotificationManager.shared.scheduleDailySummaryNotification()
         }
+    }
+}
+
+extension GifticonViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return navigationController?.viewControllers.count ?? 0 > 1
     }
 }

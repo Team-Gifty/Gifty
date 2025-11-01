@@ -51,6 +51,10 @@ class DeleteModalViewController: BaseViewController {
         $0.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
 
+    private let dimmingView = UIView().then {
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
@@ -67,6 +71,8 @@ class DeleteModalViewController: BaseViewController {
     }
 
     override func addView() {
+        view.addSubview(dimmingView)
+        
         [
             deleteLabel,
             warningLabel,
@@ -84,6 +90,10 @@ class DeleteModalViewController: BaseViewController {
     }
 
     override func setLayout() {
+        dimmingView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         modalView.snp.makeConstraints {
             $0.width.equalTo(330)
             $0.height.equalTo(212)
