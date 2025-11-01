@@ -8,7 +8,7 @@ class SearchViewController: BaseViewController {
     private var searchResults: Results<Gift>?
     private var currentFilter: SearchFilter = .productName
     private let filterDropDownView = FilterDropDownView()
-
+    
     
     lazy var searchTextField = UITextField().then {
         $0.placeholder = "검색"
@@ -31,7 +31,7 @@ class SearchViewController: BaseViewController {
         let leftContainer = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 24))
         leftImageView.frame = CGRect(x: 20, y: 2, width: 20, height: 20)
         leftContainer.addSubview(leftImageView)
-
+        
         $0.leftView = leftContainer
         $0.leftViewMode = .always
         
@@ -42,8 +42,8 @@ class SearchViewController: BaseViewController {
         rightButton.frame = CGRect(x: 0, y: 4, width: 21.27, height: 13)
         rightContainer.addSubview(rightButton)
         rightButton.addTarget(self, action: #selector(toggleFilterDropdown), for: .touchUpInside)
-
-
+        
+        
         $0.rightView = rightContainer
         $0.rightViewMode = .always
         
@@ -72,6 +72,13 @@ class SearchViewController: BaseViewController {
         updateUI()
         hideKeyboardWhenTappedAround()
     }
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
 
 
 
@@ -159,6 +166,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 102
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let gift = searchResults?[indexPath.row] else { return }
+        
+        let gifticonVC = GifticonViewController()
+        gifticonVC.gift = gift
+        navigationController?.pushViewController(gifticonVC, animated: true)
     }
 }
 
