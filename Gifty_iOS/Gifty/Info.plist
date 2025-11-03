@@ -35,7 +35,7 @@
 		<string>remote-notification</string>
 	</array>
 	    <key>KAKAO_APP_KEY</key>
-	    <string>0a7125c53730880f2e8a9186997873be</string>
+	    <string>$(KAKAO_APP_KEY)</string>
 	    <key>SUPABASE_URL</key>
 	    <string>$(SUPABASE_URL)</string>
 	    <key>SUPABASE_KEY</key>
@@ -46,7 +46,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao0a7125c53730880f2e8a9186997873be</string>
+				<string>kakao$(KAKAO_APP_KEY)</string>
 				<string>gifty</string>
 			</array>
 		</dict>
@@ -55,7 +55,7 @@
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
-		<string>kakao0a7125c53730880f2e8a9186997873be</string>
+		<string>kakao$(KAKAO_APP_KEY)</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
