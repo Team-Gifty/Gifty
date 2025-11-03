@@ -1,3 +1,8 @@
+// ===== Firebase → Supabase 마이그레이션으로 인한 주석 처리 =====
+// 롤백이 필요한 경우를 대비해 코드를 보존합니다.
+// Supabase 마이그레이션 완료 후 안정화되면 삭제 가능합니다.
+
+/*
 import Foundation
 import FirebaseFirestore
 import FirebaseStorage
@@ -230,3 +235,4 @@ class FirebaseManager {
         }.resume()
     }
 }
+*/

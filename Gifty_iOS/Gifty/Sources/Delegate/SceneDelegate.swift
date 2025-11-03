@@ -128,8 +128,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         topController.present(loadingAlert, animated: true)
-        
-        FirebaseManager.shared.receiveGift(sharedGiftId: sharedGiftId) { result in
+
+        SupabaseManager.shared.receiveGift(sharedGiftId: sharedGiftId) { result in
             DispatchQueue.main.async {
                 loadingAlert.dismiss(animated: true) {
                     switch result {
