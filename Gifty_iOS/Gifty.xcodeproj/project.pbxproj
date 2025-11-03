@@ -22,6 +22,12 @@
 		6F7FE39A2EB52AB100AD3D43 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 6F7FE3992EB52AB100AD3D43 /* FirebaseFirestore */; };
 		6F7FE39C2EB52AD400AD3D43 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6F7FE39B2EB52AD400AD3D43 /* FirebaseStorage */; };
 		6F8507E92E9FA966006DA65B /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		6F98A5672EB8D66800001B66 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A5662EB8D66800001B66 /* Auth */; };
+		6F98A5692EB8D66800001B66 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A5682EB8D66800001B66 /* Functions */; };
+		6F98A56B2EB8D66800001B66 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A56A2EB8D66800001B66 /* PostgREST */; };
+		6F98A56D2EB8D66800001B66 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A56C2EB8D66800001B66 /* Realtime */; };
+		6F98A56F2EB8D66800001B66 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A56E2EB8D66800001B66 /* Storage */; };
+		6F98A5712EB8D66800001B66 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 6F98A5702EB8D66800001B66 /* Supabase */; };
 		85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 85190AEC2E8C3D1B00498C29 /* RealmSwift */; };
 		852807FC2E899A37009710CC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FB2E899A37009710CC /* Then */; };
 		852807FF2E899A45009710CC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 852807FE2E899A45009710CC /* SnapKit */; };
@@ -71,9 +77,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F98A56D2EB8D66800001B66 /* Realtime in Frameworks */,
 				6F2EF7DD2EABC1B600E43376 /* FirebaseMessaging in Frameworks */,
+				6F98A56F2EB8D66800001B66 /* Storage in Frameworks */,
+				6F98A5712EB8D66800001B66 /* Supabase in Frameworks */,
 				6F0B87D32EB08FF000B8EC92 /* KakaoSDKCommon in Frameworks */,
+				6F98A5672EB8D66800001B66 /* Auth in Frameworks */,
 				6F0B87D12EB08FF000B8EC92 /* KakaoSDK in Frameworks */,
+				6F98A56B2EB8D66800001B66 /* PostgREST in Frameworks */,
 				6F2EF7DB2EABC0E000E43376 /* FirebaseAppCheck in Frameworks */,
 				85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */,
 				6F7FE39A2EB52AB100AD3D43 /* FirebaseFirestore in Frameworks */,
@@ -81,6 +92,7 @@
 				6F2EF7D72EABC0E000E43376 /* FirebaseAnalyticsCore in Frameworks */,
 				6F0B87D72EB08FF000B8EC92 /* KakaoSDKTalk in Frameworks */,
 				6F0B87DB2EB08FF000B8EC92 /* KakaoSDKUser in Frameworks */,
+				6F98A5692EB8D66800001B66 /* Functions in Frameworks */,
 				6F2EF7D32EABC0E000E43376 /* FirebaseAI in Frameworks */,
 				6F0B87D92EB08FF000B8EC92 /* KakaoSDKTemplate in Frameworks */,
 				6F7FE39C2EB52AD400AD3D43 /* FirebaseStorage in Frameworks */,
@@ -157,6 +169,12 @@
 				6F0B87DA2EB08FF000B8EC92 /* KakaoSDKUser */,
 				6F7FE3992EB52AB100AD3D43 /* FirebaseFirestore */,
 				6F7FE39B2EB52AD400AD3D43 /* FirebaseStorage */,
+				6F98A5662EB8D66800001B66 /* Auth */,
+				6F98A5682EB8D66800001B66 /* Functions */,
+				6F98A56A2EB8D66800001B66 /* PostgREST */,
+				6F98A56C2EB8D66800001B66 /* Realtime */,
+				6F98A56E2EB8D66800001B66 /* Storage */,
+				6F98A5702EB8D66800001B66 /* Supabase */,
 			);
 			productName = Gifty_iOS;
 			productReference = 85BB434B2E83F68E002330D2 /* Gifty.app */;
@@ -192,6 +210,7 @@
 				85190AEB2E8C3D1B00498C29 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				6F2EF7D12EABC0E000E43376 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				6F0B87CF2EB08FEF00B8EC92 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85BB434C2E83F68E002330D2 /* Products */;
@@ -479,6 +498,14 @@
 				minimumVersion = 12.4.0;
 			};
 		};
+		6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 		85190AEB2E8C3D1B00498C29 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -575,6 +602,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6F2EF7D12EABC0E000E43376 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		6F98A5662EB8D66800001B66 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		6F98A5682EB8D66800001B66 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		6F98A56A2EB8D66800001B66 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		6F98A56C2EB8D66800001B66 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		6F98A56E2EB8D66800001B66 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		6F98A5702EB8D66800001B66 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
 		};
 		85190AEC2E8C3D1B00498C29 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
