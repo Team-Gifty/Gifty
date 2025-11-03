@@ -133,8 +133,8 @@ class GifticonViewController: BaseViewController {
         loadingIndicator.startAnimating()
         loadingAlert.view.addSubview(loadingIndicator)
         present(loadingAlert, animated: true)
-        
-        FirebaseManager.shared.shareGift(gift) { [weak self] result in
+
+        SupabaseManager.shared.shareGift(gift) { [weak self] result in
             DispatchQueue.main.async {
                 loadingAlert.dismiss(animated: true) {
                     switch result {

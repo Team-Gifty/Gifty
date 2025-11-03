@@ -6,3 +6,6 @@
 *.xcuserdata/
 *.xccheckout
 *.xcscmblueprint
+
+# Config files with sensitive data
+Config/Config.xcconfig

@@ -135,9 +135,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             
             topController.present(loadingAlert, animated: true)
             
-            FirebaseManager.shared.receiveGift(sharedGiftId: sharedGiftId) { result in
+            SupabaseManager.shared.receiveGift(sharedGiftId: sharedGiftId) { result in
                 DispatchQueue.main.async {
-                    loadingAlert.dismiss(animated: true) {
+                    loadingAlert.dismiss(animated: true, completion: {
                         switch result {
                         case .success(let gift):
                             let successAlert = UIAlertController(
@@ -159,7 +159,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                             errorAlert.addAction(UIAlertAction(title: "확인", style: .default))
                             topController.present(errorAlert, animated: true)
                         }
-                    }
+                    })
                 }
             }
         }
