@@ -59,6 +59,7 @@ class SearchViewController: BaseViewController {
         $0.backgroundColor = .clear
         $0.separatorStyle = .none
         $0.showsVerticalScrollIndicator = false
+        $0.clipsToBounds = false
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
     
@@ -72,16 +73,6 @@ class SearchViewController: BaseViewController {
         updateUI()
         hideKeyboardWhenTappedAround()
     }
-    
-    func hideKeyboardWhenTappedAround() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-
-
-
     
     override func addView() {
         [
@@ -158,8 +149,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let dateString = dateFormatter.string(from: gift.expiryDate)
+
+        let isExpired = gift.checkIsExpired
         
-        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString)
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired)
         
         return cell
     }

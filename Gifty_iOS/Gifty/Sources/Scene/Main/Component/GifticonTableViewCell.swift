@@ -6,6 +6,16 @@ class GifticonTableViewCell: UITableViewCell {
 
     static let identifier = "GifticonTableViewCell"
 
+    private let shadowView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 3
+        $0.layer.shadowColor = UIColor(named: "595959")?.cgColor
+        $0.layer.shadowOpacity = 0.25
+        $0.layer.shadowOffset = CGSize(width: 1, height: 2.5)
+        $0.layer.shadowRadius = 2
+        $0.layer.masksToBounds = false
+    }
+
     private let containerView = UIView().then {
         $0.backgroundColor = .FFFEF_7
         $0.layer.cornerRadius = 3
@@ -51,13 +61,8 @@ class GifticonTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
-        self.backgroundColor = .FFF_7_EC
-
-        contentView.layer.shadowColor = UIColor(named: "595959")?.cgColor
-        contentView.layer.shadowOpacity = 0.25
-        contentView.layer.shadowOffset = CGSize(width: 1, height: 2.5)
-        contentView.layer.shadowRadius = 2
-        contentView.layer.masksToBounds = false
+        self.backgroundColor = .clear
+        contentView.backgroundColor = .clear
 
         addView()
         setLayout()
@@ -69,11 +74,12 @@ class GifticonTableViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.layer.shadowPath = UIBezierPath(roundedRect: containerView.frame, cornerRadius: containerView.layer.cornerRadius).cgPath
     }
 
     private func addView() {
+        contentView.addSubview(shadowView)
         contentView.addSubview(containerView)
+        
         containerView.addSubview(gifticonImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(usageLabel)
@@ -82,6 +88,10 @@ class GifticonTableViewCell: UITableViewCell {
     }
 
     private func setLayout() {
+        shadowView.snp.makeConstraints {
+            $0.edges.equalTo(containerView)
+        }
+        
         containerView.snp.makeConstraints {
             $0.width.equalTo(331)
             $0.height.equalTo(89)
@@ -126,10 +136,12 @@ class GifticonTableViewCell: UITableViewCell {
             expiredLabel.isHidden = false
             dateLabel.textColor = UIColor(named: "7F7D7D")
             containerView.alpha = 0.7
+            shadowView.alpha = 0.7
         } else {
             expiredLabel.isHidden = true
             dateLabel.textColor = UIColor(named: "6A4C4C")
             containerView.alpha = 1.0
+            shadowView.alpha = 1.0
         }
     }
 }
