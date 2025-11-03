@@ -34,9 +34,12 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>KAKAO_APP_KEY</key>
-	<string>0a7125c53730880f2e8a9186997873be</string>
-	<key>CFBundleURLTypes</key>
+	    <key>KAKAO_APP_KEY</key>
+	    <string>0a7125c53730880f2e8a9186997873be</string>
+	    <key>SUPABASE_URL</key>
+	    <string>$(SUPABASE_URL)</string>
+	    <key>SUPABASE_KEY</key>
+	    <string>$(SUPABASE_KEY)</string>	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>

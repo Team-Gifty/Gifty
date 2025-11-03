@@ -48,6 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.example.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -106,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F535D502EBE43250056C8D5 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				6F535D4E2EBE43240056C8D5 /* Config.xcconfig */,
+				6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		6F6ABF672E9DEC8B0023A872 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				85BB434D2E83F68E002330D2 /* Gifty */,
+				6F535D502EBE43250056C8D5 /* Config */,
 				6F6ABF672E9DEC8B0023A872 /* Frameworks */,
 				85BB434C2E83F68E002330D2 /* Products */,
 			);
@@ -265,6 +277,7 @@
 /* Begin XCBuildConfiguration section */
 		85BB435F2E83F68F002330D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F535D4E2EBE43240056C8D5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -301,6 +314,7 @@
 		};
 		85BB43602E83F68F002330D2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F535D4E2EBE43240056C8D5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
