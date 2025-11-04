@@ -93,7 +93,7 @@ class GifticonTableViewCell: UITableViewCell {
         }
         
         containerView.snp.makeConstraints {
-            $0.width.equalTo(331)
+            $0.width.leading.trailing.equalToSuperview().inset(10)
             $0.height.equalTo(89)
             $0.center.equalToSuperview()
         }
