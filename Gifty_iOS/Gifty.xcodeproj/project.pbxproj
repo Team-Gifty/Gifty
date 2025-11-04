@@ -48,8 +48,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.example.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
+		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -150,7 +150,6 @@
 			buildConfigurationList = 85BB435E2E83F68F002330D2 /* Build configuration list for PBXNativeTarget "Gifty" */;
 			buildPhases = (
 				85BB43472E83F68E002330D2 /* Sources */,
-				6FD4A0772E9D38F800041C7B /* ShellScript */,
 				85BB43482E83F68E002330D2 /* Frameworks */,
 				85BB43492E83F68E002330D2 /* Resources */,
 				6F8507E82E9FA963006DA65B /* Embed Frameworks */,
@@ -244,26 +243,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		6FD4A0772E9D38F800041C7B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "  if which swiftlint >/dev/null; then\n      swiftlint || true\n    else\n      echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    fi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		85BB43472E83F68E002330D2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -283,7 +262,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Gifty/Gifty.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 4WFV8NBUPB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifty/Info.plist;
@@ -296,7 +275,7 @@
 					"\" @loader_path/Frameworks\"",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahyeonlee.gifty.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -320,7 +299,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Gifty/Gifty.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 4WFV8NBUPB;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gifty/Info.plist;
@@ -333,7 +312,7 @@
 					"\" @loader_path/Frameworks\"",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahyeonlee.gifty.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -524,8 +503,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.54.6;
 			};
 		};
 		852807FA2E899A37009710CC /* XCRemoteSwiftPackageReference "Then" */ = {
