@@ -289,7 +289,6 @@ class GifticonViewController: BaseViewController {
         
         [productInfoView, storeInfoView, expiryInfoView, memoInfoView].forEach { contentView.addSubview($0) }
         
-        view.addSubview(scrollView)
     }
 
     private func configure(with gift: Gift) {
