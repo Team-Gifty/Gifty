@@ -80,14 +80,14 @@ class UploadViewController: BaseViewController {
         
         shadowView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(photoDescriptionLabel.snp.bottom).offset(16)
+            $0.top.equalTo(photoDescriptionLabel.snp.bottom).offset(30)
             $0.width.equalTo(287)
             $0.height.equalTo(323)
         }
         
         imageuploadButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(photoDescriptionLabel.snp.bottom).offset(16)
+            $0.top.equalTo(photoDescriptionLabel.snp.bottom).offset(30)
             $0.width.equalTo(287)
             $0.height.equalTo(323)
         }
