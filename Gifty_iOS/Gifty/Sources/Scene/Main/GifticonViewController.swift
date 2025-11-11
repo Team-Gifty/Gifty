@@ -7,6 +7,7 @@ import Realm
 
 class GifticonViewController: BaseViewController {
     var gift: Gift?
+    
 
     private let imageView = UIImageView().then {
         $0.image = UIImage(named: "Test")
@@ -69,10 +70,10 @@ class GifticonViewController: BaseViewController {
         $0.textColor = .CDB_9_AD
     }
     
-    private let pView = UIView()
-    private let sView = UIView()
-    private let eView = UIView()
-    private let mView = UIView()
+    private let productInfoView = UIView()
+    private let storeInfoView = UIView()
+    private let expiryInfoView = UIView()
+    private let memoInfoView = UIView()
     private let contentView = UIView()
 
     private let modifyButton = UIButton().then {
@@ -277,16 +278,17 @@ class GifticonViewController: BaseViewController {
 
         [exitButton, deleteButton, shareButton, modifyButton].forEach { view.addSubview($0) }
         
-        pView.addSubview(productLabel)
-        pView.addSubview(productcontentLabel)
-        sView.addSubview(storeLabel)
-        sView.addSubview(storecontentLabel)
-        eView.addSubview(expiryLabel)
-        eView.addSubview(expirycontentLabel)
-        mView.addSubview(memoLabel)
-        mView.addSubview(memocontentLabel)
+        productInfoView.addSubview(productLabel)
+        productInfoView.addSubview(productcontentLabel)
+        storeInfoView.addSubview(storeLabel)
+        storeInfoView.addSubview(storecontentLabel)
+        expiryInfoView.addSubview(expiryLabel)
+        expiryInfoView.addSubview(expirycontentLabel)
+        memoInfoView.addSubview(memoLabel)
+        memoInfoView.addSubview(memocontentLabel)
         
-        [pView, sView, eView, mView].forEach { contentView.addSubview($0) }
+        [productInfoView, storeInfoView, expiryInfoView, memoInfoView].forEach { contentView.addSubview($0) }
+        
     }
 
     private func configure(with gift: Gift) {
@@ -330,7 +332,7 @@ class GifticonViewController: BaseViewController {
             $0.leading.equalTo(productLabel.snp.trailing).offset(42)
             $0.top.bottom.trailing.equalToSuperview()
         }
-        pView.snp.makeConstraints {
+        productInfoView.snp.makeConstraints {
             $0.top.equalTo(contentView.snp.top)
         }
         storeLabel.snp.makeConstraints {
@@ -340,8 +342,8 @@ class GifticonViewController: BaseViewController {
             $0.leading.equalTo(storeLabel.snp.trailing).offset(42)
             $0.top.bottom.trailing.equalToSuperview()
         }
-        sView.snp.makeConstraints {
-            $0.top.equalTo(pView.snp.bottom).offset(14)
+        storeInfoView.snp.makeConstraints {
+            $0.top.equalTo(productInfoView.snp.bottom).offset(14)
         }
         expiryLabel.snp.makeConstraints {
             $0.leading.top.bottom.equalToSuperview()
@@ -350,8 +352,8 @@ class GifticonViewController: BaseViewController {
             $0.leading.equalTo(expiryLabel.snp.trailing).offset(30)
             $0.top.bottom.trailing.equalToSuperview()
         }
-        eView.snp.makeConstraints {
-            $0.top.equalTo(sView.snp.bottom).offset(14)
+        expiryInfoView.snp.makeConstraints {
+            $0.top.equalTo(storeInfoView.snp.bottom).offset(14)
         }
         memoLabel.snp.makeConstraints {
             $0.leading.top.bottom.equalToSuperview()
@@ -360,8 +362,8 @@ class GifticonViewController: BaseViewController {
             $0.leading.equalTo(memoLabel.snp.trailing).offset(55)
             $0.top.bottom.trailing.equalToSuperview()
         }
-        mView.snp.makeConstraints {
-            $0.top.equalTo(eView.snp.bottom).offset(14)
+        memoInfoView.snp.makeConstraints {
+            $0.top.equalTo(expiryInfoView.snp.bottom).offset(14)
         }
         contentView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
