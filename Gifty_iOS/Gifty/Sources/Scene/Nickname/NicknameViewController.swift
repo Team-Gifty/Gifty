@@ -1,10 +1,14 @@
 import UIKit
 import SnapKit
 import Then
-import RealmSwift
+import RxSwift
+import RxCocoa
 
 class NicknameViewController: BaseViewController {
-    var nicknameState: Bool = false
+
+    private let viewModel = NicknameViewModel()
+    private let disposeBag = DisposeBag()
+    private let viewWillAppearTrigger = PublishSubject<Void>()
 
     let nicknameLabel = UILabel().then {
         $0.text = "사용하실 닉네임을 입력해주세요!"
@@ -27,21 +31,15 @@ class NicknameViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadNickname()
         hideKeyboardWhenTappedAround()
+        bind()
+        bindKeyboard()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addKeyboardObservers()
+        viewWillAppearTrigger.onNext(())
     }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        removeKeyboardObservers()
-    }
-
-
 
     override func addView() {
         [
@@ -49,9 +47,6 @@ class NicknameViewController: BaseViewController {
             nicknameField,
             nicknameButton
         ].forEach { view.addSubview($0) }
-        
-        nicknameField.delegate = self
-        nicknameButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
     }
 
     override func setLayout() {
@@ -70,59 +65,60 @@ class NicknameViewController: BaseViewController {
         }
     }
 
-    private func addKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    private func bind() {
+        let input = NicknameViewModel.Input(
+            nicknameText: nicknameField.rx.text.orEmpty.asObservable(),
+            saveButtonTap: nicknameButton.rx.tap.asObservable(),
+            viewWillAppear: viewWillAppearTrigger.asObservable()
+        )
+
+        let output = viewModel.transform(input: input)
+
+        output.isButtonEnabled
+            .drive(nicknameButton.rx.isEnabled)
+            .disposed(by: disposeBag)
+
+        output.isButtonEnabled
+            .drive(onNext: { [weak self] isEnabled in
+                self?.nicknameButton.backgroundColor = isEnabled ? .FDE_1_AD : .lightGray
+                self?.nicknameButton.setTitleColor(isEnabled ? .A_98_E_5_C : .darkGray, for: .normal)
+            })
+            .disposed(by: disposeBag)
+
+        output.loadedNickname
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] nickname in
+                self?.nicknameField.text = nickname
+                print("✅ 저장된 닉네임 불러오기: \(nickname)")
+            })
+            .disposed(by: disposeBag)
+
+        output.saveCompleted
+            .subscribe(onNext: { [weak self] nickname in
+                self?.showSaveAlert(nickname: nickname)
+            })
+            .disposed(by: disposeBag)
     }
 
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
+    private func bindKeyboard() {
+        let keyboardWillShow = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
+            .map { $0.height }
 
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
+        let keyboardWillHide = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+            .map { _ in CGFloat(7) }
 
-        let keyboardHeight = keyboardFrame.height
-        
-        nicknameButton.snp.updateConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(keyboardHeight)
-        }
-        
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        nicknameButton.snp.updateConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(7)
-        }
-        
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    @objc private func saveButtonTapped() {
-        guard let nickname = nicknameField.text, !nickname.isEmpty else {
-            return
-        }
-
-        RealmManager.shared.saveNickname(nickname)
-
-        showSaveAlert(nickname: nickname)
-    }
-
-    private func loadNickname() {
-        if let savedNickname = RealmManager.shared.getUser()?.nickname {
-            nicknameField.text = savedNickname
-            updateNicknameButtonState(isEnabled: true, backgroundColor: .FDE_1_AD, textColor: .A_98_E_5_C)
-            print("✅ 저장된 닉네임 불러오기: \(savedNickname ?? "")")
-        }
+        Observable.merge(keyboardWillShow, keyboardWillHide)
+            .subscribe(onNext: { [weak self] bottomInset in
+                guard let self = self else { return }
+                self.nicknameButton.snp.updateConstraints {
+                    $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(bottomInset)
+                }
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     private func showSaveAlert(nickname: String) {
@@ -150,11 +146,5 @@ class NicknameViewController: BaseViewController {
         UIView.transition(with: sceneDelegate.window!, duration: 0.3, options: .transitionCrossDissolve, animations: {
             sceneDelegate.window?.rootViewController = navController
         })
-    }
-
-    func updateNicknameButtonState(isEnabled: Bool, backgroundColor: UIColor, textColor: UIColor) {
-        nicknameButton.isEnabled = isEnabled
-        nicknameButton.backgroundColor = backgroundColor
-        nicknameButton.setTitleColor(textColor, for: .normal)
     }
 }
