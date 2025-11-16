@@ -67,7 +67,7 @@ class NicknameViewController: BaseViewController {
 
     private func bind() {
         let input = NicknameViewModel.Input(
-            nicknameText: nicknameField.rx.text.orEmpty.asObservable(),
+            nicknameText: nicknameField.innerTextField.rx.text.orEmpty.asObservable(),
             saveButtonTap: nicknameButton.rx.tap.asObservable(),
             viewWillAppear: viewWillAppearTrigger.asObservable()
         )
@@ -79,7 +79,7 @@ class NicknameViewController: BaseViewController {
             .disposed(by: disposeBag)
 
         output.isButtonEnabled
-            .drive(onNext: { [weak self] isEnabled in
+            .drive(onNext: { [weak self] (isEnabled: Bool) in
                 self?.nicknameButton.backgroundColor = isEnabled ? .FDE_1_AD : .lightGray
                 self?.nicknameButton.setTitleColor(isEnabled ? .A_98_E_5_C : .darkGray, for: .normal)
             })
@@ -87,14 +87,14 @@ class NicknameViewController: BaseViewController {
 
         output.loadedNickname
             .compactMap { $0 }
-            .subscribe(onNext: { [weak self] nickname in
+            .subscribe(onNext: { [weak self] (nickname: String) in
                 self?.nicknameField.text = nickname
                 print("✅ 저장된 닉네임 불러오기: \(nickname)")
             })
             .disposed(by: disposeBag)
 
         output.saveCompleted
-            .subscribe(onNext: { [weak self] nickname in
+            .subscribe(onNext: { [weak self] (nickname: String) in
                 self?.showSaveAlert(nickname: nickname)
             })
             .disposed(by: disposeBag)

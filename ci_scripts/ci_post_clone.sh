@@ -2,24 +2,38 @@
 
 set -e
 
-echo "🚀 Starting Xcode Cloud post-clone script..."
+echo "Starting post-clone script..."
 
-# 현재 디렉토리 확인
-echo "📂 Current directory: $(pwd)"
-echo "📦 Workspace: $CI_WORKSPACE"
+echo "Workspace: $CI_WORKSPACE"
 
-# Config 파일이 있는지 확인 (private repo에서 가져온 경우)
-if [ -f "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig" ]; then
-    echo "✅ Config.xcconfig found"
+mkdir -p "$CI_WORKSPACE/Gifty_iOS/Config"
+
+# xcconfig 저장소에서 설정 파일 복사
+XCCONFIG_REPO="$CI_WORKSPACE/../Gifty_XCConfig"
+
+if [ -d "$XCCONFIG_REPO" ]; then
+    if [ -f "$XCCONFIG_REPO/Config.xcconfig" ]; then
+        cp "$XCCONFIG_REPO/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
+        echo "Config copied from root"
+    elif [ -f "$XCCONFIG_REPO/Config/Config.xcconfig" ]; then
+        cp "$XCCONFIG_REPO/Config/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
+        echo "Config copied from Config dir"
+    else
+        echo "Error: Config.xcconfig not found"
+        ls -la "$XCCONFIG_REPO" || true
+        exit 1
+    fi
 else
-    echo "⚠️ Config.xcconfig not found - make sure it's properly configured"
+    echo "Error: Gifty_XCConfig repo not found"
+    echo "Add it as Additional Repository in Xcode Cloud"
+    ls -la "$CI_WORKSPACE/.." || true
+    exit 1
 fi
 
-# SPM 의존성 확인
-if [ -d "$CI_WORKSPACE/Gifty_iOS/.build" ]; then
-    echo "✅ Using cached SPM dependencies"
-else
-    echo "📦 SPM dependencies will be resolved during build"
+if [ ! -f "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig" ]; then
+    echo "Error: Config setup failed"
+    exit 1
 fi
 
-echo "✅ Post-clone script completed successfully"
+echo "Config ready"
+echo "Post-clone completed"
