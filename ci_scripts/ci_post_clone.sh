@@ -2,7 +2,9 @@
 
 set -e
 
-echo "Starting post-clone script..."
+echo "=========================================="
+echo "POST-CLONE SCRIPT IS RUNNING!"
+echo "=========================================="
 echo "Workspace: $CI_WORKSPACE"
 
 # 모든 클론된 저장소 확인

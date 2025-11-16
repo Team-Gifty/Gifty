@@ -23,6 +23,7 @@ workflows:
         configuration: Release
         destination:
           - platform: "iOS"
+        project: Gifty_iOS/Gifty.xcodeproj
             
     # TestFlight 자동 배포
     actions:
