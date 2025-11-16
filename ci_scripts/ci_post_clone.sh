@@ -3,37 +3,56 @@
 set -e
 
 echo "Starting post-clone script..."
-
 echo "Workspace: $CI_WORKSPACE"
+
+# 모든 클론된 저장소 확인
+echo "=== Available repositories ==="
+ls -la "$CI_WORKSPACE/.." || true
+echo "=============================="
 
 mkdir -p "$CI_WORKSPACE/Gifty_iOS/Config"
 
-# xcconfig 저장소에서 설정 파일 복사
-XCCONFIG_REPO="$CI_WORKSPACE/../Gifty_XCConfig"
+# 가능한 모든 xcconfig 저장소 경로 시도
+POSSIBLE_PATHS=(
+    "$CI_WORKSPACE/../Gifty_XCConfig"
+    "$CI_WORKSPACE/../gifty_xcconfig"
+    "$CI_WORKSPACE/../XCConfig"
+    "$CI_WORKSPACE/../xcconfig"
+)
 
-if [ -d "$XCCONFIG_REPO" ]; then
-    if [ -f "$XCCONFIG_REPO/Config.xcconfig" ]; then
-        cp "$XCCONFIG_REPO/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
-        echo "Config copied from root"
-    elif [ -f "$XCCONFIG_REPO/Config/Config.xcconfig" ]; then
-        cp "$XCCONFIG_REPO/Config/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
-        echo "Config copied from Config dir"
-    else
-        echo "Error: Config.xcconfig not found"
+FOUND=false
+
+for XCCONFIG_REPO in "${POSSIBLE_PATHS[@]}"; do
+    if [ -d "$XCCONFIG_REPO" ]; then
+        echo "Found repo at: $XCCONFIG_REPO"
+        echo "Contents:"
         ls -la "$XCCONFIG_REPO" || true
-        exit 1
+
+        if [ -f "$XCCONFIG_REPO/Config.xcconfig" ]; then
+            cp "$XCCONFIG_REPO/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
+            echo "Config copied from root"
+            FOUND=true
+            break
+        elif [ -f "$XCCONFIG_REPO/Config/Config.xcconfig" ]; then
+            cp "$XCCONFIG_REPO/Config/Config.xcconfig" "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig"
+            echo "Config copied from Config dir"
+            FOUND=true
+            break
+        fi
     fi
-else
-    echo "Error: Gifty_XCConfig repo not found"
-    echo "Add it as Additional Repository in Xcode Cloud"
-    ls -la "$CI_WORKSPACE/.." || true
+done
+
+if [ "$FOUND" = false ]; then
+    echo "Error: Config.xcconfig not found in any repository"
+    echo "Make sure Gifty_XCConfig is added as Additional Repository"
     exit 1
 fi
 
-if [ ! -f "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig" ]; then
+if [ -f "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig" ]; then
+    echo "Config ready ($(wc -c < "$CI_WORKSPACE/Gifty_iOS/Config/Config.xcconfig") bytes)"
+else
     echo "Error: Config setup failed"
     exit 1
 fi
 
-echo "Config ready"
 echo "Post-clone completed"
