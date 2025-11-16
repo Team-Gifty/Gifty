@@ -1,7 +1,7 @@
 version: 1
 workflows:
-  Build:
-    name: Xcode Cloud Build
+  TestFlight:
+    name: TestFlight Distribution
     description: Build and archive for iOS
 
     trigger:
