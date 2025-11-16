@@ -1,22 +1,18 @@
 version: 1
 workflows:
-  TestFlight:
-    name: TestFlight Distribution
-    description: Build and distribute to TestFlight automatically
-    
-    # main 브랜치에 push될 때 자동 빌드
+  Build:
+    name: Xcode Cloud Build
+    description: Build and archive for iOS
+
     trigger:
       push:
         branches:
           - main
-      
-    # 빌드 환경
+
     environment:
       xcode: latest
-      
-    # 빌드 단계
+
     steps:
-      # Archive 및 TestFlight 배포
       - name: Archive
         platform: iOS
         scheme: "Gifty 1"
@@ -24,8 +20,3 @@ workflows:
         destination:
           - platform: "iOS"
         project: Gifty_iOS/Gifty.xcodeproj
-            
-    # TestFlight 자동 배포
-    actions:
-      - action: distribute
-        destination: TestFlight
