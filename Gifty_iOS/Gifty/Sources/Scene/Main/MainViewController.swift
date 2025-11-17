@@ -148,8 +148,8 @@ class MainViewController: BaseViewController {
 
         gifticonTableView.snp.makeConstraints {
             $0.top.equalTo(sortButton.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(31)
-            $0.trailing.equalToSuperview().offset(-28)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
 

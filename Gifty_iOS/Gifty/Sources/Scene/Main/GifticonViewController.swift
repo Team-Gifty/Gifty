@@ -398,7 +398,7 @@ class GifticonViewController: BaseViewController {
         exitButton.snp.makeConstraints {
             $0.width.height.equalTo(44)
             $0.top.equalTo(view.snp.top).offset(74)
-            $0.leading.equalToSuperview().inset(34)
+            $0.leading.equalToSuperview().inset(20)
         }
         
     }
