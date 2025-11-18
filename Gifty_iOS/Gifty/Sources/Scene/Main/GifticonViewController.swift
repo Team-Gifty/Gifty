@@ -263,13 +263,21 @@ class GifticonViewController: BaseViewController {
 
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
+
         if let gift = gift {
             configure(with: gift)
         }
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         imageView.addGestureRecognizer(tapGesture)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.bringSubviewToFront(deleteButton)
+        view.bringSubviewToFront(shareButton)
+        view.bringSubviewToFront(modifyButton)
+        view.bringSubviewToFront(exitButton)
     }
 
     override func addView() {
@@ -371,21 +379,26 @@ class GifticonViewController: BaseViewController {
             $0.width.equalTo(245)
             $0.height.equalTo(234)
         }
-        modifyButton.snp.makeConstraints {
-            $0.trailing.equalTo(shadowView.snp.trailing)
-            $0.bottom.equalTo(shadowView.snp.top).offset(-11)
-        }
         shareButton.snp.makeConstraints {
+            $0.width.height.equalTo(44)
             $0.trailing.equalTo(modifyButton.snp.leading).offset(-10)
             $0.bottom.equalTo(shadowView.snp.top).offset(-11)
         }
         deleteButton.snp.makeConstraints {
+            $0.width.height.equalTo(44)
             $0.trailing.equalTo(shareButton.snp.leading).offset(-10)
             $0.bottom.equalTo(shadowView.snp.top).offset(-11)
         }
+        modifyButton.snp.makeConstraints {
+            $0.width.equalTo(68)
+            $0.height.equalTo(33)
+            $0.trailing.equalTo(shadowView.snp.trailing)
+            $0.centerY.equalTo(shareButton)
+        }
         exitButton.snp.makeConstraints {
+            $0.width.height.equalTo(44)
             $0.top.equalTo(view.snp.top).offset(74)
-            $0.leading.equalToSuperview().inset(34)
+            $0.leading.equalToSuperview().inset(20)
         }
         
     }

@@ -48,7 +48,7 @@ class MainViewController: BaseViewController {
         $0.showsVerticalScrollIndicator = false
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
-    
+
     private let testNotificationButton = UIButton(type: .system).then {
         $0.setTitle("Test Notification", for: .normal)
         $0.addTarget(self, action: #selector(testNotificationButtonTapped), for: .touchUpInside)
@@ -77,7 +77,7 @@ class MainViewController: BaseViewController {
             name: NSNotification.Name("OpenGifticon"),
             object: nil
         )
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refreshGiftList),
@@ -113,10 +113,9 @@ class MainViewController: BaseViewController {
             boxImageView,
             noneLabel,
             testNotificationButton,
-
             gifticonTableView
         ].forEach { view.addSubview($0) }
-        
+
         view.bringSubviewToFront(testNotificationButton)
     }
 
@@ -148,8 +147,8 @@ class MainViewController: BaseViewController {
 
         gifticonTableView.snp.makeConstraints {
             $0.top.equalTo(sortButton.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(31)
-            $0.trailing.equalToSuperview().offset(-28)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
 
