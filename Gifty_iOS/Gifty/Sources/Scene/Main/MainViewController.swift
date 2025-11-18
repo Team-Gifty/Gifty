@@ -3,7 +3,6 @@ import SnapKit
 import Then
 import RealmSwift
 import Realm
-import GoogleMobileAds
 
 class MainViewController: BaseViewController {
     
@@ -50,8 +49,6 @@ class MainViewController: BaseViewController {
         $0.register(GifticonTableViewCell.self, forCellReuseIdentifier: GifticonTableViewCell.identifier)
     }
 
-    private let adMobBannerView = AdMobBannerView(adUnitID: "ca-app-pub-6956983354882052/3641173207")
-
     private let testNotificationButton = UIButton(type: .system).then {
         $0.setTitle("Test Notification", for: .normal)
         $0.addTarget(self, action: #selector(testNotificationButtonTapped), for: .touchUpInside)
@@ -73,8 +70,6 @@ class MainViewController: BaseViewController {
         updateSortButtonTitle()
         loadGifts()
         setupRealmNotification()
-
-        adMobBannerView.loadAd(from: self)
 
         NotificationCenter.default.addObserver(
             self,
@@ -118,7 +113,6 @@ class MainViewController: BaseViewController {
             boxImageView,
             noneLabel,
             testNotificationButton,
-            adMobBannerView,
             gifticonTableView
         ].forEach { view.addSubview($0) }
 
@@ -151,16 +145,11 @@ class MainViewController: BaseViewController {
             $0.trailing.equalTo(sortButton.snp.trailing)
         }
 
-        adMobBannerView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-
         gifticonTableView.snp.makeConstraints {
             $0.top.equalTo(sortButton.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(adMobBannerView.snp.top).offset(-10)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-30)
         }
 
         noneLabel.snp.makeConstraints {
