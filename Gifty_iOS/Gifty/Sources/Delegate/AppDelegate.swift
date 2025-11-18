@@ -4,6 +4,7 @@ import FirebaseMessaging
 import UserNotifications
 import KakaoSDKCommon
 import KakaoSDKAuth
+import GoogleMobileAds
 
 @main
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -18,14 +19,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
         
         FirebaseApp.configure()
-        
+
         Messaging.messaging().delegate = self
-        
+
         NotificationManager.shared.requestAuthorization()
         UNUserNotificationCenter.current().delegate = self
-        
+
         NotificationManager.shared.scheduleDailySummaryNotification()
-        
+
+        MobileAds.shared.start(completionHandler: nil)
+        print("===== AdMob SDK 초기화 =====")
+        print("✅ AdMob SDK 초기화 완료")
+        print("===========================")
+
         return true
     }
     
