@@ -10,6 +10,11 @@ class MemoViewController: BaseViewController {
         $0.font = .giftyFont(size: 24)
         $0.textColor = ._6_A_4_C_4_C
     }
+    
+    private let backButton = UIButton().then {
+        $0.setImage(UIImage(named: "Back"), for: .normal)
+        $0.tintColor = ._6_A_4_C_4_C
+    }
 
     private let memoTextField = GiftyTextField(hintText: "메모 (선택)")
 
@@ -29,7 +34,7 @@ class MemoViewController: BaseViewController {
     }
 
     override func addView() {
-        [titleLabel, memoTextField, registerButton].forEach { view.addSubview($0) }
+        [titleLabel, memoTextField, registerButton, backButton].forEach { view.addSubview($0) }
     }
 
     override func setLayout() {
@@ -46,6 +51,11 @@ class MemoViewController: BaseViewController {
         registerButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
+        }
+        
+        backButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(30)
+            $0.top.equalTo(view.safeAreaLayoutGuide).inset(40)
         }
     }
 
