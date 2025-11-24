@@ -24,7 +24,7 @@ class ProductNameViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         nameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         
@@ -73,5 +73,9 @@ class ProductNameViewController: BaseViewController {
         usageLocationVC.productName = name
         usageLocationVC.selectedImageName = selectedImageName
         navigationController?.pushViewController(usageLocationVC, animated: true)
+    }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

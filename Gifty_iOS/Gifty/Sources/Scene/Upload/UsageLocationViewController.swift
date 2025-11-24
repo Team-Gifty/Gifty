@@ -25,7 +25,7 @@ class UsageLocationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         usageTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         
@@ -75,5 +75,9 @@ class UsageLocationViewController: BaseViewController {
         expirationDateVC.usageLocation = usage
         expirationDateVC.selectedImageName = selectedImageName
         navigationController?.pushViewController(expirationDateVC, animated: true)
+    }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

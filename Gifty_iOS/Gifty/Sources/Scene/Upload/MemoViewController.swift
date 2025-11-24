@@ -29,6 +29,7 @@ class MemoViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
     }
 
@@ -63,7 +64,7 @@ class MemoViewController: BaseViewController {
               let usage = usageLocation,
               let expiryDate = expirationDate,
               let imageName = selectedImageName else {
-            return 
+            return
         }
         
         let memo = memoTextField.text
@@ -111,6 +112,10 @@ class MemoViewController: BaseViewController {
         } else {
             print("❌ 탭바 컨트롤러 찾기 실패")
         }
+    }
+
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 
     private func showAlert(title: String, message: String) {

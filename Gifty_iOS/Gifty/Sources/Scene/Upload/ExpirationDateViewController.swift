@@ -31,6 +31,7 @@ class ExpirationDateViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         if #available(iOS 14.0, *) {
             datePicker.overrideUserInterfaceStyle = .light
@@ -72,5 +73,9 @@ class ExpirationDateViewController: BaseViewController {
         memoVC.expirationDate = expirationDate
         memoVC.selectedImageName = selectedImageName
         navigationController?.pushViewController(memoVC, animated: true)
+    }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
