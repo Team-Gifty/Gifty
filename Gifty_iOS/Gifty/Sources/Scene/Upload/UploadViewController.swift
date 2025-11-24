@@ -75,7 +75,7 @@ class UploadViewController: BaseViewController {
     override func setLayout() {
         photoDescriptionLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(75)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(90)
         }
         
         shadowView.snp.makeConstraints {
