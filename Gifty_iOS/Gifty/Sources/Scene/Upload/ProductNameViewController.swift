@@ -13,7 +13,6 @@ class ProductNameViewController: BaseViewController {
     
     private let backButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
-        $0.tintColor = ._6_A_4_C_4_C
     }
 
     private let nameTextField = GiftyTextField(hintText: "상품명")
