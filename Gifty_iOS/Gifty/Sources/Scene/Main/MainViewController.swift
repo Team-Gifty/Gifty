@@ -266,19 +266,19 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
               let gift = gifts?[indexPath.row] else {
             return UITableViewCell()
         }
-        
+
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
         let image = UIImage(contentsOfFile: fileURL.path)
-        
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let dateString = dateFormatter.string(from: gift.expiryDate)
 
         let isExpired = gift.checkIsExpired
-        
-        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired)
-        
+
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired, isShared: gift.isShared)
+
         return cell
     }
     
