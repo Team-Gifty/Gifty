@@ -155,11 +155,11 @@ class GifticonViewController: BaseViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         let expiryString = dateFormatter.string(from: gift.expiryDate)
-        
+
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
         guard let image = UIImage(contentsOfFile: fileURL.path) else { return }
-        
+
         let feedTemplate = FeedTemplate(
             content: Content(
                 title: "🎁 \(gift.name)",
@@ -192,6 +192,10 @@ class GifticonViewController: BaseViewController {
                 } else {
                     print("✅ 카카오톡 공유 성공")
                     print("============================")
+
+                    RealmManager.shared.updateGiftSharedStatus(gift, isShared: true)
+                    self?.configure(with: gift)
+
                     if let sharingResult = sharingResult {
                         UIApplication.shared.open(sharingResult.url, options: [:])
                     }
@@ -313,7 +317,38 @@ class GifticonViewController: BaseViewController {
 
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
-        imageView.image = UIImage(contentsOfFile: fileURL.path)
+        if let originalImage = UIImage(contentsOfFile: fileURL.path) {
+            if gift.isShared {
+                imageView.image = applyBlurAndLogo(to: originalImage)
+            } else {
+                imageView.image = originalImage
+            }
+        }
+    }
+
+    private func applyBlurAndLogo(to image: UIImage) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        defer { UIGraphicsEndImageContext() }
+
+        guard let context = UIGraphicsGetCurrentContext() else { return image }
+
+        image.draw(at: .zero)
+
+        context.saveGState()
+        let blurredImage = image.applyGaussianBlur(radius: 10)
+        blurredImage?.draw(at: .zero, blendMode: .normal, alpha: 0.9)
+        context.restoreGState()
+
+        if let logoImage = UIImage(named: "GiftyBox") {
+            let logoSize = CGSize(width: image.size.width * 0.3, height: image.size.height * 0.3)
+            let logoOrigin = CGPoint(
+                x: (image.size.width - logoSize.width) / 2,
+                y: (image.size.height - logoSize.height) / 2
+            )
+            logoImage.draw(in: CGRect(origin: logoOrigin, size: logoSize), blendMode: .normal, alpha: 0.8)
+        }
+
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 
     @objc private func exitButtonTapped() {
@@ -408,10 +443,17 @@ class GifticonViewController: BaseViewController {
 
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
-        let originalImage = UIImage(contentsOfFile: fileURL.path)
+        guard let originalImage = UIImage(contentsOfFile: fileURL.path) else { return }
+
+        let displayImage: UIImage?
+        if gift.isShared {
+            displayImage = applyBlurAndLogo(to: originalImage)
+        } else {
+            displayImage = originalImage
+        }
 
         let zoomVC = ImageZoomViewController()
-        zoomVC.image = originalImage
+        zoomVC.image = displayImage
         zoomVC.modalPresentationStyle = .fullScreen
         present(zoomVC, animated: true, completion: nil)
     }

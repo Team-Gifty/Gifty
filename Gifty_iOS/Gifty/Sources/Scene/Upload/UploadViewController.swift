@@ -96,7 +96,7 @@ class UploadViewController: BaseViewController {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(300)
             $0.height.equalTo(50)
-            $0.top.equalTo(imageuploadButton.snp.bottom).offset(25)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-70)
         }
     }
     
