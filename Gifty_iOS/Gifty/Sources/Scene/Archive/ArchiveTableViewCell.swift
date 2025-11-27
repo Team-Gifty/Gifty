@@ -8,72 +8,96 @@ class ArchiveTableViewCell: UITableViewCell {
 
     private let shadowView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 16
+        $0.layer.cornerRadius = 8
         $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
-        $0.layer.shadowOpacity = 0.3
-        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
-        $0.layer.shadowRadius = 12
+        $0.layer.shadowOpacity = 0.25
+        $0.layer.shadowOffset = CGSize(width: 0, height: 3)
+        $0.layer.shadowRadius = 10
         $0.layer.masksToBounds = false
     }
 
     private let containerView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.99, green: 0.98, blue: 0.96, alpha: 1.0)
-        $0.layer.cornerRadius = 16
-        $0.clipsToBounds = true
+        $0.backgroundColor = UIColor(red: 0.996, green: 0.988, blue: 0.973, alpha: 1.0)
+        $0.layer.cornerRadius = 8
+        $0.clipsToBounds = false
     }
 
-    private let imageContainerView = UIView().then {
+    private let stampView = UIView().then {
+        $0.backgroundColor = .clear
+        $0.layer.borderWidth = 2
+        $0.layer.borderColor = UIColor.CBBDB_1.cgColor
+        $0.layer.cornerRadius = 4
+        $0.transform = CGAffineTransform(rotationAngle: .pi / 12)
+    }
+
+    private let stampIcon = UILabel().then {
+        $0.text = "💝"
+        $0.font = .systemFont(ofSize: 16)
+        $0.textAlignment = .center
+    }
+
+    private let envelopeTopView = UIView().then {
+        $0.backgroundColor = UIColor(red: 0.89, green: 0.82, blue: 0.75, alpha: 0.3)
+    }
+
+    private let letterPaperView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 12
+        $0.layer.cornerRadius = 6
         $0.layer.shadowColor = UIColor.black.cgColor
-        $0.layer.shadowOpacity = 0.08
-        $0.layer.shadowOffset = CGSize(width: 0, height: 2)
-        $0.layer.shadowRadius = 4
+        $0.layer.shadowOpacity = 0.05
+        $0.layer.shadowOffset = CGSize(width: 0, height: 1)
+        $0.layer.shadowRadius = 2
     }
 
     private let gifticonImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 12
+        $0.layer.cornerRadius = 8
         $0.backgroundColor = .lightGray
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.CBBDB_1.withAlphaComponent(0.2).cgColor
     }
 
-    private let heartIcon = UILabel().then {
-        $0.text = "💝"
-        $0.font = .systemFont(ofSize: 20)
+    private let polaroidFrame = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 4
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.1
+        $0.layer.shadowOffset = CGSize(width: 0, height: 2)
+        $0.layer.shadowRadius = 3
+        $0.transform = CGAffineTransform(rotationAngle: -.pi / 36)
     }
 
     private let titleLabel = UILabel().then {
-        $0.font = .giftyFont(size: 15)
+        $0.font = .giftyFont(size: 16)
         $0.textColor = ._6_A_4_C_4_C
         $0.text = "제목"
         $0.numberOfLines = 2
     }
 
-    private let fromContainer = UIView().then {
-        $0.backgroundColor = UIColor.CBBDB_1.withAlphaComponent(0.2)
-        $0.layer.cornerRadius = 8
+    private let decorLine = UIView().then {
+        $0.backgroundColor = .CBBDB_1.withAlphaComponent(0.4)
+    }
+
+    private let fromIcon = UILabel().then {
+        $0.text = "✉️"
+        $0.font = .systemFont(ofSize: 14)
     }
 
     private let fromLabel = UILabel().then {
-        $0.text = "From"
-        $0.font = .giftyFont(size: 10)
+        $0.text = "From."
+        $0.font = .giftyFont(size: 11)
         $0.textColor = .CDB_9_AD
     }
 
     private let giverLabel = UILabel().then {
-        $0.font = .giftyFont(size: 12)
+        $0.font = .giftyFont(size: 13)
         $0.textColor = ._6_A_4_C_4_C
         $0.text = "준 사람"
     }
 
-    private let dateIcon = UILabel().then {
-        $0.text = "📅"
-        $0.font = .systemFont(ofSize: 11)
-    }
-
     private let dateLabel = UILabel().then {
-        $0.font = .giftyFont(size: 11)
+        $0.font = .giftyFont(size: 10)
         $0.textColor = .CDB_9_AD
         $0.text = "YYYY.MM.DD"
     }
@@ -100,15 +124,19 @@ class ArchiveTableViewCell: UITableViewCell {
         contentView.addSubview(shadowView)
         contentView.addSubview(containerView)
 
-        containerView.addSubview(imageContainerView)
-        imageContainerView.addSubview(gifticonImageView)
-        containerView.addSubview(titleLabel)
-        containerView.addSubview(heartIcon)
-        containerView.addSubview(fromContainer)
-        fromContainer.addSubview(fromLabel)
-        fromContainer.addSubview(giverLabel)
-        containerView.addSubview(dateIcon)
-        containerView.addSubview(dateLabel)
+        containerView.addSubview(envelopeTopView)
+        containerView.addSubview(stampView)
+        stampView.addSubview(stampIcon)
+
+        containerView.addSubview(letterPaperView)
+        letterPaperView.addSubview(polaroidFrame)
+        polaroidFrame.addSubview(gifticonImageView)
+        letterPaperView.addSubview(titleLabel)
+        letterPaperView.addSubview(decorLine)
+        letterPaperView.addSubview(fromIcon)
+        letterPaperView.addSubview(fromLabel)
+        letterPaperView.addSubview(giverLabel)
+        letterPaperView.addSubview(dateLabel)
     }
 
     private func setLayout() {
@@ -121,50 +149,70 @@ class ArchiveTableViewCell: UITableViewCell {
             $0.top.bottom.equalToSuperview().inset(8)
         }
 
-        imageContainerView.snp.makeConstraints {
-            $0.leading.top.equalToSuperview().offset(16)
-            $0.width.height.equalTo(100)
+        envelopeTopView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(40)
+        }
+
+        stampView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.width.height.equalTo(32)
+        }
+
+        stampIcon.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+
+        letterPaperView.snp.makeConstraints {
+            $0.top.equalTo(envelopeTopView.snp.bottom).offset(-8)
+            $0.leading.trailing.equalToSuperview().inset(12)
+            $0.bottom.equalToSuperview().inset(12)
+        }
+
+        polaroidFrame.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(14)
+            $0.top.equalToSuperview().offset(14)
+            $0.width.equalTo(90)
+            $0.height.equalTo(100)
         }
 
         gifticonImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-
-        heartIcon.snp.makeConstraints {
-            $0.top.trailing.equalToSuperview().inset(16)
+            $0.top.leading.trailing.equalToSuperview().inset(6)
+            $0.bottom.equalToSuperview().inset(18)
         }
 
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.equalTo(imageContainerView.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().inset(45)
+            $0.top.equalToSuperview().offset(18)
+            $0.leading.equalTo(polaroidFrame.snp.trailing).offset(14)
+            $0.trailing.equalToSuperview().inset(12)
         }
 
-        fromContainer.snp.makeConstraints {
-            $0.leading.equalTo(titleLabel)
+        decorLine.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(10)
-            $0.height.equalTo(28)
+            $0.leading.equalTo(titleLabel)
+            $0.trailing.equalToSuperview().inset(12)
+            $0.height.equalTo(1)
+        }
+
+        fromIcon.snp.makeConstraints {
+            $0.leading.equalTo(titleLabel)
+            $0.top.equalTo(decorLine.snp.bottom).offset(10)
         }
 
         fromLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(10)
-            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(fromIcon.snp.trailing).offset(4)
+            $0.centerY.equalTo(fromIcon)
         }
 
         giverLabel.snp.makeConstraints {
-            $0.leading.equalTo(fromLabel.snp.trailing).offset(6)
-            $0.trailing.equalToSuperview().inset(10)
-            $0.centerY.equalToSuperview()
-        }
-
-        dateIcon.snp.makeConstraints {
-            $0.leading.equalTo(imageContainerView)
-            $0.bottom.equalToSuperview().inset(16)
+            $0.leading.equalTo(fromLabel.snp.trailing).offset(4)
+            $0.centerY.equalTo(fromIcon)
         }
 
         dateLabel.snp.makeConstraints {
-            $0.leading.equalTo(dateIcon.snp.trailing).offset(6)
-            $0.centerY.equalTo(dateIcon)
+            $0.trailing.equalToSuperview().inset(14)
+            $0.bottom.equalToSuperview().inset(14)
         }
     }
 
