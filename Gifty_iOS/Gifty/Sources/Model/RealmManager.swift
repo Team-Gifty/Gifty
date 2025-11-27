@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import CoreLocation
 
 
 class RealmManager {
@@ -97,7 +98,40 @@ class RealmManager {
             return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
         case .byExpiryDate:
             return realm.objects(Gift.self).sorted(byKeyPath: "expiryDate", ascending: true)
+        case .byDistance:
+            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
         }
+    }
+
+    func getGiftsSortedByDistance(currentLocation: CLLocation?) -> [Gift] {
+        let allGifts = Array(realm.objects(Gift.self))
+
+        guard let currentLocation = currentLocation else {
+            return allGifts
+        }
+
+        return allGifts.sorted { gift1, gift2 in
+            let distance1 = getDistance(from: currentLocation, to: gift1)
+            let distance2 = getDistance(from: currentLocation, to: gift2)
+
+            if distance1 == nil && distance2 == nil {
+                return false
+            } else if distance1 == nil {
+                return false
+            } else if distance2 == nil {
+                return true
+            } else {
+                return distance1! < distance2!
+            }
+        }
+    }
+
+    private func getDistance(from location: CLLocation, to gift: Gift) -> Double? {
+        guard let lat = gift.latitude, let lon = gift.longitude else {
+            return nil
+        }
+        let giftLocation = CLLocation(latitude: lat, longitude: lon)
+        return location.distance(from: giftLocation)
     }
 
     func searchGifts(name: String) -> Results<Gift> {

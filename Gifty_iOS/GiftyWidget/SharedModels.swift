@@ -4,6 +4,7 @@ import RealmSwift
 enum SortOrder {
     case byExpiryDate
     case byRegistrationDate
+    case byDistance
 }
 
 class Gift: Object {
@@ -77,6 +78,8 @@ class RealmManager {
             return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
         case .byExpiryDate:
             return realm.objects(Gift.self).sorted(byKeyPath: "expiryDate", ascending: true)
+        case .byDistance:
+            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
         }
     }
 }
