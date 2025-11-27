@@ -8,7 +8,7 @@ class ArchiveTableViewCell: UITableViewCell {
 
     private let shadowView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 8
+        $0.layer.cornerRadius = 12
         $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
         $0.layer.shadowOpacity = 0.25
         $0.layer.shadowOffset = CGSize(width: 0, height: 3)
@@ -17,15 +17,17 @@ class ArchiveTableViewCell: UITableViewCell {
     }
 
     private let containerView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.996, green: 0.988, blue: 0.973, alpha: 1.0)
-        $0.layer.cornerRadius = 8
+        $0.backgroundColor = UIColor(red: 0.95, green: 0.92, blue: 0.88, alpha: 1.0)
+        $0.layer.cornerRadius = 12
+        $0.layer.borderWidth = 1.5
+        $0.layer.borderColor = UIColor(red: 0.82, green: 0.76, blue: 0.70, alpha: 0.8).cgColor
         $0.clipsToBounds = false
     }
 
     private let stampView = UIView().then {
         $0.backgroundColor = .clear
-        $0.layer.borderWidth = 2
-        $0.layer.borderColor = UIColor.CBBDB_1.cgColor
+        $0.layer.borderWidth = 2.5
+        $0.layer.borderColor = UIColor(red: 0.80, green: 0.74, blue: 0.69, alpha: 1.0).cgColor
         $0.layer.cornerRadius = 4
         $0.transform = CGAffineTransform(rotationAngle: .pi / 12)
     }
@@ -37,22 +39,24 @@ class ArchiveTableViewCell: UITableViewCell {
     }
 
     private let envelopeTopView = UIView().then {
-        $0.backgroundColor = UIColor(red: 0.89, green: 0.82, blue: 0.75, alpha: 0.3)
+        $0.backgroundColor = UIColor(red: 0.85, green: 0.78, blue: 0.70, alpha: 0.5)
     }
 
     private let letterPaperView = UIView().then {
-        $0.backgroundColor = .white
-        $0.layer.cornerRadius = 6
+        $0.backgroundColor = UIColor(red: 1.0, green: 0.99, blue: 0.97, alpha: 1.0)
+        $0.layer.cornerRadius = 10
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(red: 0.90, green: 0.86, blue: 0.82, alpha: 0.6).cgColor
         $0.layer.shadowColor = UIColor.black.cgColor
-        $0.layer.shadowOpacity = 0.05
-        $0.layer.shadowOffset = CGSize(width: 0, height: 1)
-        $0.layer.shadowRadius = 2
+        $0.layer.shadowOpacity = 0.08
+        $0.layer.shadowOffset = CGSize(width: 0, height: 2)
+        $0.layer.shadowRadius = 3
     }
 
     private let gifticonImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 8
+        $0.layer.cornerRadius = 6
         $0.backgroundColor = .lightGray
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.CBBDB_1.withAlphaComponent(0.2).cgColor
@@ -60,7 +64,7 @@ class ArchiveTableViewCell: UITableViewCell {
 
     private let polaroidFrame = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 4
+        $0.layer.cornerRadius = 6
         $0.layer.shadowColor = UIColor.black.cgColor
         $0.layer.shadowOpacity = 0.1
         $0.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -171,10 +175,10 @@ class ArchiveTableViewCell: UITableViewCell {
         }
 
         polaroidFrame.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(14)
-            $0.top.equalToSuperview().offset(14)
-            $0.width.equalTo(90)
-            $0.height.equalTo(100)
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(16)
+            $0.width.equalTo(100)
+            $0.height.equalTo(110)
         }
 
         gifticonImageView.snp.makeConstraints {

@@ -133,7 +133,7 @@ extension ArchiveViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 170
+        return 190
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
