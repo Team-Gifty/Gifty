@@ -84,6 +84,26 @@ class MainViewController: BaseViewController {
             name: NSNotification.Name("RefreshGiftList"),
             object: nil
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleNearbyGiftUpdate),
+            name: NSNotification.Name("NearbyGiftDetected"),
+            object: nil
+        )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleNearbyGiftUpdate),
+            name: NSNotification.Name("NearbyGiftUpdated"),
+            object: nil
+        )
+    }
+
+    @objc private func handleNearbyGiftUpdate() {
+        DispatchQueue.main.async { [weak self] in
+            self?.gifticonTableView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -276,9 +296,10 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         let dateString = dateFormatter.string(from: gift.expiryDate)
 
         let isExpired = gift.checkIsExpired
-        
-        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired)
-        
+        let isNearby = GeofenceManager.shared.isGiftNearby(gift)
+
+        cell.configure(image: image, title: gift.name, usage: gift.usage, date: dateString, isExpired: isExpired, isNearby: isNearby)
+
         return cell
     }
     
