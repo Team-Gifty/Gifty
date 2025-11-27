@@ -95,6 +95,7 @@
 		6F51271B2ED810EF00CCE053 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
+		6F731CB22ED81DDF002DA137 /* GiftyWidgetExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GiftyWidgetExtensionRelease.entitlements; sourceTree = "<group>"; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -204,6 +205,7 @@
 		85BB43422E83F68E002330D2 = {
 			isa = PBXGroup;
 			children = (
+				6F731CB22ED81DDF002DA137 /* GiftyWidgetExtensionRelease.entitlements */,
 				85BB434D2E83F68E002330D2 /* Gifty */,
 				6F535D502EBE43250056C8D5 /* Config */,
 				6F51271D2ED810EF00CCE053 /* GiftyWidget */,
@@ -397,6 +399,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GiftyWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4WFV8NBUPB;
@@ -428,6 +431,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GiftyWidgetExtensionRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4WFV8NBUPB;
@@ -497,7 +501,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Gifty/Gifty.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Gifty/GiftyRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 4WFV8NBUPB;

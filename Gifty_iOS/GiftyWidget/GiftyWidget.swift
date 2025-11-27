@@ -1,18 +1,18 @@
 import WidgetKit
 import SwiftUI
-import RealmSwift
 
 // Timeline Entry
 struct GiftyEntry: TimelineEntry {
     let date: Date
     let expiryDate: Date?
     let daysRemaining: Int?
+    let debugInfo: String
 }
 
 // Provider
 struct GiftyProvider: TimelineProvider {
     func placeholder(in context: Context) -> GiftyEntry {
-        GiftyEntry(date: Date(), expiryDate: Date(), daysRemaining: 1)
+        GiftyEntry(date: Date(), expiryDate: Date(), daysRemaining: 1, debugInfo: "placeholder")
     }
 
     func getSnapshot(in context: Context, completion: @escaping (GiftyEntry) -> Void) {
@@ -30,23 +30,30 @@ struct GiftyProvider: TimelineProvider {
 
     private func getEntry() -> GiftyEntry {
         // Realm에서 가장 가까운 만료일 교환권 조회
-        let realmManager = RealmManager.shared
-        let gifts = realmManager.getGifts(sortedBy: .byExpiryDate)
+        do {
+            let realmManager = RealmManager.shared
+            let gifts = realmManager.getGifts(sortedBy: .byExpiryDate)
 
-        guard let nearestGift = gifts.first(where: { !$0.checkIsExpired }) else {
-            return GiftyEntry(date: Date(), expiryDate: nil, daysRemaining: nil)
+            let debugInfo = "총 \(gifts.count)개"
+
+            guard let nearestGift = gifts.first(where: { !$0.checkIsExpired }) else {
+                return GiftyEntry(date: Date(), expiryDate: nil, daysRemaining: nil, debugInfo: debugInfo + " / 유효한 교환권 없음")
+            }
+
+            let calendar = Calendar.current
+            let today = calendar.startOfDay(for: Date())
+            let expiryDay = calendar.startOfDay(for: nearestGift.expiryDate)
+            let daysRemaining = calendar.dateComponents([.day], from: today, to: expiryDay).day ?? 0
+
+            return GiftyEntry(
+                date: Date(),
+                expiryDate: nearestGift.expiryDate,
+                daysRemaining: daysRemaining,
+                debugInfo: debugInfo + " / 성공"
+            )
+        } catch {
+            return GiftyEntry(date: Date(), expiryDate: nil, daysRemaining: nil, debugInfo: "에러: \(error.localizedDescription)")
         }
-
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let expiryDay = calendar.startOfDay(for: nearestGift.expiryDate)
-        let daysRemaining = calendar.dateComponents([.day], from: today, to: expiryDay).day ?? 0
-
-        return GiftyEntry(
-            date: Date(),
-            expiryDate: nearestGift.expiryDate,
-            daysRemaining: daysRemaining
-        )
     }
 }
 
@@ -56,17 +63,22 @@ struct GiftyWidgetEntryView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "FFF7EC")
+            Color(red: 1.0, green: 0.97, blue: 0.93)
 
-            VStack(spacing: 0) {
+            VStack(spacing: 5) {
+                // 디버그 정보 (상단에 작게 표시)
+                Text(entry.debugInfo)
+                    .font(.system(size: 10))
+                    .foregroundColor(.red)
+
                 Spacer()
-                    .frame(height: 20)
+                    .frame(height: 10)
 
                 // 만료 날짜
                 if let expiryDate = entry.expiryDate {
                     Text("만료 날짜 \(formatDate(expiryDate))")
-                        .font(.custom("OwnglyphPDH-Regular", size: 20))
-                        .foregroundColor(Color(hex: "6A4C4C"))
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(red: 0.42, green: 0.30, blue: 0.30))
 
                     Spacer()
                         .frame(height: 11)
@@ -74,18 +86,19 @@ struct GiftyWidgetEntryView: View {
                     // D-day
                     if let days = entry.daysRemaining {
                         Text("D - \(days)")
-                            .font(.custom("OwnglyphPDH-Regular", size: 50))
-                            .foregroundColor(Color(hex: "6A4C4C"))
+                            .font(.system(size: 50))
+                            .foregroundColor(Color(red: 0.42, green: 0.30, blue: 0.30))
                             .frame(width: 94, height: 54)
                     }
                 } else {
                     Text("교환권 없음")
-                        .font(.custom("OwnglyphPDH-Regular", size: 20))
-                        .foregroundColor(Color(hex: "6A4C4C"))
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(red: 0.42, green: 0.30, blue: 0.30))
                 }
 
                 Spacer()
             }
+            .padding(.top, 10)
         }
     }
 
@@ -103,7 +116,7 @@ struct GiftyWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: GiftyProvider()) { entry in
             GiftyWidgetEntryView(entry: entry)
-                .containerBackground(Color(hex: "FFF7EC"), for: .widget)
+                .containerBackground(Color(red: 1.0, green: 0.97, blue: 0.93), for: .widget)
         }
         .configurationDisplayName("Gifty")
         .description("가장 가까운 교환권의 만료일을 확인하세요")
@@ -111,32 +124,9 @@ struct GiftyWidget: Widget {
     }
 }
 
-// Color Extension
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 6: // RGB
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
-    }
-}
-
 #Preview(as: .systemSmall) {
     GiftyWidget()
 } timeline: {
-    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()), daysRemaining: 3)
-    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 1, to: Date()), daysRemaining: 1)
+    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()), daysRemaining: 3, debugInfo: "총 5개 / 성공")
+    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 1, to: Date()), daysRemaining: 1, debugInfo: "총 5개 / 성공")
 }

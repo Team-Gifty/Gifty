@@ -5,8 +5,7 @@ import RealmSwift
 class RealmManager {
     static let shared = RealmManager()
 
-    // App Group identifier - Xcode에서 설정한 App Group ID로 변경 필요
-    private let appGroupIdentifier = "group.com.gifty.shared"
+    private let appGroupIdentifier = "group.com.ahyeonlee.gifty.shared"
 
     var realm: Realm {
         do {
