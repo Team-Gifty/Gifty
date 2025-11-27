@@ -8,56 +8,74 @@ class ArchiveTableViewCell: UITableViewCell {
 
     private let shadowView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 12
-        $0.layer.shadowColor = UIColor(named: "595959")?.cgColor
-        $0.layer.shadowOpacity = 0.25
-        $0.layer.shadowOffset = CGSize(width: 1, height: 2.5)
-        $0.layer.shadowRadius = 2
+        $0.layer.cornerRadius = 16
+        $0.layer.shadowColor = UIColor.CBBDB_1.cgColor
+        $0.layer.shadowOpacity = 0.3
+        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
+        $0.layer.shadowRadius = 12
         $0.layer.masksToBounds = false
     }
 
     private let containerView = UIView().then {
-        $0.backgroundColor = .FFFEF_7
-        $0.layer.cornerRadius = 12
+        $0.backgroundColor = UIColor(red: 0.99, green: 0.98, blue: 0.96, alpha: 1.0)
+        $0.layer.cornerRadius = 16
         $0.clipsToBounds = true
+    }
+
+    private let imageContainerView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 12
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOpacity = 0.08
+        $0.layer.shadowOffset = CGSize(width: 0, height: 2)
+        $0.layer.shadowRadius = 4
     }
 
     private let gifticonImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 8
+        $0.layer.cornerRadius = 12
         $0.backgroundColor = .lightGray
     }
 
+    private let heartIcon = UILabel().then {
+        $0.text = "💝"
+        $0.font = .systemFont(ofSize: 20)
+    }
+
     private let titleLabel = UILabel().then {
-        $0.font = .cellFont(size: 11)
-        $0.textColor = UIColor(named: "6A4C4C")
+        $0.font = .giftyFont(size: 15)
+        $0.textColor = ._6_A_4_C_4_C
         $0.text = "제목"
+        $0.numberOfLines = 2
+    }
+
+    private let fromContainer = UIView().then {
+        $0.backgroundColor = UIColor.CBBDB_1.withAlphaComponent(0.2)
+        $0.layer.cornerRadius = 8
+    }
+
+    private let fromLabel = UILabel().then {
+        $0.text = "From"
+        $0.font = .giftyFont(size: 10)
+        $0.textColor = .CDB_9_AD
     }
 
     private let giverLabel = UILabel().then {
-        $0.font = .cellFont(size: 9)
-        $0.textColor = UIColor(named: "6A4C4C")
+        $0.font = .giftyFont(size: 12)
+        $0.textColor = ._6_A_4_C_4_C
         $0.text = "준 사람"
     }
 
+    private let dateIcon = UILabel().then {
+        $0.text = "📅"
+        $0.font = .systemFont(ofSize: 11)
+    }
+
     private let dateLabel = UILabel().then {
-        $0.font = .cellFont(size: 12)
-        $0.textColor = UIColor(named: "6A4C4C")
+        $0.font = .giftyFont(size: 11)
+        $0.textColor = .CDB_9_AD
         $0.text = "YYYY.MM.DD"
-    }
-
-    private let archiveBadge = UIView().then {
-        $0.backgroundColor = .CBBDB_1
-        $0.layer.cornerRadius = 10
-        $0.clipsToBounds = true
-    }
-
-    private let archiveLabel = UILabel().then {
-        $0.text = "💝 간직함"
-        $0.font = .cellFont(size: 9)
-        $0.textColor = ._6_A_4_C_4_C
-        $0.textAlignment = .center
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -82,12 +100,15 @@ class ArchiveTableViewCell: UITableViewCell {
         contentView.addSubview(shadowView)
         contentView.addSubview(containerView)
 
-        containerView.addSubview(gifticonImageView)
+        containerView.addSubview(imageContainerView)
+        imageContainerView.addSubview(gifticonImageView)
         containerView.addSubview(titleLabel)
-        containerView.addSubview(giverLabel)
+        containerView.addSubview(heartIcon)
+        containerView.addSubview(fromContainer)
+        fromContainer.addSubview(fromLabel)
+        fromContainer.addSubview(giverLabel)
+        containerView.addSubview(dateIcon)
         containerView.addSubview(dateLabel)
-        containerView.addSubview(archiveBadge)
-        archiveBadge.addSubview(archiveLabel)
     }
 
     private func setLayout() {
@@ -96,42 +117,54 @@ class ArchiveTableViewCell: UITableViewCell {
         }
 
         containerView.snp.makeConstraints {
-            $0.width.leading.trailing.equalToSuperview().inset(10)
-            $0.height.equalTo(89)
-            $0.center.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.top.bottom.equalToSuperview().inset(8)
+        }
+
+        imageContainerView.snp.makeConstraints {
+            $0.leading.top.equalToSuperview().offset(16)
+            $0.width.height.equalTo(100)
         }
 
         gifticonImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(13)
-            $0.width.height.equalTo(73.3)
+            $0.edges.equalToSuperview()
+        }
+
+        heartIcon.snp.makeConstraints {
+            $0.top.trailing.equalToSuperview().inset(16)
         }
 
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(gifticonImageView.snp.top).offset(4)
-            $0.leading.equalTo(gifticonImageView.snp.trailing).offset(20)
-            $0.trailing.equalToSuperview().offset(-12)
+            $0.top.equalToSuperview().offset(20)
+            $0.leading.equalTo(imageContainerView.snp.trailing).offset(16)
+            $0.trailing.equalToSuperview().inset(45)
+        }
+
+        fromContainer.snp.makeConstraints {
+            $0.leading.equalTo(titleLabel)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+            $0.height.equalTo(28)
+        }
+
+        fromLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(10)
+            $0.centerY.equalToSuperview()
         }
 
         giverLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(11)
-            $0.leading.equalTo(titleLabel.snp.leading)
+            $0.leading.equalTo(fromLabel.snp.trailing).offset(6)
+            $0.trailing.equalToSuperview().inset(10)
+            $0.centerY.equalToSuperview()
         }
 
-        archiveBadge.snp.makeConstraints {
-            $0.leading.equalTo(titleLabel.snp.leading)
-            $0.top.equalTo(giverLabel.snp.bottom).offset(6)
-            $0.height.equalTo(20)
-        }
-
-        archiveLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(8)
-            $0.top.bottom.equalToSuperview().inset(3)
+        dateIcon.snp.makeConstraints {
+            $0.leading.equalTo(imageContainerView)
+            $0.bottom.equalToSuperview().inset(16)
         }
 
         dateLabel.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-12)
-            $0.bottom.equalToSuperview().offset(-9)
+            $0.leading.equalTo(dateIcon.snp.trailing).offset(6)
+            $0.centerY.equalTo(dateIcon)
         }
     }
 

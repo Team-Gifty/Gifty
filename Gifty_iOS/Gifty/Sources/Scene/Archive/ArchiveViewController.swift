@@ -133,14 +133,14 @@ extension ArchiveViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 102
+        return 148
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let gift = archivedGifts?[indexPath.row] else { return }
 
-        let gifticonVC = GifticonViewController()
-        gifticonVC.gift = gift
-        navigationController?.pushViewController(gifticonVC, animated: true)
+        let archiveDetailVC = ArchiveDetailViewController()
+        archiveDetailVC.gift = gift
+        navigationController?.pushViewController(archiveDetailVC, animated: true)
     }
 }
