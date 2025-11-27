@@ -140,7 +140,7 @@ class NotificationManager {
     func scheduleImmediateNotification(for gift: Gift) {
         let giftRef = ThreadSafeReference(to: gift)
         DispatchQueue.global().async {
-            let realm = try! Realm()
+            let realm = RealmManager.shared.realm
             guard let gift = realm.resolve(giftRef) else {
                 return
             }
