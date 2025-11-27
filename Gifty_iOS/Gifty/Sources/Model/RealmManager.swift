@@ -1,13 +1,17 @@
 import Foundation
 import RealmSwift
 
+
 class RealmManager {
     static let shared = RealmManager()
+
+    private let appGroupIdentifier = "group.com.ahyeonlee.gifty.shared"
 
     var realm: Realm {
         do {
             let config = Realm.Configuration(
-                schemaVersion: 3,
+                fileURL: getRealmFileURL(),
+                schemaVersion: 4,
                 migrationBlock: { migration, oldSchemaVersion in
                     if oldSchemaVersion < 3 {
                         migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
@@ -23,6 +27,15 @@ class RealmManager {
     }
 
     private init() {}
+
+    // App Group 컨테이너 내 Realm 파일 경로 반환
+    private func getRealmFileURL() -> URL? {
+        guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
+            print("⚠️ App Group 컨테이너를 찾을 수 없습니다. 기본 경로를 사용합니다.")
+            return Realm.Configuration.defaultConfiguration.fileURL
+        }
+        return containerURL.appendingPathComponent("default.realm")
+    }
 
     func saveNickname(_ nickname: String) {
         let now = Date()
