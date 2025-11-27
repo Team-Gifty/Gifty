@@ -21,7 +21,7 @@ class ArchiveTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1.5
         $0.layer.borderColor = UIColor(red: 0.82, green: 0.76, blue: 0.70, alpha: 0.8).cgColor
-        $0.clipsToBounds = false
+        $0.clipsToBounds = true
     }
 
     private let stampView = UIView().then {
