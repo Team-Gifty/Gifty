@@ -29,6 +29,32 @@ class UsageLocationViewController: BaseViewController {
         $0.isHidden = true
     }
 
+    private let locationPreviewContainer = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 12
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor._6_A_4_C_4_C.withAlphaComponent(0.3).cgColor
+        $0.isHidden = true
+    }
+
+    private let previewMapView = MKMapView().then {
+        $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
+        $0.isUserInteractionEnabled = false
+    }
+
+    private let previewTitleLabel = UILabel().then {
+        $0.font = .giftyFont(size: 16)
+        $0.textColor = ._6_A_4_C_4_C
+        $0.numberOfLines = 1
+    }
+
+    private let previewAddressLabel = UILabel().then {
+        $0.font = .giftyFont(size: 12)
+        $0.textColor = ._6_A_4_C_4_C.withAlphaComponent(0.6)
+        $0.numberOfLines = 2
+    }
+
     private let searchCompleter = MKLocalSearchCompleter()
     private var searchResults: [MKLocalSearchCompletion] = []
     private let locationManager = CLLocationManager()
@@ -63,7 +89,8 @@ class UsageLocationViewController: BaseViewController {
     }
 
     override func addView() {
-        [titleLabel, usageTextField, confirmButton, backButton, searchResultsTableView].forEach { view.addSubview($0) }
+        [previewMapView, previewTitleLabel, previewAddressLabel].forEach { locationPreviewContainer.addSubview($0) }
+        [titleLabel, usageTextField, confirmButton, backButton, searchResultsTableView, locationPreviewContainer].forEach { view.addSubview($0) }
     }
 
     override func setLayout() {
@@ -81,6 +108,29 @@ class UsageLocationViewController: BaseViewController {
             $0.top.equalTo(usageTextField.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(200)
+        }
+
+        locationPreviewContainer.snp.makeConstraints {
+            $0.top.equalTo(usageTextField.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(120)
+        }
+
+        previewMapView.snp.makeConstraints {
+            $0.leading.top.bottom.equalToSuperview().inset(12)
+            $0.width.equalTo(100)
+        }
+
+        previewTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16)
+            $0.leading.equalTo(previewMapView.snp.trailing).offset(12)
+            $0.trailing.equalToSuperview().inset(12)
+        }
+
+        previewAddressLabel.snp.makeConstraints {
+            $0.top.equalTo(previewTitleLabel.snp.bottom).offset(6)
+            $0.leading.equalTo(previewMapView.snp.trailing).offset(12)
+            $0.trailing.equalToSuperview().inset(12)
         }
 
         confirmButton.snp.makeConstraints {
@@ -101,11 +151,14 @@ class UsageLocationViewController: BaseViewController {
 
     @objc private func textFieldDidChange() {
         updateButtonState()
+        locationPreviewContainer.isHidden = true
 
         guard let query = usageTextField.text, !query.isEmpty else {
             searchResults = []
             searchResultsTableView.isHidden = true
             searchResultsTableView.reloadData()
+            selectedLatitude = nil
+            selectedLongitude = nil
             return
         }
 
@@ -202,16 +255,39 @@ extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSourc
 
         search.start { [weak self] response, error in
             guard let self = self,
-                  let coordinate = response?.mapItems.first?.placemark.coordinate else {
+                  let mapItem = response?.mapItems.first else {
                 print("Failed to get coordinates: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
 
+            let coordinate = mapItem.placemark.coordinate
             self.selectedLatitude = coordinate.latitude
             self.selectedLongitude = coordinate.longitude
             self.usageTextField.text = selectedResult.title
+
+            self.showLocationPreview(title: selectedResult.title,
+                                   address: selectedResult.subtitle,
+                                   coordinate: coordinate)
+
             self.searchResultsTableView.isHidden = true
             self.updateButtonState()
         }
+    }
+
+    private func showLocationPreview(title: String, address: String, coordinate: CLLocationCoordinate2D) {
+        previewTitleLabel.text = title
+        previewAddressLabel.text = address
+
+        let region = MKCoordinateRegion(center: coordinate,
+                                       latitudinalMeters: 500,
+                                       longitudinalMeters: 500)
+        previewMapView.setRegion(region, animated: false)
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        previewMapView.removeAnnotations(previewMapView.annotations)
+        previewMapView.addAnnotation(annotation)
+
+        locationPreviewContainer.isHidden = false
     }
 }
