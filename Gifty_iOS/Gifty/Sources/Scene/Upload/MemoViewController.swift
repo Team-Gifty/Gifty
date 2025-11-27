@@ -51,7 +51,7 @@ class MemoViewController: BaseViewController {
         }
 
         registerButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(60)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         
