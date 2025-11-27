@@ -270,11 +270,6 @@ class GifticonViewController: BaseViewController {
         present(alert, animated: true)
     }
 
-    private  let deleteButton = UIButton().then {
-        $0.setImage(UIImage(named: "Delete"), for: .normal)
-        $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-    }
-
     private let exitButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
         $0.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
@@ -297,7 +292,6 @@ class GifticonViewController: BaseViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.bringSubviewToFront(deleteButton)
         view.bringSubviewToFront(shareButton)
         view.bringSubviewToFront(modifyButton)
         view.bringSubviewToFront(exitButton)
@@ -307,7 +301,7 @@ class GifticonViewController: BaseViewController {
         [contentView, shadowView].forEach { view.addSubview($0) }
         shadowView.addSubview(imageView)
 
-        [exitButton, deleteButton, shareButton, modifyButton, completeButton].forEach { view.addSubview($0) }
+        [exitButton, shareButton, modifyButton, completeButton].forEach { view.addSubview($0) }
         
         productInfoView.addSubview(productLabel)
         productInfoView.addSubview(productcontentLabel)
@@ -442,11 +436,6 @@ class GifticonViewController: BaseViewController {
             $0.trailing.equalTo(modifyButton.snp.leading).offset(-10)
             $0.bottom.equalTo(shadowView.snp.top).offset(-11)
         }
-        deleteButton.snp.makeConstraints {
-            $0.width.height.equalTo(44)
-            $0.trailing.equalTo(shareButton.snp.leading).offset(-10)
-            $0.bottom.equalTo(shadowView.snp.top).offset(-11)
-        }
         completeButton.snp.makeConstraints {
             $0.height.equalTo(33)
             $0.width.equalTo(80)
@@ -481,21 +470,6 @@ class GifticonViewController: BaseViewController {
         present(zoomVC, animated: true, completion: nil)
     }
 
-    @objc
-    private func deleteButtonTapped() {
-        let deleteModalVC = DeleteModalViewController()
-        deleteModalVC.modalPresentationStyle = .overFullScreen
-        deleteModalVC.modalTransitionStyle = .crossDissolve
-        deleteModalVC.onDelete = {
-            if let gift = self.gift {
-                RealmManager.shared.deleteGift(gift)
-                NotificationManager.shared.scheduleDailySummaryNotification()
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-        self.present(deleteModalVC, animated: true, completion: nil)
-    }
-    
     @objc private func modifyButtonTapped() {
         let modifyVC = ModifyGiftViewController()
         modifyVC.gift = self.gift
