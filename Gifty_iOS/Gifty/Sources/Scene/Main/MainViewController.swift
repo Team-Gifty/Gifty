@@ -166,13 +166,13 @@ class MainViewController: BaseViewController {
         }
 
         archiveButton.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().inset(34)
+            $0.centerY.equalTo(titleLabel)
+            $0.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(36)
         }
 
         sortButton.snp.makeConstraints {
-            $0.top.equalTo(archiveButton.snp.bottom).offset(8)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
             $0.trailing.equalToSuperview().inset(33)
         }
         

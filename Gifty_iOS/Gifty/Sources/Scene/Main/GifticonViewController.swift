@@ -97,7 +97,7 @@ class GifticonViewController: BaseViewController {
 
     private let completeButton = UIButton().then {
         $0.setTitle("사용 완료", for: .normal)
-        $0.setTitleColor(._6_A_4_C_4_C, for: .normal)
+        $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = .giftyFont(size: 16)
         $0.backgroundColor = .A_98_E_5_C
         $0.layer.cornerRadius = 8
@@ -504,23 +504,18 @@ class GifticonViewController: BaseViewController {
     }
 
     @objc private func completeButtonTapped() {
-        let alert = UIAlertController(
-            title: "사용 완료",
-            message: "이 교환권을 간직함에 보관하시겠어요?",
-            preferredStyle: .alert
-        )
+        let completeModal = CompleteModalViewController()
+        completeModal.modalPresentationStyle = .overFullScreen
 
-        alert.addAction(UIAlertAction(title: "예", style: .default) { [weak self] _ in
+        completeModal.onArchive = { [weak self] in
             self?.askForGiverName()
-        })
+        }
 
-        alert.addAction(UIAlertAction(title: "아니오", style: .default) { [weak self] _ in
+        completeModal.onDelete = { [weak self] in
             self?.deleteGift()
-        })
+        }
 
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-
-        present(alert, animated: true)
+        present(completeModal, animated: true)
     }
 
     private func askForGiverName() {
@@ -565,13 +560,24 @@ class GifticonViewController: BaseViewController {
     private func deleteGift() {
         guard let gift = gift else { return }
 
-        RealmManager.shared.deleteGift(gift)
-        GeofenceManager.shared.removeGeofence(for: gift.id.stringValue)
-        NotificationManager.shared.scheduleDailySummaryNotification()
+        // Realm 객체가 삭제되기 전에 필요한 값 복사
+        let giftId = gift.id.stringValue
 
-        showSimpleAlert(message: "교환권이 삭제되었습니다") { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+        let deleteModalVC = DeleteModalViewController()
+        deleteModalVC.modalPresentationStyle = .overFullScreen
+        deleteModalVC.modalTransitionStyle = .crossDissolve
+        deleteModalVC.onDelete = { [weak self] in
+            guard let self = self else { return }
+
+            // 복사한 ID로 객체를 다시 찾아서 삭제
+            if let giftToDelete = RealmManager.shared.getGift(by: giftId) {
+                RealmManager.shared.deleteGift(giftToDelete)
+                GeofenceManager.shared.removeGeofence(for: giftId)
+                NotificationManager.shared.scheduleDailySummaryNotification()
+                self.navigationController?.popViewController(animated: true)
+            }
         }
+        present(deleteModalVC, animated: true, completion: nil)
     }
 
     private func showSimpleAlert(message: String, completion: (() -> Void)? = nil) {
