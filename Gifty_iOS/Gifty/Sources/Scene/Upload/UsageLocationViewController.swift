@@ -17,9 +17,9 @@ class UsageLocationViewController: BaseViewController {
         $0.setImage(UIImage(named: "Back"), for: .normal)
     }
 
-    private let usageTextField = GiftyTextField(hintText: "사용처")
+    private let usageTextField = GiftyTextField(hintText: "사용처 검색")
 
-    private let confirmButton = GiftyButton(buttonText: "확인", isEnabled: true)
+    private let confirmButton = GiftyButton(buttonText: "확인", isEnabled: false)
 
     private let searchResultsTableView = UITableView().then {
         $0.backgroundColor = .white
@@ -29,7 +29,14 @@ class UsageLocationViewController: BaseViewController {
         $0.isHidden = true
     }
 
-    private let locationPreviewContainer = UIView().then {
+    private let previewMapView = MKMapView().then {
+        $0.layer.cornerRadius = 12
+        $0.clipsToBounds = true
+        $0.isUserInteractionEnabled = false
+        $0.isHidden = true
+    }
+
+    private let locationInfoContainer = UIView().then {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 12
         $0.layer.borderWidth = 1
@@ -37,22 +44,18 @@ class UsageLocationViewController: BaseViewController {
         $0.isHidden = true
     }
 
-    private let previewMapView = MKMapView().then {
-        $0.layer.cornerRadius = 8
-        $0.clipsToBounds = true
-        $0.isUserInteractionEnabled = false
-    }
-
     private let previewTitleLabel = UILabel().then {
-        $0.font = .giftyFont(size: 16)
+        $0.font = .giftyFont(size: 18)
         $0.textColor = ._6_A_4_C_4_C
         $0.numberOfLines = 1
+        $0.textAlignment = .center
     }
 
     private let previewAddressLabel = UILabel().then {
-        $0.font = .giftyFont(size: 12)
+        $0.font = .giftyFont(size: 14)
         $0.textColor = ._6_A_4_C_4_C.withAlphaComponent(0.6)
         $0.numberOfLines = 2
+        $0.textAlignment = .center
     }
 
     private let searchCompleter = MKLocalSearchCompleter()
@@ -89,8 +92,8 @@ class UsageLocationViewController: BaseViewController {
     }
 
     override func addView() {
-        [previewMapView, previewTitleLabel, previewAddressLabel].forEach { locationPreviewContainer.addSubview($0) }
-        [titleLabel, usageTextField, confirmButton, backButton, searchResultsTableView, locationPreviewContainer].forEach { view.addSubview($0) }
+        [previewTitleLabel, previewAddressLabel].forEach { locationInfoContainer.addSubview($0) }
+        [titleLabel, usageTextField, confirmButton, backButton, searchResultsTableView, previewMapView, locationInfoContainer].forEach { view.addSubview($0) }
     }
 
     override func setLayout() {
@@ -110,27 +113,26 @@ class UsageLocationViewController: BaseViewController {
             $0.height.equalTo(200)
         }
 
-        locationPreviewContainer.snp.makeConstraints {
-            $0.top.equalTo(usageTextField.snp.bottom).offset(12)
+        previewMapView.snp.makeConstraints {
+            $0.top.equalTo(usageTextField.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(120)
+            $0.height.equalTo(200)
         }
 
-        previewMapView.snp.makeConstraints {
-            $0.leading.top.bottom.equalToSuperview().inset(12)
-            $0.width.equalTo(100)
+        locationInfoContainer.snp.makeConstraints {
+            $0.top.equalTo(previewMapView.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(80)
         }
 
         previewTitleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16)
-            $0.leading.equalTo(previewMapView.snp.trailing).offset(12)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
 
         previewAddressLabel.snp.makeConstraints {
-            $0.top.equalTo(previewTitleLabel.snp.bottom).offset(6)
-            $0.leading.equalTo(previewMapView.snp.trailing).offset(12)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.top.equalTo(previewTitleLabel.snp.bottom).offset(8)
+            $0.leading.trailing.equalToSuperview().inset(16)
         }
 
         confirmButton.snp.makeConstraints {
@@ -145,20 +147,21 @@ class UsageLocationViewController: BaseViewController {
     }
     
     private func updateButtonState() {
-        let isEmpty = usageTextField.text?.isEmpty ?? true
-        confirmButton.isEnabled = !isEmpty
+        let hasLocation = selectedLatitude != nil && selectedLongitude != nil
+        confirmButton.isEnabled = hasLocation
     }
 
     @objc private func textFieldDidChange() {
+        previewMapView.isHidden = true
+        locationInfoContainer.isHidden = true
+        selectedLatitude = nil
+        selectedLongitude = nil
         updateButtonState()
-        locationPreviewContainer.isHidden = true
 
         guard let query = usageTextField.text, !query.isEmpty else {
             searchResults = []
             searchResultsTableView.isHidden = true
             searchResultsTableView.reloadData()
-            selectedLatitude = nil
-            selectedLongitude = nil
             return
         }
 
@@ -279,8 +282,8 @@ extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSourc
         previewAddressLabel.text = address
 
         let region = MKCoordinateRegion(center: coordinate,
-                                       latitudinalMeters: 500,
-                                       longitudinalMeters: 500)
+                                       latitudinalMeters: 1000,
+                                       longitudinalMeters: 1000)
         previewMapView.setRegion(region, animated: false)
 
         let annotation = MKPointAnnotation()
@@ -288,6 +291,7 @@ extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSourc
         previewMapView.removeAnnotations(previewMapView.annotations)
         previewMapView.addAnnotation(annotation)
 
-        locationPreviewContainer.isHidden = false
+        previewMapView.isHidden = false
+        locationInfoContainer.isHidden = false
     }
 }
