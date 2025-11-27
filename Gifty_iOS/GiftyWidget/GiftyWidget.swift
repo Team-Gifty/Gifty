@@ -5,11 +5,12 @@ struct GiftyEntry: TimelineEntry {
     let date: Date
     let expiryDate: Date?
     let daysRemaining: Int?
+    let validGiftsCount: Int
 }
 
 struct GiftyProvider: TimelineProvider {
     func placeholder(in context: Context) -> GiftyEntry {
-        GiftyEntry(date: Date(), expiryDate: Date(), daysRemaining: 1)
+        GiftyEntry(date: Date(), expiryDate: Date(), daysRemaining: 1, validGiftsCount: 4)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (GiftyEntry) -> Void) {
@@ -27,8 +28,11 @@ struct GiftyProvider: TimelineProvider {
         let realmManager = RealmManager.shared
         let gifts = realmManager.getGifts(sortedBy: .byExpiryDate)
 
-        guard let nearestGift = gifts.first(where: { !$0.checkIsExpired }) else {
-            return GiftyEntry(date: Date(), expiryDate: nil, daysRemaining: nil)
+        let validGifts = gifts.filter { !$0.checkIsExpired }
+        let validGiftsCount = validGifts.count
+
+        guard let nearestGift = validGifts.first else {
+            return GiftyEntry(date: Date(), expiryDate: nil, daysRemaining: nil, validGiftsCount: validGiftsCount)
         }
 
         let calendar = Calendar.current
@@ -39,7 +43,8 @@ struct GiftyProvider: TimelineProvider {
         return GiftyEntry(
             date: Date(),
             expiryDate: nearestGift.expiryDate,
-            daysRemaining: daysRemaining
+            daysRemaining: daysRemaining,
+            validGiftsCount: validGiftsCount
         )
     }
 }
@@ -68,6 +73,19 @@ struct GiftyWidgetEntryView: View {
                             .font(.giftyFont(size: 40))
                             .foregroundColor(.widgetText)
                     }
+
+                    Spacer()
+                        .frame(height: 10)
+
+                    HStack(spacing: 7) {
+                        Image("GiftyBox")
+                            .resizable()
+                            .frame(width: 27, height: 32)
+
+                        Text(": \(entry.validGiftsCount)개")
+                            .font(.giftyFont(size: 25))
+                            .foregroundColor(.widgetText)
+                    }
                 } else {
                     Text("교환권 없음")
                         .font(.giftyFont(size: 14))
@@ -81,7 +99,7 @@ struct GiftyWidgetEntryView: View {
 
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yy.MM.dd."
+        formatter.dateFormat = "yy.MM.dd"
         return formatter.string(from: date)
     }
 }
@@ -103,6 +121,6 @@ struct GiftyWidget: Widget {
 #Preview(as: .systemSmall) {
     GiftyWidget()
 } timeline: {
-    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()), daysRemaining: 3)
-    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 1, to: Date()), daysRemaining: 1)
+    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()), daysRemaining: 3, validGiftsCount: 4)
+    GiftyEntry(date: .now, expiryDate: Calendar.current.date(byAdding: .day, value: 1, to: Date()), daysRemaining: 1, validGiftsCount: 2)
 }

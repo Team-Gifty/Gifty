@@ -1,10 +1,3 @@
-//
-//  GiftyWidgetControl.swift
-//  GiftyWidget
-//
-//  Created by 이지훈 on 11/27/25.
-//
-
 import AppIntents
 import SwiftUI
 import WidgetKit
@@ -42,7 +35,7 @@ extension GiftyWidgetControl {
         }
 
         func currentValue(configuration: TimerConfiguration) async throws -> Value {
-            let isRunning = true // Check if the timer is running
+            let isRunning = true
             return GiftyWidgetControl.Value(isRunning: isRunning, name: configuration.timerName)
         }
     }
@@ -71,7 +64,6 @@ struct StartTimerIntent: SetValueIntent {
     }
 
     func perform() async throws -> some IntentResult {
-        // Start the timer…
         return .result()
     }
 }

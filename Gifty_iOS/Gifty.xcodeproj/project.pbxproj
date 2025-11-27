@@ -95,7 +95,6 @@
 		6F51271B2ED810EF00CCE053 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
-		6F731CB22ED81DDF002DA137 /* GiftyWidgetExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GiftyWidgetExtensionRelease.entitlements; sourceTree = "<group>"; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -110,6 +109,7 @@
 		6FFD12522ED8290B00EB022D /* Exceptions for "Gifty" folder in "GiftyWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Assets.xcassets,
 				"Sources/DesignSystem/Font/온글잎 박다현체.ttf",
 				"Sources/DesignSystem/Font/온글잎 콘콘체.ttf",
 				"Sources/DesignSystem/Font/Gumi Romance.ttf",
@@ -216,7 +216,6 @@
 		85BB43422E83F68E002330D2 = {
 			isa = PBXGroup;
 			children = (
-				6F731CB22ED81DDF002DA137 /* GiftyWidgetExtensionRelease.entitlements */,
 				85BB434D2E83F68E002330D2 /* Gifty */,
 				6F535D502EBE43250056C8D5 /* Config */,
 				6F51271D2ED810EF00CCE053 /* GiftyWidget */,
