@@ -11,11 +11,17 @@ class RealmManager {
         do {
             let config = Realm.Configuration(
                 fileURL: getRealmFileURL(),
-                schemaVersion: 4,
+                schemaVersion: 5,
                 migrationBlock: { migration, oldSchemaVersion in
                     if oldSchemaVersion < 3 {
                         migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
                             newObject?["isExpired"] = false
+                        }
+                    }
+                    if oldSchemaVersion < 5 {
+                        migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
+                            newObject?["latitude"] = nil
+                            newObject?["longitude"] = nil
                         }
                     }
                 }
@@ -66,7 +72,7 @@ class RealmManager {
         }
     }
 
-    func saveGift(name: String, usage: String, expiryDate: Date, memo: String?, imagePath: String) -> Gift? {
+    func saveGift(name: String, usage: String, expiryDate: Date, memo: String?, imagePath: String, latitude: Double? = nil, longitude: Double? = nil) -> Gift? {
         guard let user = getUser() else { return nil }
 
         let newGift = Gift()
@@ -76,6 +82,8 @@ class RealmManager {
         newGift.expiryDate = expiryDate
         newGift.memo = memo
         newGift.imagePath = imagePath
+        newGift.latitude = latitude
+        newGift.longitude = longitude
 
         try! realm.write {
             user.gifts.append(newGift)
@@ -114,12 +122,14 @@ class RealmManager {
         }
     }
 
-    func updateGift(_ gift: Gift, name: String, usage: String, expiryDate: Date, memo: String?) {
+    func updateGift(_ gift: Gift, name: String, usage: String, expiryDate: Date, memo: String?, latitude: Double? = nil, longitude: Double? = nil) {
         try! realm.write {
             gift.name = name
             gift.usage = usage
             gift.expiryDate = expiryDate
             gift.memo = memo
+            gift.latitude = latitude
+            gift.longitude = longitude
         }
     }
 

@@ -28,6 +28,8 @@ class ExpirationDateViewController: BaseViewController {
     var productName: String?
     var usageLocation: String?
     var selectedImageName: String?
+    var latitude: Double?
+    var longitude: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +56,7 @@ class ExpirationDateViewController: BaseViewController {
         }
 
         confirmButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(60)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         
@@ -72,6 +74,8 @@ class ExpirationDateViewController: BaseViewController {
         memoVC.usageLocation = usageLocation
         memoVC.expirationDate = expirationDate
         memoVC.selectedImageName = selectedImageName
+        memoVC.latitude = latitude
+        memoVC.longitude = longitude
         navigationController?.pushViewController(memoVC, animated: true)
     }
     

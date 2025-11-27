@@ -8,7 +8,7 @@ class GifticonTableViewCell: UITableViewCell {
 
     private let shadowView = UIView().then {
         $0.backgroundColor = .white
-        $0.layer.cornerRadius = 3
+        $0.layer.cornerRadius = 12
         $0.layer.shadowColor = UIColor(named: "595959")?.cgColor
         $0.layer.shadowOpacity = 0.25
         $0.layer.shadowOffset = CGSize(width: 1, height: 2.5)
@@ -18,14 +18,14 @@ class GifticonTableViewCell: UITableViewCell {
 
     private let containerView = UIView().then {
         $0.backgroundColor = .FFFEF_7
-        $0.layer.cornerRadius = 3
+        $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
     }
 
     private let gifticonImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 3
+        $0.layer.cornerRadius = 8
         $0.backgroundColor = .lightGray
     }
 
@@ -52,10 +52,24 @@ class GifticonTableViewCell: UITableViewCell {
         $0.font = .cellFont(size: 10)
         $0.textColor = UIColor(named: "9B1C1C")
         $0.backgroundColor = UIColor(named: "9B1C1C")?.withAlphaComponent(0.1)
-        $0.layer.cornerRadius = 3
+        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
         $0.textAlignment = .center
         $0.isHidden = true
+    }
+
+    private let nearbyBadge = UIView().then {
+        $0.backgroundColor = .A_98_E_5_C
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
+        $0.isHidden = true
+    }
+
+    private let nearbyLabel = UILabel().then {
+        $0.text = "📍 근처에 있어요!"
+        $0.font = .cellFont(size: 9)
+        $0.textColor = .white
+        $0.textAlignment = .center
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -85,6 +99,8 @@ class GifticonTableViewCell: UITableViewCell {
         containerView.addSubview(usageLabel)
         containerView.addSubview(expiredLabel)
         containerView.addSubview(dateLabel)
+        containerView.addSubview(nearbyBadge)
+        nearbyBadge.addSubview(nearbyLabel)
     }
 
     private func setLayout() {
@@ -118,6 +134,17 @@ class GifticonTableViewCell: UITableViewCell {
             $0.height.equalTo(18)
             $0.width.equalTo(50)
         }
+
+        nearbyBadge.snp.makeConstraints {
+            $0.leading.equalTo(titleLabel.snp.leading)
+            $0.top.equalTo(usageLabel.snp.bottom).offset(6)
+            $0.height.equalTo(20)
+        }
+
+        nearbyLabel.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(8)
+            $0.top.bottom.equalToSuperview().inset(3)
+        }
         
         dateLabel.snp.makeConstraints {
             $0.trailing.equalToSuperview().offset(-12)
@@ -125,23 +152,32 @@ class GifticonTableViewCell: UITableViewCell {
         }
     }
 
-    func configure(image: UIImage?, title: String, usage: String, date: String, isExpired: Bool = false) {
+    func configure(image: UIImage?, title: String, usage: String, date: String, isExpired: Bool = false, isNearby: Bool = false) {
         gifticonImageView.image = image
         titleLabel.text = title
         usageLabel.text = usage
         dateLabel.text = date
-        
-        // 만료 상태 처리
+
         if isExpired {
             expiredLabel.isHidden = false
             dateLabel.textColor = UIColor(named: "7F7D7D")
             containerView.alpha = 0.7
             shadowView.alpha = 0.7
+            containerView.layer.borderWidth = 0
         } else {
             expiredLabel.isHidden = true
             dateLabel.textColor = UIColor(named: "6A4C4C")
             containerView.alpha = 1.0
             shadowView.alpha = 1.0
+        }
+
+        nearbyBadge.isHidden = !isNearby || isExpired
+
+        if isNearby && !isExpired {
+            containerView.layer.borderWidth = 2.5
+            containerView.layer.borderColor = UIColor._6_A_4_C_4_C.cgColor
+        } else if !isExpired {
+            containerView.layer.borderWidth = 0
         }
     }
 }

@@ -9,6 +9,8 @@ class Gift: Object {
     @Persisted var memo: String?
     @Persisted var imagePath: String
     @Persisted var isExpired: Bool = false
+    @Persisted var latitude: Double?
+    @Persisted var longitude: Double?
 
     var checkIsExpired: Bool {
         let calendar = Calendar.current

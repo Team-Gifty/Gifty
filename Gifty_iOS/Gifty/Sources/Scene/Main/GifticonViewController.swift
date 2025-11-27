@@ -4,6 +4,7 @@ import Then
 import KakaoSDKShare
 import KakaoSDKTemplate
 import Realm
+import CoreLocation
 
 class GifticonViewController: BaseViewController {
     var gift: Gift?
@@ -45,6 +46,18 @@ class GifticonViewController: BaseViewController {
     private let storecontentLabel = UILabel().then {
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
+        $0.numberOfLines = 1
+    }
+
+    private let storeInfoButton = UIButton().then {
+        $0.setTitle("정보 더보기", for: .normal)
+        $0.setTitleColor(._6_A_4_C_4_C.withAlphaComponent(0.7), for: .normal)
+        $0.titleLabel?.font = .giftyFont(size: 14)
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor._6_A_4_C_4_C.withAlphaComponent(0.3).cgColor
+        $0.layer.cornerRadius = 8
+        $0.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+        $0.isHidden = true
     }
 
     private let expiryLabel = UILabel().then {
@@ -290,6 +303,7 @@ class GifticonViewController: BaseViewController {
         productInfoView.addSubview(productcontentLabel)
         storeInfoView.addSubview(storeLabel)
         storeInfoView.addSubview(storecontentLabel)
+        storeInfoView.addSubview(storeInfoButton)
         expiryInfoView.addSubview(expiryLabel)
         expiryInfoView.addSubview(expirycontentLabel)
         memoInfoView.addSubview(memoLabel)
@@ -303,6 +317,13 @@ class GifticonViewController: BaseViewController {
         productcontentLabel.text = gift.name
         storecontentLabel.text = gift.usage
 
+        if gift.latitude != nil && gift.longitude != nil {
+            storeInfoButton.isHidden = false
+            storeInfoButton.addTarget(self, action: #selector(showLocationMap), for: .touchUpInside)
+        } else {
+            storeInfoButton.isHidden = true
+        }
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         expirycontentLabel.text = dateFormatter.string(from: gift.expiryDate)
@@ -314,6 +335,28 @@ class GifticonViewController: BaseViewController {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let fileURL = documentDirectory.appendingPathComponent(gift.imagePath)
         imageView.image = UIImage(contentsOfFile: fileURL.path)
+    }
+
+    @objc private func showLocationMap() {
+        guard let gift = gift,
+              let latitude = gift.latitude,
+              let longitude = gift.longitude else { return }
+
+        let mapVC = LocationMapViewController()
+        mapVC.configure(title: gift.usage, latitude: latitude, longitude: longitude)
+        mapVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = mapVC.sheetPresentationController {
+            let customDetent = UISheetPresentationController.Detent.custom { context in
+                return context.maximumDetentValue * 0.7
+            }
+            sheet.detents = [customDetent, .large()]
+            sheet.selectedDetentIdentifier = customDetent.identifier
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+
+        present(mapVC, animated: true)
     }
 
     @objc private func exitButtonTapped() {
@@ -348,7 +391,12 @@ class GifticonViewController: BaseViewController {
         }
         storecontentLabel.snp.makeConstraints {
             $0.leading.equalTo(storeLabel.snp.trailing).offset(42)
-            $0.top.bottom.trailing.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
+        }
+        storeInfoButton.snp.makeConstraints {
+            $0.leading.equalTo(storecontentLabel.snp.trailing).offset(8)
+            $0.centerY.equalToSuperview()
+            $0.trailing.lessThanOrEqualToSuperview()
         }
         storeInfoView.snp.makeConstraints {
             $0.top.equalTo(productInfoView.snp.bottom).offset(14)

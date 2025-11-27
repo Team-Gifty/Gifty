@@ -14,6 +14,8 @@ class Gift: Object {
     @Persisted var memo: String?
     @Persisted var imagePath: String
     @Persisted var isExpired: Bool = false
+    @Persisted var latitude: Double?
+    @Persisted var longitude: Double?
 
     var checkIsExpired: Bool {
         let calendar = Calendar.current
@@ -39,11 +41,17 @@ class RealmManager {
         do {
             let config = Realm.Configuration(
                 fileURL: getRealmFileURL(),
-                schemaVersion: 4,
+                schemaVersion: 5,
                 migrationBlock: { migration, oldSchemaVersion in
                     if oldSchemaVersion < 3 {
                         migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
                             newObject?["isExpired"] = false
+                        }
+                    }
+                    if oldSchemaVersion < 5 {
+                        migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
+                            newObject?["latitude"] = nil
+                            newObject?["longitude"] = nil
                         }
                     }
                 }
