@@ -7,5 +7,10 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>온글잎 박다현체.ttf</string>
+		<string>온글잎 콘콘체.ttf</string>
+	</array>
 </dict>
 </plist>
