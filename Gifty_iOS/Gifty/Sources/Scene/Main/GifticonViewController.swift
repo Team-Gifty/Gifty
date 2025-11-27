@@ -4,6 +4,7 @@ import Then
 import KakaoSDKShare
 import KakaoSDKTemplate
 import Realm
+import RealmSwift
 import CoreLocation
 
 class GifticonViewController: BaseViewController {
@@ -46,7 +47,7 @@ class GifticonViewController: BaseViewController {
     private let storecontentLabel = UILabel().then {
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
-        $0.numberOfLines = 1
+        $0.numberOfLines = 0
     }
 
     private let storeInfoButton = UIButton().then {
@@ -92,6 +93,15 @@ class GifticonViewController: BaseViewController {
     private let modifyButton = UIButton().then {
         $0.setImage(UIImage(named: "Modify"), for: .normal)
         $0.addTarget(self, action: #selector(modifyButtonTapped), for: .touchUpInside)
+    }
+
+    private let completeButton = UIButton().then {
+        $0.setTitle("사용 완료", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = .giftyFont(size: 16)
+        $0.backgroundColor = .A_98_E_5_C
+        $0.layer.cornerRadius = 8
+        $0.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
 
     private  let shareButton = UIButton().then {
@@ -260,11 +270,6 @@ class GifticonViewController: BaseViewController {
         present(alert, animated: true)
     }
 
-    private  let deleteButton = UIButton().then {
-        $0.setImage(UIImage(named: "Delete"), for: .normal)
-        $0.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-    }
-
     private let exitButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
         $0.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
@@ -287,7 +292,6 @@ class GifticonViewController: BaseViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.bringSubviewToFront(deleteButton)
         view.bringSubviewToFront(shareButton)
         view.bringSubviewToFront(modifyButton)
         view.bringSubviewToFront(exitButton)
@@ -297,7 +301,7 @@ class GifticonViewController: BaseViewController {
         [contentView, shadowView].forEach { view.addSubview($0) }
         shadowView.addSubview(imageView)
 
-        [exitButton, deleteButton, shareButton, modifyButton].forEach { view.addSubview($0) }
+        [exitButton, shareButton, modifyButton, completeButton].forEach { view.addSubview($0) }
         
         productInfoView.addSubview(productLabel)
         productInfoView.addSubview(productcontentLabel)
@@ -432,15 +436,17 @@ class GifticonViewController: BaseViewController {
             $0.trailing.equalTo(modifyButton.snp.leading).offset(-10)
             $0.bottom.equalTo(shadowView.snp.top).offset(-11)
         }
-        deleteButton.snp.makeConstraints {
-            $0.width.height.equalTo(44)
-            $0.trailing.equalTo(shareButton.snp.leading).offset(-10)
-            $0.bottom.equalTo(shadowView.snp.top).offset(-11)
+        completeButton.snp.makeConstraints {
+            $0.height.equalTo(33)
+            $0.width.equalTo(80)
+            $0.trailing.equalTo(shadowView.snp.trailing)
+            $0.centerY.equalTo(shareButton)
         }
+
         modifyButton.snp.makeConstraints {
             $0.width.equalTo(68)
             $0.height.equalTo(33)
-            $0.trailing.equalTo(shadowView.snp.trailing)
+            $0.trailing.equalTo(completeButton.snp.leading).offset(-8)
             $0.centerY.equalTo(shareButton)
         }
         exitButton.snp.makeConstraints {
@@ -464,26 +470,96 @@ class GifticonViewController: BaseViewController {
         present(zoomVC, animated: true, completion: nil)
     }
 
-    @objc
-    private func deleteButtonTapped() {
-        let deleteModalVC = DeleteModalViewController()
-        deleteModalVC.modalPresentationStyle = .overFullScreen
-        deleteModalVC.modalTransitionStyle = .crossDissolve
-        deleteModalVC.onDelete = {
-            if let gift = self.gift {
-                RealmManager.shared.deleteGift(gift)
-                NotificationManager.shared.scheduleDailySummaryNotification()
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-        self.present(deleteModalVC, animated: true, completion: nil)
-    }
-    
     @objc private func modifyButtonTapped() {
         let modifyVC = ModifyGiftViewController()
         modifyVC.gift = self.gift
         modifyVC.delegate = self
         self.present(modifyVC, animated: true, completion: nil)
+    }
+
+    @objc private func completeButtonTapped() {
+        let completeModal = CompleteModalViewController()
+        completeModal.modalPresentationStyle = .overFullScreen
+
+        completeModal.onArchive = { [weak self] in
+            self?.askForGiverName()
+        }
+
+        completeModal.onDelete = { [weak self] in
+            self?.deleteGift()
+        }
+
+        present(completeModal, animated: true)
+    }
+
+    private func askForGiverName() {
+        let alert = UIAlertController(
+            title: "간직함",
+            message: "이 선물을 누가 주셨나요?",
+            preferredStyle: .alert
+        )
+
+        alert.addTextField { textField in
+            textField.placeholder = "이름을 입력해주세요"
+        }
+
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            guard let giverName = alert.textFields?.first?.text, !giverName.isEmpty else {
+                self?.showSimpleAlert(message: "이름을 입력해주세요")
+                return
+            }
+            self?.archiveGift(giverName: giverName)
+        })
+
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+
+        present(alert, animated: true)
+    }
+
+    private func archiveGift(giverName: String) {
+        guard let gift = gift else { return }
+
+        try! RealmManager.shared.realm.write {
+            gift.isArchived = true
+            gift.giverName = giverName
+        }
+
+        GeofenceManager.shared.removeGeofence(for: gift.id.stringValue)
+
+        showSimpleAlert(message: "간직함에 보관되었습니다") { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    private func deleteGift() {
+        guard let gift = gift else { return }
+
+        // Realm 객체가 삭제되기 전에 필요한 값 복사
+        let giftId = gift.id.stringValue
+
+        let deleteModalVC = DeleteModalViewController()
+        deleteModalVC.modalPresentationStyle = .overFullScreen
+        deleteModalVC.modalTransitionStyle = .crossDissolve
+        deleteModalVC.onDelete = { [weak self] in
+            guard let self = self else { return }
+
+            // 복사한 ID로 객체를 다시 찾아서 삭제
+            if let giftToDelete = RealmManager.shared.getGift(by: giftId) {
+                RealmManager.shared.deleteGift(giftToDelete)
+                GeofenceManager.shared.removeGeofence(for: giftId)
+                NotificationManager.shared.scheduleDailySummaryNotification()
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        present(deleteModalVC, animated: true, completion: nil)
+    }
+
+    private func showSimpleAlert(message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+            completion?()
+        })
+        present(alert, animated: true)
     }
 }
 

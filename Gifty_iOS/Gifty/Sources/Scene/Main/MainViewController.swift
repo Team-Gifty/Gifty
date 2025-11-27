@@ -16,6 +16,18 @@ class MainViewController: BaseViewController {
         $0.font = .nicknameFont(size: 15)
     }
     
+    private let archiveButton = UIButton(type: .system).then {
+        $0.setTitle("💝 간직함", for: .normal)
+        $0.setTitleColor(._6_A_4_C_4_C, for: .normal)
+        $0.titleLabel?.font = .giftyFont(size: 16)
+        $0.backgroundColor = .FFFEF_7
+        $0.layer.cornerRadius = 8
+        $0.layer.borderWidth = 1.5
+        $0.layer.borderColor = UIColor._6_A_4_C_4_C.withAlphaComponent(0.3).cgColor
+        $0.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        $0.addTarget(self, action: #selector(archiveButtonTapped), for: .touchUpInside)
+    }
+
     private let sortButton = UIButton(type: .system).then {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(named: "arrowDown")
@@ -25,7 +37,7 @@ class MainViewController: BaseViewController {
         $0.configuration = config
         $0.addTarget(self, action: #selector(toggleSortDropdown), for: .touchUpInside)
     }
-    
+
     private let sortDropDownView = SortDropDownView().then {
         $0.isHidden = true
     }
@@ -55,8 +67,10 @@ class MainViewController: BaseViewController {
     }
 
     private var gifts: Results<Gift>?
+    private var giftArray: [Gift] = []
     private var notificationToken: NotificationToken?
     private var currentSortOrder: SortOrder = .byRegistrationDate
+    private var isUsingArrayData: Bool = false
     
     var ShowCheckModal = false
     
@@ -128,6 +142,7 @@ class MainViewController: BaseViewController {
         [
             iconImageView,
             titleLabel,
+            archiveButton,
             sortButton,
             sortDropDownView,
             boxImageView,
@@ -149,7 +164,13 @@ class MainViewController: BaseViewController {
             $0.centerY.equalTo(iconImageView)
             $0.leading.equalTo(iconImageView.snp.trailing).offset(8)
         }
-        
+
+        archiveButton.snp.makeConstraints {
+            $0.centerY.equalTo(titleLabel)
+            $0.trailing.equalToSuperview().inset(24)
+            $0.height.equalTo(36)
+        }
+
         sortButton.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
             $0.trailing.equalToSuperview().inset(33)
@@ -193,10 +214,76 @@ class MainViewController: BaseViewController {
         }
     }
     
-    private func loadGifts() {
-        gifts = RealmManager.shared.getGifts(sortedBy: currentSortOrder)
-        updateUI()
-        gifticonTableView.reloadData()
+    private func loadGifts(animated: Bool = false) {
+        if currentSortOrder == .byDistance {
+            let sortedArray = RealmManager.shared.getGiftsSortedByDistance(currentLocation: GeofenceManager.shared.currentLocation)
+
+            if animated && !giftArray.isEmpty {
+                let oldIds = isUsingArrayData ? giftArray.map { $0.id.stringValue } : (gifts?.map { $0.id.stringValue } ?? [])
+                let newIds = sortedArray.map { $0.id.stringValue }
+
+                var moveOperations: [(from: Int, to: Int)] = []
+
+                for (newIndex, newId) in newIds.enumerated() {
+                    if let oldIndex = oldIds.firstIndex(of: newId), oldIndex != newIndex {
+                        moveOperations.append((from: oldIndex, to: newIndex))
+                    }
+                }
+
+                giftArray = sortedArray
+                isUsingArrayData = true
+
+                gifticonTableView.performBatchUpdates({
+                    for operation in moveOperations {
+                        gifticonTableView.moveRow(
+                            at: IndexPath(row: operation.from, section: 0),
+                            to: IndexPath(row: operation.to, section: 0)
+                        )
+                    }
+                }, completion: { _ in
+                    self.gifticonTableView.reloadData()
+                })
+            } else {
+                giftArray = sortedArray
+                isUsingArrayData = true
+                updateUI()
+                gifticonTableView.reloadData()
+            }
+        } else {
+            let newGifts = RealmManager.shared.getGifts(sortedBy: currentSortOrder)
+
+            if animated, let oldGifts = gifts, !oldGifts.isEmpty {
+                let oldIds = isUsingArrayData ? giftArray.map { $0.id.stringValue } : oldGifts.map { $0.id.stringValue }
+                let newIds = newGifts.map { $0.id.stringValue }
+
+                var moveOperations: [(from: Int, to: Int)] = []
+
+                for (newIndex, newId) in newIds.enumerated() {
+                    if let oldIndex = oldIds.firstIndex(of: newId), oldIndex != newIndex {
+                        moveOperations.append((from: oldIndex, to: newIndex))
+                    }
+                }
+
+                gifts = newGifts
+                isUsingArrayData = false
+
+                gifticonTableView.performBatchUpdates({
+                    for operation in moveOperations {
+                        gifticonTableView.moveRow(
+                            at: IndexPath(row: operation.from, section: 0),
+                            to: IndexPath(row: operation.to, section: 0)
+                        )
+                    }
+                }, completion: { _ in
+                    self.gifticonTableView.reloadData()
+                })
+            } else {
+                gifts = newGifts
+                isUsingArrayData = false
+                updateUI()
+                gifticonTableView.reloadData()
+            }
+        }
     }
     
     private func setupRealmNotification() {
@@ -213,7 +300,7 @@ class MainViewController: BaseViewController {
     }
     
     private func updateUI() {
-        let hasGifts = !(gifts?.isEmpty ?? true)
+        let hasGifts = isUsingArrayData ? !giftArray.isEmpty : !(gifts?.isEmpty ?? true)
         gifticonTableView.isHidden = !hasGifts
         noneLabel.isHidden = hasGifts
         boxImageView.isHidden = hasGifts
@@ -221,7 +308,15 @@ class MainViewController: BaseViewController {
     }
     
     private func updateSortButtonTitle() {
-        let title = currentSortOrder == .byExpiryDate ? "짧은 유효기간 순" : "최신 등록 순"
+        let title: String
+        switch currentSortOrder {
+        case .byExpiryDate:
+            title = "짧은 유효기간 순"
+        case .byRegistrationDate:
+            title = "최신 등록 순"
+        case .byDistance:
+            title = "가까운 거리 순"
+        }
         var attText = AttributedString(title)
         attText.font = .giftyFont(size: 16)
         sortButton.configuration?.attributedTitle = attText
@@ -234,6 +329,11 @@ class MainViewController: BaseViewController {
         }
     }
     
+    @objc private func archiveButtonTapped() {
+        let archiveVC = ArchiveViewController()
+        navigationController?.pushViewController(archiveVC, animated: true)
+    }
+
     @objc private func testNotificationButtonTapped() {
         GeofenceManager.shared.sendTestNotification()
     }
@@ -278,13 +378,22 @@ class MainViewController: BaseViewController {
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return gifts?.count ?? 0
+        return isUsingArrayData ? giftArray.count : (gifts?.count ?? 0)
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell,
-              let gift = gifts?[indexPath.row] else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: GifticonTableViewCell.identifier, for: indexPath) as? GifticonTableViewCell else {
             return UITableViewCell()
+        }
+
+        let gift: Gift
+        if isUsingArrayData {
+            gift = giftArray[indexPath.row]
+        } else {
+            guard let giftFromResults = gifts?[indexPath.row] else {
+                return UITableViewCell()
+            }
+            gift = giftFromResults
         }
         
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -308,8 +417,14 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let gift = gifts?[indexPath.row] else { return }
-        
+        let gift: Gift
+        if isUsingArrayData {
+            gift = giftArray[indexPath.row]
+        } else {
+            guard let giftFromResults = gifts?[indexPath.row] else { return }
+            gift = giftFromResults
+        }
+
         let gifticonVC = GifticonViewController()
         gifticonVC.gift = gift
         navigationController?.pushViewController(gifticonVC, animated: true)
@@ -322,6 +437,6 @@ extension MainViewController: SortDropDownViewDelegate {
         sortDropDownView.set(sortOrder: sortOrder)
         sortDropDownView.isHidden = true
         updateSortButtonTitle()
-        loadGifts()
+        loadGifts(animated: true)
     }
 }

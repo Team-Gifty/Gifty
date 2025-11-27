@@ -11,6 +11,8 @@ class Gift: Object {
     @Persisted var isExpired: Bool = false
     @Persisted var latitude: Double?
     @Persisted var longitude: Double?
+    @Persisted var isArchived: Bool = false
+    @Persisted var giverName: String?
 
     var checkIsExpired: Bool {
         let calendar = Calendar.current
