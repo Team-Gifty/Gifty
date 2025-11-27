@@ -235,7 +235,7 @@ class MainViewController: BaseViewController {
     }
     
     @objc private func testNotificationButtonTapped() {
-        NotificationManager.shared.scheduleDailySummaryNotificationForTest()
+        GeofenceManager.shared.sendTestNotification()
     }
 
     @objc private func refreshGiftList() {

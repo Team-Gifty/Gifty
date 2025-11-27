@@ -27,6 +27,22 @@ class GeofenceManager: NSObject {
         setupGeofences()
     }
 
+    func sendTestNotification() {
+        let gifts = RealmManager.shared.getGifts()
+        guard let firstGift = gifts.first(where: { $0.latitude != nil && !$0.isExpired }) else {
+            let content = UNMutableNotificationContent()
+            content.title = "🎁 교환권 사용 알림 (테스트)"
+            content.body = "위치 정보가 있는 교환권이 없습니다."
+            content.sound = .default
+
+            let request = UNNotificationRequest(identifier: "test_notification", content: content, trigger: nil)
+            UNUserNotificationCenter.current().add(request)
+            return
+        }
+
+        sendNotification(for: firstGift)
+    }
+
     func setupGeofences() {
         for region in locationManager.monitoredRegions {
             locationManager.stopMonitoring(for: region)
