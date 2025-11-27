@@ -193,10 +193,38 @@ class MainViewController: BaseViewController {
         }
     }
     
-    private func loadGifts() {
-        gifts = RealmManager.shared.getGifts(sortedBy: currentSortOrder)
-        updateUI()
-        gifticonTableView.reloadData()
+    private func loadGifts(animated: Bool = false) {
+        let newGifts = RealmManager.shared.getGifts(sortedBy: currentSortOrder)
+
+        if animated, let oldGifts = gifts, !oldGifts.isEmpty {
+            let oldIds = oldGifts.map { $0.id.stringValue }
+            let newIds = newGifts.map { $0.id.stringValue }
+
+            var moveOperations: [(from: Int, to: Int)] = []
+
+            for (newIndex, newId) in newIds.enumerated() {
+                if let oldIndex = oldIds.firstIndex(of: newId), oldIndex != newIndex {
+                    moveOperations.append((from: oldIndex, to: newIndex))
+                }
+            }
+
+            gifts = newGifts
+
+            gifticonTableView.performBatchUpdates({
+                for operation in moveOperations {
+                    gifticonTableView.moveRow(
+                        at: IndexPath(row: operation.from, section: 0),
+                        to: IndexPath(row: operation.to, section: 0)
+                    )
+                }
+            }, completion: { _ in
+                self.gifticonTableView.reloadData()
+            })
+        } else {
+            gifts = newGifts
+            updateUI()
+            gifticonTableView.reloadData()
+        }
     }
     
     private func setupRealmNotification() {
@@ -322,6 +350,6 @@ extension MainViewController: SortDropDownViewDelegate {
         sortDropDownView.set(sortOrder: sortOrder)
         sortDropDownView.isHidden = true
         updateSortButtonTitle()
-        loadGifts()
+        loadGifts(animated: true)
     }
 }
