@@ -28,6 +28,8 @@ class ExpirationDateViewController: BaseViewController {
     var productName: String?
     var usageLocation: String?
     var selectedImageName: String?
+    var latitude: Double?
+    var longitude: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +74,8 @@ class ExpirationDateViewController: BaseViewController {
         memoVC.usageLocation = usageLocation
         memoVC.expirationDate = expirationDate
         memoVC.selectedImageName = selectedImageName
+        memoVC.latitude = latitude
+        memoVC.longitude = longitude
         navigationController?.pushViewController(memoVC, animated: true)
     }
     

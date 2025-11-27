@@ -25,6 +25,8 @@ class MemoViewController: BaseViewController {
     var usageLocation: String?
     var expirationDate: Date?
     var selectedImageName: String?
+    var latitude: Double?
+    var longitude: Double?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +78,7 @@ class MemoViewController: BaseViewController {
         
         print("===== 등록 시작 =====")
         
-        if let newGift = viewModel.saveGift(name: name, usage: usage, expiryDate: expiryDate, memo: memo, imagePath: imageName) {
+        if let newGift = viewModel.saveGift(name: name, usage: usage, expiryDate: expiryDate, memo: memo, imagePath: imageName, latitude: latitude, longitude: longitude) {
             print("✅ 기프티콘 저장 성공: \(newGift.name)")
             NotificationManager.shared.scheduleImmediateNotification(for: newGift)
             NotificationManager.shared.scheduleDailySummaryNotification()
