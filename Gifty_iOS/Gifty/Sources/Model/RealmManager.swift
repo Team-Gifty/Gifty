@@ -12,7 +12,7 @@ class RealmManager {
         do {
             let config = Realm.Configuration(
                 fileURL: getRealmFileURL(),
-                schemaVersion: 5,
+                schemaVersion: 6,
                 migrationBlock: { migration, oldSchemaVersion in
                     if oldSchemaVersion < 3 {
                         migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
@@ -23,6 +23,12 @@ class RealmManager {
                         migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
                             newObject?["latitude"] = nil
                             newObject?["longitude"] = nil
+                        }
+                    }
+                    if oldSchemaVersion < 6 {
+                        migration.enumerateObjects(ofType: "Gift") { oldObject, newObject in
+                            newObject?["isArchived"] = false
+                            newObject?["giverName"] = nil
                         }
                     }
                 }
@@ -93,18 +99,19 @@ class RealmManager {
     }
 
     func getGifts(sortedBy sortOrder: SortOrder = .byRegistrationDate) -> Results<Gift> {
+        let nonArchivedGifts = realm.objects(Gift.self).filter("isArchived == false")
         switch sortOrder {
         case .byRegistrationDate:
-            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
+            return nonArchivedGifts.sorted(byKeyPath: "id", ascending: false)
         case .byExpiryDate:
-            return realm.objects(Gift.self).sorted(byKeyPath: "expiryDate", ascending: true)
+            return nonArchivedGifts.sorted(byKeyPath: "expiryDate", ascending: true)
         case .byDistance:
-            return realm.objects(Gift.self).sorted(byKeyPath: "id", ascending: false)
+            return nonArchivedGifts.sorted(byKeyPath: "id", ascending: false)
         }
     }
 
     func getGiftsSortedByDistance(currentLocation: CLLocation?) -> [Gift] {
-        let allGifts = Array(realm.objects(Gift.self))
+        let allGifts = Array(realm.objects(Gift.self).filter("isArchived == false"))
 
         guard let currentLocation = currentLocation else {
             return allGifts

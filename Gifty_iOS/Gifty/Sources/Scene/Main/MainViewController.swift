@@ -16,6 +16,18 @@ class MainViewController: BaseViewController {
         $0.font = .nicknameFont(size: 15)
     }
     
+    private let archiveButton = UIButton(type: .system).then {
+        $0.setTitle("💝 간직함", for: .normal)
+        $0.setTitleColor(._6_A_4_C_4_C, for: .normal)
+        $0.titleLabel?.font = .giftyFont(size: 16)
+        $0.backgroundColor = .FFFEF_7
+        $0.layer.cornerRadius = 8
+        $0.layer.borderWidth = 1.5
+        $0.layer.borderColor = UIColor._6_A_4_C_4_C.withAlphaComponent(0.3).cgColor
+        $0.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        $0.addTarget(self, action: #selector(archiveButtonTapped), for: .touchUpInside)
+    }
+
     private let sortButton = UIButton(type: .system).then {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(named: "arrowDown")
@@ -25,7 +37,7 @@ class MainViewController: BaseViewController {
         $0.configuration = config
         $0.addTarget(self, action: #selector(toggleSortDropdown), for: .touchUpInside)
     }
-    
+
     private let sortDropDownView = SortDropDownView().then {
         $0.isHidden = true
     }
@@ -130,6 +142,7 @@ class MainViewController: BaseViewController {
         [
             iconImageView,
             titleLabel,
+            archiveButton,
             sortButton,
             sortDropDownView,
             boxImageView,
@@ -151,9 +164,15 @@ class MainViewController: BaseViewController {
             $0.centerY.equalTo(iconImageView)
             $0.leading.equalTo(iconImageView.snp.trailing).offset(8)
         }
-        
-        sortButton.snp.makeConstraints {
+
+        archiveButton.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().inset(34)
+            $0.height.equalTo(36)
+        }
+
+        sortButton.snp.makeConstraints {
+            $0.top.equalTo(archiveButton.snp.bottom).offset(8)
             $0.trailing.equalToSuperview().inset(33)
         }
         
@@ -310,6 +329,11 @@ class MainViewController: BaseViewController {
         }
     }
     
+    @objc private func archiveButtonTapped() {
+        let archiveVC = ArchiveViewController()
+        navigationController?.pushViewController(archiveVC, animated: true)
+    }
+
     @objc private func testNotificationButtonTapped() {
         GeofenceManager.shared.sendTestNotification()
     }

@@ -4,6 +4,7 @@ import Then
 import KakaoSDKShare
 import KakaoSDKTemplate
 import Realm
+import RealmSwift
 import CoreLocation
 
 class GifticonViewController: BaseViewController {
@@ -46,7 +47,7 @@ class GifticonViewController: BaseViewController {
     private let storecontentLabel = UILabel().then {
         $0.font = .giftyFont(size: 22)
         $0.textColor = ._6_A_4_C_4_C
-        $0.numberOfLines = 1
+        $0.numberOfLines = 0
     }
 
     private let storeInfoButton = UIButton().then {
@@ -92,6 +93,15 @@ class GifticonViewController: BaseViewController {
     private let modifyButton = UIButton().then {
         $0.setImage(UIImage(named: "Modify"), for: .normal)
         $0.addTarget(self, action: #selector(modifyButtonTapped), for: .touchUpInside)
+    }
+
+    private let completeButton = UIButton().then {
+        $0.setTitle("사용 완료", for: .normal)
+        $0.setTitleColor(._6_A_4_C_4_C, for: .normal)
+        $0.titleLabel?.font = .giftyFont(size: 16)
+        $0.backgroundColor = .A_98_E_5_C
+        $0.layer.cornerRadius = 8
+        $0.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
 
     private  let shareButton = UIButton().then {
@@ -297,7 +307,7 @@ class GifticonViewController: BaseViewController {
         [contentView, shadowView].forEach { view.addSubview($0) }
         shadowView.addSubview(imageView)
 
-        [exitButton, deleteButton, shareButton, modifyButton].forEach { view.addSubview($0) }
+        [exitButton, deleteButton, shareButton, modifyButton, completeButton].forEach { view.addSubview($0) }
         
         productInfoView.addSubview(productLabel)
         productInfoView.addSubview(productcontentLabel)
@@ -437,10 +447,17 @@ class GifticonViewController: BaseViewController {
             $0.trailing.equalTo(shareButton.snp.leading).offset(-10)
             $0.bottom.equalTo(shadowView.snp.top).offset(-11)
         }
+        completeButton.snp.makeConstraints {
+            $0.height.equalTo(33)
+            $0.width.equalTo(80)
+            $0.trailing.equalTo(shadowView.snp.trailing)
+            $0.centerY.equalTo(shareButton)
+        }
+
         modifyButton.snp.makeConstraints {
             $0.width.equalTo(68)
             $0.height.equalTo(33)
-            $0.trailing.equalTo(shadowView.snp.trailing)
+            $0.trailing.equalTo(completeButton.snp.leading).offset(-8)
             $0.centerY.equalTo(shareButton)
         }
         exitButton.snp.makeConstraints {
@@ -484,6 +501,85 @@ class GifticonViewController: BaseViewController {
         modifyVC.gift = self.gift
         modifyVC.delegate = self
         self.present(modifyVC, animated: true, completion: nil)
+    }
+
+    @objc private func completeButtonTapped() {
+        let alert = UIAlertController(
+            title: "사용 완료",
+            message: "이 교환권을 간직함에 보관하시겠어요?",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "예", style: .default) { [weak self] _ in
+            self?.askForGiverName()
+        })
+
+        alert.addAction(UIAlertAction(title: "아니오", style: .default) { [weak self] _ in
+            self?.deleteGift()
+        })
+
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+
+        present(alert, animated: true)
+    }
+
+    private func askForGiverName() {
+        let alert = UIAlertController(
+            title: "간직함",
+            message: "이 선물을 누가 주셨나요?",
+            preferredStyle: .alert
+        )
+
+        alert.addTextField { textField in
+            textField.placeholder = "이름을 입력해주세요"
+        }
+
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { [weak self] _ in
+            guard let giverName = alert.textFields?.first?.text, !giverName.isEmpty else {
+                self?.showSimpleAlert(message: "이름을 입력해주세요")
+                return
+            }
+            self?.archiveGift(giverName: giverName)
+        })
+
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+
+        present(alert, animated: true)
+    }
+
+    private func archiveGift(giverName: String) {
+        guard let gift = gift else { return }
+
+        try! RealmManager.shared.realm.write {
+            gift.isArchived = true
+            gift.giverName = giverName
+        }
+
+        GeofenceManager.shared.removeGeofence(for: gift.id.stringValue)
+
+        showSimpleAlert(message: "간직함에 보관되었습니다") { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    private func deleteGift() {
+        guard let gift = gift else { return }
+
+        RealmManager.shared.deleteGift(gift)
+        GeofenceManager.shared.removeGeofence(for: gift.id.stringValue)
+        NotificationManager.shared.scheduleDailySummaryNotification()
+
+        showSimpleAlert(message: "교환권이 삭제되었습니다") { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    private func showSimpleAlert(message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "확인", style: .default) { _ in
+            completion?()
+        })
+        present(alert, animated: true)
     }
 }
 
