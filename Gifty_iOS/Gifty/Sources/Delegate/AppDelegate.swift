@@ -27,6 +27,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
         NotificationManager.shared.scheduleDailySummaryNotification()
 
+        GeofenceManager.shared.requestLocationPermission()
+        GeofenceManager.shared.startMonitoring()
+
         MobileAds.shared.start(completionHandler: nil)
         print("===== AdMob SDK 초기화 =====")
         print("✅ AdMob SDK 초기화 완료")
