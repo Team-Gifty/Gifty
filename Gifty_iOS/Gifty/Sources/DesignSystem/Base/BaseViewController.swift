@@ -8,6 +8,11 @@ open class BaseViewController: UIViewController {
         setLayout()
     }
 
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     open func addView() {}
     open func setLayout() {}
 
@@ -16,7 +21,7 @@ open class BaseViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
-    
+
     @objc internal override func dismissKeyboard() {
         view.endEditing(true)
     }
