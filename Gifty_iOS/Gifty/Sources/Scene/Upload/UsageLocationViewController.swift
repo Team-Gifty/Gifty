@@ -3,6 +3,7 @@ import UIKit
 import SnapKit
 import Then
 import MapKit
+import CoreLocation
 
 class UsageLocationViewController: BaseViewController {
 
@@ -26,11 +27,12 @@ class UsageLocationViewController: BaseViewController {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor._6_A_4_C_4_C.withAlphaComponent(0.3).cgColor
         $0.isHidden = true
-        $0.register(UITableViewCell.self, forCellReuseIdentifier: "SearchResultCell")
     }
 
     private let searchCompleter = MKLocalSearchCompleter()
     private var searchResults: [MKLocalSearchCompletion] = []
+    private let locationManager = CLLocationManager()
+    private var currentLocation: CLLocation?
 
     var productName: String?
     var selectedImageName: String?
@@ -44,12 +46,20 @@ class UsageLocationViewController: BaseViewController {
         usageTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
 
+        setupLocationManager()
         searchCompleter.delegate = self
         searchCompleter.resultTypes = .pointOfInterest
         searchResultsTableView.delegate = self
         searchResultsTableView.dataSource = self
 
         updateButtonState()
+    }
+
+    private func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
 
     override func addView() {
@@ -99,6 +109,13 @@ class UsageLocationViewController: BaseViewController {
             return
         }
 
+        if let location = currentLocation {
+            let center = location.coordinate
+            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            let region = MKCoordinateRegion(center: center, span: span)
+            searchCompleter.region = region
+        }
+
         searchCompleter.queryFragment = query
     }
 
@@ -116,6 +133,32 @@ class UsageLocationViewController: BaseViewController {
 
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+    }
+}
+
+extension UsageLocationViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if currentLocation == nil, let location = locations.first {
+            currentLocation = location
+            locationManager.stopUpdatingLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location error: \(error.localizedDescription)")
+    }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+            print("Location permission denied")
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            break
+        }
     }
 }
 
@@ -137,13 +180,15 @@ extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SearchResultCell", for: indexPath)
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "SearchResultCell")
         let result = searchResults[indexPath.row]
 
         cell.textLabel?.text = result.title
         cell.detailTextLabel?.text = result.subtitle
         cell.textLabel?.font = .giftyFont(size: 16)
         cell.detailTextLabel?.font = .giftyFont(size: 12)
+        cell.detailTextLabel?.textColor = ._6_A_4_C_4_C.withAlphaComponent(0.6)
+        cell.selectionStyle = .default
 
         return cell
     }

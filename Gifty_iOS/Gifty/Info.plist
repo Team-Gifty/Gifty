@@ -66,6 +66,10 @@
 	</dict>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>근처 사용처를 검색하기 위해 위치 정보가 필요합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>등록한 교환권 사용처 근처에 가면 알림을 받기 위해 위치 정보가 필요합니다.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
