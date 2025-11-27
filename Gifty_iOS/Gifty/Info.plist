@@ -35,6 +35,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>location</string>
 	</array>
 	    <key>KAKAO_APP_KEY</key>
 	    <string>$(KAKAO_APP_KEY)</string>
