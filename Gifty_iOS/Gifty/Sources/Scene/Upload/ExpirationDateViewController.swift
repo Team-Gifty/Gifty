@@ -1,16 +1,23 @@
-
 import UIKit
 import SnapKit
 import Then
+import Combine
 
 class ExpirationDateViewController: BaseViewController {
+
+    // MARK: - Properties
+    private let viewModel = ExpirationDateViewModel()
+    private var cancellables = Set<AnyCancellable>()
+
+    private let dateSelectedSubject = PassthroughSubject<Date, Never>()
+    private let confirmButtonTappedSubject = PassthroughSubject<Void, Never>()
 
     private let titleLabel = UILabel().then {
         $0.text = "언제까지 써야하나요?"
         $0.font = .giftyFont(size: 24)
         $0.textColor = ._6_A_4_C_4_C
     }
-    
+
     private let backButton = UIButton().then {
         $0.setImage(UIImage(named: "Back"), for: .normal)
     }
@@ -24,20 +31,71 @@ class ExpirationDateViewController: BaseViewController {
     }
 
     private let confirmButton = GiftyButton(buttonText: "확인", isEnabled: true)
-    
-    var productName: String?
-    var usageLocation: String?
-    var selectedImageName: String?
-    var latitude: Double?
-    var longitude: Double?
+
+    var productName: String? {
+        didSet {
+            viewModel.setProductName(productName)
+        }
+    }
+
+    var usageLocation: String? {
+        didSet {
+            viewModel.setUsageLocation(usageLocation)
+        }
+    }
+
+    var selectedImageName: String? {
+        didSet {
+            viewModel.setImageName(selectedImageName)
+        }
+    }
+
+    var latitude: Double? {
+        didSet {
+            viewModel.setLatitude(latitude)
+        }
+    }
+
+    var longitude: Double? {
+        didSet {
+            viewModel.setLongitude(longitude)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBindings()
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         if #available(iOS 14.0, *) {
             datePicker.overrideUserInterfaceStyle = .light
         }
+    }
+
+    // MARK: - Binding
+    private func setupBindings() {
+        let input = ExpirationDateViewModel.Input(
+            dateSelected: dateSelectedSubject.eraseToAnyPublisher(),
+            confirmButtonTapped: confirmButtonTappedSubject.eraseToAnyPublisher()
+        )
+
+        let output = viewModel.transform(input: input)
+
+        output.navigationToMemo
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                let memoVC = MemoViewController()
+                memoVC.productName = data.productName
+                memoVC.usageLocation = data.usageLocation
+                memoVC.expirationDate = data.expirationDate
+                memoVC.selectedImageName = data.selectedImageName
+                memoVC.latitude = data.latitude
+                memoVC.longitude = data.longitude
+                self.navigationController?.pushViewController(memoVC, animated: true)
+            }
+            .store(in: &cancellables)
     }
 
     override func addView() {
@@ -66,19 +124,15 @@ class ExpirationDateViewController: BaseViewController {
         }
     }
 
-    @objc private func confirmButtonTapped() {
-        let expirationDate = datePicker.date
-
-        let memoVC = MemoViewController()
-        memoVC.productName = productName
-        memoVC.usageLocation = usageLocation
-        memoVC.expirationDate = expirationDate
-        memoVC.selectedImageName = selectedImageName
-        memoVC.latitude = latitude
-        memoVC.longitude = longitude
-        navigationController?.pushViewController(memoVC, animated: true)
+    // MARK: - Actions
+    @objc private func dateChanged() {
+        dateSelectedSubject.send(datePicker.date)
     }
-    
+
+    @objc private func confirmButtonTapped() {
+        confirmButtonTappedSubject.send(())
+    }
+
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
