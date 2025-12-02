@@ -7,7 +7,7 @@
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-6956983354882052~4032324948</string>
+	<string>$(ADMOB_APP_ID)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>온글잎 박다현체.ttf</string>
