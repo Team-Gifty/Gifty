@@ -1,11 +1,22 @@
-
 import UIKit
 import SnapKit
 import Then
 import MapKit
 import CoreLocation
+import Combine
 
 class UsageLocationViewController: BaseViewController {
+
+    // MARK: - Properties
+    private let viewModel = UsageLocationViewModel()
+    private var cancellables = Set<AnyCancellable>()
+
+    private let searchQueryTextSubject = CurrentValueSubject<String?, Never>(nil)
+    private let locationSelectedSubject = PassthroughSubject<MKLocalSearchCompletion, Never>()
+    private let confirmButtonTappedSubject = PassthroughSubject<Void, Never>()
+
+    private var searchResults: [MKLocalSearchCompletion] = []
+    private let locationManager = CLLocationManager()
 
     private let titleLabel = UILabel().then {
         $0.text = "어디서 사용하나요?"
@@ -58,30 +69,85 @@ class UsageLocationViewController: BaseViewController {
         $0.textAlignment = .center
     }
 
-    private let searchCompleter = MKLocalSearchCompleter()
-    private var searchResults: [MKLocalSearchCompletion] = []
-    private let locationManager = CLLocationManager()
-    private var currentLocation: CLLocation?
+    var productName: String? {
+        didSet {
+            viewModel.setProductName(productName)
+        }
+    }
 
-    var productName: String?
-    var selectedImageName: String?
-    var selectedLatitude: Double?
-    var selectedLongitude: Double?
+    var selectedImageName: String? {
+        didSet {
+            viewModel.setImageName(selectedImageName)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
+        setupBindings()
+        setupLocationManager()
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         usageTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
 
-        setupLocationManager()
-        searchCompleter.delegate = self
-        searchCompleter.resultTypes = .pointOfInterest
         searchResultsTableView.delegate = self
         searchResultsTableView.dataSource = self
+    }
 
-        updateButtonState()
+    // MARK: - Binding
+    private func setupBindings() {
+        let input = UsageLocationViewModel.Input(
+            searchQueryText: searchQueryTextSubject.eraseToAnyPublisher(),
+            locationSelected: locationSelectedSubject.eraseToAnyPublisher(),
+            confirmButtonTapped: confirmButtonTappedSubject.eraseToAnyPublisher()
+        )
+
+        let output = viewModel.transform(input: input)
+
+        output.searchResults
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                guard let self = self else { return }
+                self.searchResults = results
+                self.searchResultsTableView.isHidden = results.isEmpty
+                self.searchResultsTableView.reloadData()
+            }
+            .store(in: &cancellables)
+
+        output.selectedLocation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] locationInfo in
+                guard let self = self, let locationInfo = locationInfo else { return }
+                self.showLocationPreview(
+                    title: locationInfo.title,
+                    address: locationInfo.address,
+                    coordinate: locationInfo.coordinate
+                )
+                self.usageTextField.text = locationInfo.title
+                self.searchResultsTableView.isHidden = true
+            }
+            .store(in: &cancellables)
+
+        output.isConfirmButtonEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isEnabled in
+                self?.confirmButton.isEnabled = isEnabled
+            }
+            .store(in: &cancellables)
+
+        output.navigationToExpirationDate
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                let expirationDateVC = ExpirationDateViewController()
+                expirationDateVC.productName = data.productName
+                expirationDateVC.usageLocation = data.usageLocation
+                expirationDateVC.selectedImageName = data.selectedImageName
+                expirationDateVC.latitude = data.latitude
+                expirationDateVC.longitude = data.longitude
+                self.navigationController?.pushViewController(expirationDateVC, animated: true)
+            }
+            .store(in: &cancellables)
     }
 
     private func setupLocationManager() {
@@ -146,56 +212,45 @@ class UsageLocationViewController: BaseViewController {
         }
     }
     
-    private func updateButtonState() {
-        let hasLocation = selectedLatitude != nil && selectedLongitude != nil
-        confirmButton.isEnabled = hasLocation
-    }
-
+    // MARK: - Actions
     @objc private func textFieldDidChange() {
         previewMapView.isHidden = true
         locationInfoContainer.isHidden = true
-        selectedLatitude = nil
-        selectedLongitude = nil
-        updateButtonState()
-
-        guard let query = usageTextField.text, !query.isEmpty else {
-            searchResults = []
-            searchResultsTableView.isHidden = true
-            searchResultsTableView.reloadData()
-            return
-        }
-
-        if let location = currentLocation {
-            let center = location.coordinate
-            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            let region = MKCoordinateRegion(center: center, span: span)
-            searchCompleter.region = region
-        }
-
-        searchCompleter.queryFragment = query
+        searchQueryTextSubject.send(usageTextField.text)
     }
 
     @objc private func confirmButtonTapped() {
-        guard let usage = usageTextField.text, !usage.isEmpty else { return }
-
-        let expirationDateVC = ExpirationDateViewController()
-        expirationDateVC.productName = productName
-        expirationDateVC.usageLocation = usage
-        expirationDateVC.selectedImageName = selectedImageName
-        expirationDateVC.latitude = selectedLatitude
-        expirationDateVC.longitude = selectedLongitude
-        navigationController?.pushViewController(expirationDateVC, animated: true)
+        confirmButtonTappedSubject.send(())
     }
 
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+
+    private func showLocationPreview(title: String, address: String, coordinate: CLLocationCoordinate2D) {
+        previewTitleLabel.text = title
+        previewAddressLabel.text = address
+
+        let region = MKCoordinateRegion(center: coordinate,
+                                       latitudinalMeters: 1000,
+                                       longitudinalMeters: 1000)
+        previewMapView.setRegion(region, animated: false)
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        previewMapView.removeAnnotations(previewMapView.annotations)
+        previewMapView.addAnnotation(annotation)
+
+        previewMapView.isHidden = false
+        locationInfoContainer.isHidden = false
+    }
 }
 
+// MARK: - CLLocationManagerDelegate
 extension UsageLocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if currentLocation == nil, let location = locations.first {
-            currentLocation = location
+        if let location = locations.first {
+            viewModel.setCurrentLocation(location)
             locationManager.stopUpdatingLocation()
         }
     }
@@ -218,18 +273,7 @@ extension UsageLocationViewController: CLLocationManagerDelegate {
     }
 }
 
-extension UsageLocationViewController: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        searchResults = completer.results
-        searchResultsTableView.isHidden = searchResults.isEmpty
-        searchResultsTableView.reloadData()
-    }
-
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        print("Location search error: \(error.localizedDescription)")
-    }
-}
-
+// MARK: - UITableViewDelegate, UITableViewDataSource
 extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
@@ -252,46 +296,6 @@ extension UsageLocationViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedResult = searchResults[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-
-        let searchRequest = MKLocalSearch.Request(completion: selectedResult)
-        let search = MKLocalSearch(request: searchRequest)
-
-        search.start { [weak self] response, error in
-            guard let self = self,
-                  let mapItem = response?.mapItems.first else {
-                print("Failed to get coordinates: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-
-            let coordinate = mapItem.placemark.coordinate
-            self.selectedLatitude = coordinate.latitude
-            self.selectedLongitude = coordinate.longitude
-            self.usageTextField.text = selectedResult.title
-
-            self.showLocationPreview(title: selectedResult.title,
-                                   address: selectedResult.subtitle,
-                                   coordinate: coordinate)
-
-            self.searchResultsTableView.isHidden = true
-            self.updateButtonState()
-        }
-    }
-
-    private func showLocationPreview(title: String, address: String, coordinate: CLLocationCoordinate2D) {
-        previewTitleLabel.text = title
-        previewAddressLabel.text = address
-
-        let region = MKCoordinateRegion(center: coordinate,
-                                       latitudinalMeters: 1000,
-                                       longitudinalMeters: 1000)
-        previewMapView.setRegion(region, animated: false)
-
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        previewMapView.removeAnnotations(previewMapView.annotations)
-        previewMapView.addAnnotation(annotation)
-
-        previewMapView.isHidden = false
-        locationInfoContainer.isHidden = false
+        locationSelectedSubject.send(selectedResult)
     }
 }
