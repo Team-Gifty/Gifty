@@ -92,7 +92,6 @@
 		6F5127192ED810EF00CCE053 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		6F51271B2ED810EF00CCE053 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		6F535D4E2EBE43240056C8D5 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.example.xcconfig; sourceTree = "<group>"; };
 		85BB434B2E83F68E002330D2 /* Gifty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -197,7 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				6F535D4E2EBE43240056C8D5 /* Config.xcconfig */,
-				6F535D4F2EBE43240056C8D5 /* Config.example.xcconfig */,
 			);
 			path = Config;
 			sourceTree = "<group>";
