@@ -4,7 +4,7 @@ import FirebaseMessaging
 import UserNotifications
 import KakaoSDKCommon
 import KakaoSDKAuth
-import GoogleMobileAds
+// import GoogleMobileAds // 임시 비활성화
 
 @main
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -30,10 +30,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         GeofenceManager.shared.requestLocationPermission()
         GeofenceManager.shared.startMonitoring()
 
-        MobileAds.shared.start(completionHandler: nil)
-        print("===== AdMob SDK 초기화 =====")
-        print("✅ AdMob SDK 초기화 완료")
-        print("===========================")
+        // 광고 임시 비활성화
+//        MobileAds.shared.start(completionHandler: nil)
+//        print("===== AdMob SDK 초기화 =====")
+//        print("✅ AdMob SDK 초기화 완료")
+//        print("===========================")
 
         return true
     }
