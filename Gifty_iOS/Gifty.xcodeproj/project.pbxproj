@@ -24,6 +24,10 @@
 		6F2EF7D92EABC0E000E43376 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 6F2EF7D82EABC0E000E43376 /* FirebaseAnalyticsIdentitySupport */; };
 		6F2EF7DB2EABC0E000E43376 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 6F2EF7DA2EABC0E000E43376 /* FirebaseAppCheck */; };
 		6F2EF7DD2EABC1B600E43376 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 6F2EF7DC2EABC1B600E43376 /* FirebaseMessaging */; };
+		6F3C6B442EEF75B200DDD62F /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6F3C6B432EEF75B200DDD62F /* CombineMoya */; };
+		6F3C6B462EEF75B200DDD62F /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6F3C6B452EEF75B200DDD62F /* Moya */; };
+		6F3C6B482EEF75B200DDD62F /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6F3C6B472EEF75B200DDD62F /* ReactiveMoya */; };
+		6F3C6B4A2EEF75B200DDD62F /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6F3C6B492EEF75B200DDD62F /* RxMoya */; };
 		6F51271A2ED810EF00CCE053 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F5127192ED810EF00CCE053 /* WidgetKit.framework */; };
 		6F51271C2ED810EF00CCE053 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F51271B2ED810EF00CCE053 /* SwiftUI.framework */; };
 		6F51272D2ED810F000CCE053 /* GiftyWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6F5127182ED810EF00CCE053 /* GiftyWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -164,10 +168,13 @@
 				6F98A5712EB8D66800001B66 /* Supabase in Frameworks */,
 				6F0B87D32EB08FF000B8EC92 /* KakaoSDKCommon in Frameworks */,
 				6F98A5672EB8D66800001B66 /* Auth in Frameworks */,
+				6F3C6B4A2EEF75B200DDD62F /* RxMoya in Frameworks */,
 				6F0B87D12EB08FF000B8EC92 /* KakaoSDK in Frameworks */,
 				6F98A56B2EB8D66800001B66 /* PostgREST in Frameworks */,
+				6F3C6B462EEF75B200DDD62F /* Moya in Frameworks */,
 				6F2EF7DB2EABC0E000E43376 /* FirebaseAppCheck in Frameworks */,
 				85190AED2E8C3D1B00498C29 /* RealmSwift in Frameworks */,
+				6F3C6B442EEF75B200DDD62F /* CombineMoya in Frameworks */,
 				6F7FE39A2EB52AB100AD3D43 /* FirebaseFirestore in Frameworks */,
 				6F0B87D52EB08FF000B8EC92 /* KakaoSDKShare in Frameworks */,
 				6F24ABCB2EC19E8500F1B5C9 /* RxCocoa in Frameworks */,
@@ -183,6 +190,7 @@
 				6F7FE39C2EB52AD400AD3D43 /* FirebaseStorage in Frameworks */,
 				6F2EF7D92EABC0E000E43376 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				6F24ABCD2EC19E8500F1B5C9 /* RxRelay in Frameworks */,
+				6F3C6B482EEF75B200DDD62F /* ReactiveMoya in Frameworks */,
 				852807FC2E899A37009710CC /* Then in Frameworks */,
 				6F2EF7D52EABC0E000E43376 /* FirebaseAnalytics in Frameworks */,
 				852807FF2E899A45009710CC /* SnapKit in Frameworks */,
@@ -304,6 +312,10 @@
 				6F24ABCC2EC19E8500F1B5C9 /* RxRelay */,
 				6F24ABCE2EC19E8500F1B5C9 /* RxSwift */,
 				6F2B28352ECB490B00FB7169 /* GoogleMobileAds */,
+				6F3C6B432EEF75B200DDD62F /* CombineMoya */,
+				6F3C6B452EEF75B200DDD62F /* Moya */,
+				6F3C6B472EEF75B200DDD62F /* ReactiveMoya */,
+				6F3C6B492EEF75B200DDD62F /* RxMoya */,
 			);
 			productName = Gifty_iOS;
 			productReference = 85BB434B2E83F68E002330D2 /* Gifty.app */;
@@ -345,6 +357,7 @@
 				6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				6F24ABC72EC19E8500F1B5C9 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				6F2B28342ECB490B00FB7169 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85BB434C2E83F68E002330D2 /* Products */;
@@ -856,6 +869,14 @@
 				minimumVersion = 12.4.0;
 			};
 		};
+		6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
 		6F98A5652EB8D66800001B66 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift";
@@ -975,6 +996,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6F2EF7D12EABC0E000E43376 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		6F3C6B432EEF75B200DDD62F /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		6F3C6B452EEF75B200DDD62F /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		6F3C6B472EEF75B200DDD62F /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		6F3C6B492EEF75B200DDD62F /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F3C6B422EEF75B200DDD62F /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
 		};
 		6F5127362ED813BD00CCE053 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
